@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ru">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Карта инициатив — AI в социальной сфере Москвы</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #1a1a2e; padding: 20px; }
+  .container { max-width: 1400px; margin: 0 auto; }
+  h1 { font-size: 24px; margin-bottom: 4px; color: #16213e; }
+  .subtitle { color: #555; margin-bottom: 20px; font-size: 14px; }
+  .counter { background: #e8edf5; padding: 8px 14px; border-radius: 8px; font-size: 13px; color: #333; margin-bottom: 16px; display: inline-block; }
+
+  .filters { background: #fff; border-radius: 10px; padding: 16px 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .search-row { margin-bottom: 12px; }
+  .search-row input { width: 100%; padding: 9px 14px; border: 1px solid #d0d5dd; border-radius: 6px; font-size: 14px; outline: none; }
+  .search-row input:focus { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,.15); }
+  .tech-filters { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .tech-chip { display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; padding: 5px 12px; border-radius: 14px; border: 1px solid #d0d5dd; background: #fafafa; transition: .15s; user-select: none; }
+  .tech-chip:hover { border-color: #2563eb; background: #eff4ff; }
+  .tech-chip.active { border-color: #2563eb; background: #eff4ff; }
+  .tech-chip .tdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; transition: .15s; }
+  .reset-btn { font-size: 12px; color: #2563eb; background: none; border: none; cursor: pointer; padding: 4px 8px; }
+  .reset-btn:hover { text-decoration: underline; }
+
+  .ref-toggle { background: #fff; border-radius: 10px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); overflow: hidden; }
+  .ref-header { padding: 12px 20px; cursor: pointer; font-size: 14px; font-weight: 600; color: #1e293b; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+  .ref-header:hover { background: #f8fafc; }
+  .ref-header .arrow { transition: transform .2s; font-size: 12px; }
+  .ref-body { padding: 0 20px 16px; display: none; }
+  .ref-body.open { display: block; }
+  .ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+  .ref-item { display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 6px 10px; background: #f8fafc; border-radius: 6px; }
+  .ref-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .ref-item .desc { color: #64748b; font-size: 11px; }
+
+  .group { background: #fff; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08); overflow: hidden; }
+  .group-header { padding: 14px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; transition: background .15s; }
+  .group-header:hover { background: #f8fafc; }
+  .group-header h2 { font-size: 15px; font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 10px; }
+  .group-header .badge { background: #e2e8f0; color: #475569; font-size: 12px; padding: 1px 10px; border-radius: 10px; font-weight: 500; }
+  .group-header .dept { font-size: 12px; color: #64748b; font-weight: 400; }
+  .group-header .arrow { transition: transform .2s; font-size: 14px; color: #94a3b8; }
+  .group-body { overflow-x: auto; }
+  .group-body.collapsed { display: none; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 900px; }
+  thead th { background: #f1f5f9; padding: 10px 12px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; white-space: nowrap; position: sticky; top: 0; }
+  tbody td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+  tbody tr:hover { background: #f8fafc; }
+  tbody tr.hidden { display: none; }
+  .col-id { width: 32px; text-align: center; color: #94a3b8; font-size: 11px; }
+  .col-title { min-width: 200px; }
+  .col-title .desc { font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.3; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+  .tag-proposed { background: #fef3c7; color: #92400e; }
+  .tag-pilot { background: #dbeafe; color: #1e40af; }
+  .tag-implemented { background: #dcfce7; color: #166534; }
+  .tag-planning { background: #f3e8ff; color: #6b21a8; }
+
+  .tech-cell { white-space: nowrap; text-align: center; min-width: 28px; }
+  .tdot-cell { display: inline-block; width: 10px; height: 10px; border-radius: 50%; opacity: .2; }
+  .tdot-cell.active { opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+
+  .tech-header { display: flex; flex-direction: column; align-items: center; font-size: 10px; line-height: 1.2; min-width: 52px; padding: 4px; }
+  .tech-header .tdot-th { margin-bottom: 2px; width: 12px; height: 12px; }
+  .sortable { cursor: pointer; user-select: none; }
+  .sortable:hover { color: #2563eb; }
+  .sarr { font-size: 10px; margin-left: 2px; }
+  .col-complexity { text-align: center; white-space: nowrap; min-width: 68px; }
+  .col-status { white-space: nowrap; }
+  .complexity-bar { display: inline-flex; align-items: center; gap: 5px; }
+  .complexity-bar .bar-track { width: 36px; height: 4px; background: #e2e8f0; border-radius: 3px; overflow: hidden; display: inline-block; }
+  .complexity-bar .bar-fill { height: 100%; border-radius: 3px; transition: width .3s; }
+  .complexity-num { font-size: 12px; font-weight: 600; color: #475569; min-width: 14px; }
+
+  .col-comment { text-align: center; width: 36px; }
+  .comment-btn { background: none; border: none; cursor: pointer; font-size: 15px; padding: 2px 4px; border-radius: 4px; opacity: .35; transition: .15s; line-height: 1; }
+  .comment-btn:hover { opacity: 1; background: #f1f5f9; }
+  .comment-btn.has-note { opacity: 1; }
+
+  .comment-popup { position: fixed; z-index: 1000; background: #fff; border: 1px solid #d0d5dd; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.12); padding: 0; width: 280px; display: none; }
+  .comment-popup.open { display: block; }
+  .comment-popup textarea { width: 100%; border: none; padding: 10px 12px; font-size: 12px; font-family: inherit; resize: vertical; min-height: 60px; outline: none; border-radius: 8px 8px 0 0; line-height: 1.4; }
+  .comment-popup .popup-footer { display: flex; justify-content: space-between; align-items: center; padding: 5px 12px 8px; border-top: 1px solid #f1f5f9; font-size: 11px; color: #94a3b8; }
+  .comment-popup .popup-saved { color: #10b981; }
+  .comment-popup .popup-clear { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+  .comment-popup .popup-clear:hover { background: #fef2f2; }
+
+  .comment-overlay { position: fixed; inset: 0; z-index: 999; display: none; }
+  .comment-overlay.open { display: block; }
+
+  @media (max-width: 768px) {
+    body { padding: 10px; }
+    .filters { padding: 12px; }
+    .group-header { padding: 12px 14px; }
+    thead th, tbody td { padding: 6px 8px; font-size: 12px; }
+    .tech-cell { min-width: 22px; }
+    .col-title { min-width: 140px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Карта инициатив</h1>
+  <div class="subtitle">Внедрение технологий искусственного интеллекта в социальной сфере города Москвы</div>
+
+  <div class="counter" id="counter">Загрузка...</div>
+
+  <div class="filters">
+    <div class="search-row">
+      <input type="text" id="searchInput" placeholder="Поиск по названию или описанию...">
+    </div>
+    <div class="tech-filters" id="techFilters"></div>
+  </div>
+
+  <div class="ref-toggle">
+    <div class="ref-header" id="refHeader">
+      <span>📖 Справочник технологий искусственного интеллекта</span>
+      <span class="arrow" id="refArrow">&#9660;</span>
+    </div>
+    <div class="ref-body" id="refBody"></div>
+  </div>
+
+  <div id="groups"></div>
+
+  <div class="comment-overlay" id="commentOverlay" onclick="closePopup()"></div>
+  <div class="comment-popup" id="commentPopup">
+    <textarea placeholder="Ваша заметка..." rows="3"></textarea>
+    <div class="popup-footer">
+      <span class="popup-saved"></span>
+      <button class="popup-clear">Очистить</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const TECH = [
+    { id: 'nlp', ru: 'Обработка естественного языка (NLP)', desc: 'Анализ текста, классификация, суммаризация, работа с языковыми моделями', color: '#6366f1' },
+    { id: 'speech', ru: 'Речевая аналитика', desc: 'Распознавание речи, транскрибация, анализ диалогов, синтез речи', color: '#0ea5e9' },
+    { id: 'voice_bio', ru: 'Голосовая биометрия', desc: 'Верификация личности по голосу, идентификация звонящего', color: '#8b5cf6' },
+    { id: 'emotion', ru: 'Анализ тональности и эмоций (Affective AI)', desc: 'Определение настроения, эмоциональной окраски, выявление экстренных состояний', color: '#f43f5e' },
+    { id: 'cv', ru: 'Компьютерное зрение', desc: 'Распознавание изображений, детекция объектов и силуэтов, анализ фото/видео', color: '#14b8a6' },
+    { id: 'predictive', ru: 'Предиктивная аналитика', desc: 'Прогнозирование, временные ряды, моделирование сценариев, анализ загрузки', color: '#f59e0b' },
+    { id: 'recsys', ru: 'Рекомендательные системы', desc: 'Персональные подборки, индивидуальные траектории, адресные предложения', color: '#ec4899' },
+    { id: 'genai', ru: 'Генеративный ИИ (GenAI / LLM)', desc: 'Генерация текста, программного кода, инструкций, сценариев и методических материалов', color: '#10b981' },
+    { id: 'knowledge', ru: 'Графы знаний и базы знаний', desc: 'Семантический поиск, единая база с интеллектуальным поиском по регламентам и НПА', color: '#3b82f6' },
+    { id: 'assistant', ru: 'Виртуальные ассистенты и чат-боты', desc: 'ИИ-консультанты, HR-капсулы, помощники операторов контакт-центров', color: '#a855f7' },
+    { id: 'anomaly', ru: 'Выявление аномалий', desc: 'Обнаружение отклонений в поведении, расходах, вовлечённости, рисков', color: '#ef4444' },
+    { id: 'digital_twin', ru: 'Цифровые двойники и симуляция', desc: 'Моделирование систем, цифровые паспорта учреждений, сценарное планирование', color: '#06b6d4' },
+    { id: 'idp', ru: 'Интеллектуальная обработка документов (IDP/OCR)', desc: 'Распознавание и классификация документов, автоматизация документооборота', color: '#eab308' },
+    { id: 'ivr', ru: 'Интерактивное голосовое меню (IVR)', desc: 'Автоматизация приёма звонков, тональный набор, умная маршрутизация', color: '#7c3aed' },
+  ];
+
+  const INITIATIVES = [
+    {
+      customer: 'Авшарян Л.Н.', dept: 'Управление стратегии долголетия и специальных проектов',
+      items: [
+        { id: 1, title: 'Цифровой консультант по базе знаний', techs: ['nlp','knowledge','genai'], status: 'proposed',
+          desc: 'Ответы на вопросы работников на основании регламентов, инструкций и нормативных документов с обязательными ссылками на источники и учетом прав доступа' },
+        { id: 2, title: 'Персональная траектория долголетия', techs: ['recsys','predictive'], status: 'proposed',
+          desc: 'Создание индивидуальных рекомендаций по занятиям, мероприятиям, клубам и образовательным программам с учетом интересов, района проживания, физической доступности и истории участия' },
+        { id: 3, title: 'ИИ-диспетчер обращений и заявок', techs: ['nlp','predictive'], status: 'proposed',
+          desc: 'Автоматическая классификация обращений, поиск дублей, определение приоритета, подбор исполнителя, прогноз SLA и подготовка проекта ответа' },
+        { id: 4, title: 'Прогноз посещаемости и загрузки ЦМД', techs: ['predictive'], status: 'proposed',
+          desc: 'Прогнозирование посещений по центрам, дням недели, времени, направлениям и мероприятиям с учетом сезонности и календаря' },
+        { id: 5, title: 'Раннее выявление снижения вовлеченности', techs: ['anomaly','predictive'], status: 'proposed',
+          desc: 'Определение участников, которые стали реже посещать занятия или полностью прекратили участие. Формирование сценария мягкого контакта и альтернативных предложений' },
+        { id: 6, title: 'ИИ-конструктор программ и мероприятий', techs: ['genai'], status: 'proposed',
+          desc: 'Подготовка концепции мероприятия, сценария, программы, чек-листа, распределения ролей, сметы, рисков и коммуникационных материалов' },
+        { id: 7, title: 'Интеллектуальный анализ обратной связи', techs: ['nlp','emotion'], status: 'proposed',
+          desc: 'Обработка отзывов, обращений, результатов опросов и комментариев: выделение тем, повторяющихся проблем, эмоциональной окраски и динамики' },
+        { id: 8, title: 'ИИ-помощник для проверок ЦМД', techs: ['cv','idp'], status: 'proposed',
+          desc: 'Анализ чек-листов, документов и фотографий, поиск несоответствий, подготовка проекта акта и контроль устранения замечаний' },
+        { id: 9, title: 'Интеллектуальное планирование развития сети', techs: ['predictive'], status: 'proposed',
+          desc: 'Анализ посещаемости, демографии районов, транспортной доступности, востребованных направлений и загрузки действующих объектов' },
+        { id: 10, title: 'Управленческий ИИ-дайджест', techs: ['nlp','genai'], status: 'proposed',
+          desc: 'Автоматическое формирование еженедельной записки: ключевая динамика, отклонения, проблемные зоны, лучшие практики и рекомендуемые решения' },
+      ]
+    },
+    {
+      customer: 'Медникова С.А.', dept: 'Директор (Служба контроля и бухгалтерского учета ГКУ)',
+      items: [
+        { id: 11, title: 'Единая онлайн-платформа передачи материальных ценностей («Электронная площадка»)', techs: ['idp'], status: 'proposed',
+          desc: 'Организация единой платформы размещения, поиска и передачи материальных ценностей между подведомственными учреждениями Департамента' },
+      ]
+    },
+    {
+      customer: 'Данько Т.В.', dept: 'Управление опеки и попечительства',
+      items: [
+        { id: 12, title: 'Сбор и анализ сведений о подопечных детях и опекунах из внешних источников', techs: ['nlp','anomaly'], status: 'proposed',
+          desc: 'Анализ соцсетей, СМИ, государственных реестров и баз данных для выявления суицидальной направленности среди подростков, вовлечения в противоправные действия либо нарушения прав' },
+        { id: 13, title: 'Мониторинг психологического состояния ребенка при беседе', techs: ['speech','emotion'], status: 'proposed',
+          desc: 'Оценка психологического состояния в момент проведения беседы в рамках обследования условий жизни' },
+        { id: 14, title: 'Мониторинг расходования денежных средств на содержание подопечных', techs: ['anomaly'], status: 'proposed',
+          desc: 'Контроль целевого использования выплачиваемых средств с помощью ИИ-анализа транзакций' },
+        { id: 15, title: 'Система автоматического обнаружения событий «Побег» и «Нарушение режима»', techs: ['cv'], status: 'pilot',
+          desc: 'Использование детектора силуэтов ГИС ЕЦХД в ГБУ ЦССВ имени Ю.В. Никулина. Ведется подготовка к пилотированию' },
+        { id: 16, title: 'Пилотные VR- и роботизированные продукты для ЦССВ', techs: ['cv','speech'], status: 'pilot',
+          desc: 'VR Inclusion, экзоскелеты, автоматизированная уборка и цифровизация протоколирования — ЦССВ готовы участвовать в пилотном тестировании' },
+      ]
+    },
+    {
+      customer: 'Морозов А.Е.', dept: 'Управление содействия занятости населения (ЦЗН «Моя работа»)',
+      items: [
+        { id: 17, title: 'Сервис речевой аналитики', techs: ['speech'], status: 'implemented',
+          desc: 'Запись диалогов сотрудников и посетителей с последующим автоматическим анализом для оценки соблюдения стандартов общения' },
+        { id: 18, title: 'HR-капсулы', techs: ['assistant','genai'], status: 'implemented',
+          desc: 'Автономные устройства с виртуальным консультантом для составления резюме, подбора вакансий и программ обучения' },
+        { id: 19, title: 'Атлас профессий', techs: ['recsys','knowledge'], status: 'implemented',
+          desc: 'Подбор траектории обучения и анализ рынка труда по результатам профориентации' },
+        { id: 20, title: 'Сервис транскрибации аудио- и видеозаписей', techs: ['speech'], status: 'implemented',
+          desc: 'Протоколирование видеовстреч с помощью автоматической расшифровки' },
+        { id: 21, title: 'Сервис формирования инструкций на основе видеозаписей', techs: ['cv','genai'], status: 'implemented',
+          desc: 'Подготовка предварительного текстового документа с изображениями для последующего изготовления пользовательской инструкции' },
+        { id: 22, title: 'Использование нейросетей для написания web-кода', techs: ['genai'], status: 'implemented',
+          desc: 'Генерация лендингов и регистрационных форм с помощью общедоступных нейросетей' },
+        { id: 23, title: 'ИИ для обработки больших массивов данных и аналитики', techs: ['predictive','nlp'], status: 'implemented',
+          desc: 'Формирование статистических и аналитических данных на основе больших массивов информации' },
+      ]
+    },
+    {
+      customer: 'Романова О.С.', dept: 'Управление организации социального обслуживания на дому',
+      items: [
+        { id: 24, title: 'Голосовые ИИ-технологии для автоматизации обзвонов и мониторинга 73 000 граждан', techs: ['speech','voice_bio','emotion','assistant'], status: 'proposed',
+          desc: 'Распознавание речи, верификация личности, экстренное реагирование, интеграция с голосовым ассистентом «Алиса» для граждан с ментальными дефицитами, ИИ-чекапы для оценки способности к самообслуживанию' },
+        { id: 25, title: 'Интеллектуальная фотофиксация контроля качества социальных услуг', techs: ['cv'], status: 'proposed',
+          desc: 'Верификация в реальном времени (наложение контура предыдущего кадра), сквозной фотоанализ из трёх источников, автоматическое выявление рисков изменения условий проживания' },
+        { id: 26, title: 'ИИ-технология признания граждан нуждающимися в социальном обслуживании', techs: ['nlp','idp'], status: 'pilot',
+          desc: 'Внедрение в ИС «Система долговременного ухода и социальные стационары» совместно с ГКУ «Инфогород» для оптимизации трудозатрат' },
+      ]
+    },
+    {
+      customer: 'Табурчану А.В.', dept: 'Управление по социальной интеграции лиц с ограничениями жизнедеятельности',
+      items: [
+        { id: 27, title: 'ИИ-поддержка специалистов системы комплексной реабилитации', techs: ['assistant','knowledge','nlp','speech'], status: 'proposed',
+          desc: 'Интеллектуальная поддержка операторов контакт-центра и специалистов по маршрутизации, единая база знаний с интеллектуальным поиском, ИИ-помощник с прослушиванием звонков в реальном времени, интеграция с МИССО' },
+        { id: 28, title: 'Цифровой двойник системы комплексной реабилитации', techs: ['digital_twin','predictive'], status: 'proposed',
+          desc: 'Мониторинг загрузки учреждений, коечного фонда и кадровых ресурсов, прогнозирование, моделирование сценариев, цифровые паспорта учреждений, автоматизированная отчётность' },
+        { id: 29, title: 'Сервисы цифрового сопровождения граждан в реабилитации', techs: ['idp'], status: 'proposed',
+          desc: 'Электронная подача заявлений, цифровое сопровождение маршрута реабилитации, контроль статуса услуг, электронная запись, уведомления и документы' },
+      ]
+    },
+    {
+      customer: 'Фирсова Т.И.', dept: 'Управление организации стационарного социального обслуживания',
+      items: [
+        { id: 30, title: 'Речевой анализатор экстренных состояний «ВербAI» (телефон 051)', techs: ['speech','emotion'], status: 'pilot',
+          desc: 'Пилотный проект для телефона неотложной психологической помощи. ДИТ проводит предпроектное обследование. Функционал ИИ-ассистента в реальном времени пока не реализован' },
+        { id: 31, title: 'ИИ-помощник Координационного центра стационарного социального обслуживания', techs: ['speech','assistant'], status: 'proposed',
+          desc: 'Прослушивание звонков в реальном времени, вывод вспомогательной информации, варианты ответов, ссылки на НПА, интеграция с ИС СДУ' },
+        { id: 32, title: 'IVR (интерактивное голосовое меню) в CRM-системе', techs: ['ivr','speech'], status: 'planning',
+          desc: 'Приветствие, тональный набор (DTMF), инструкции, маршрутизация, справочная информация, сбор данных до соединения, аналитика' },
+      ]
+    },
+  ];
+
+  const STATUS_MAP = {
+    proposed: { label: 'Предложено', cls: 'tag-proposed' },
+    pilot: { label: 'Пилот', cls: 'tag-pilot' },
+    implemented: { label: 'Внедрено', cls: 'tag-implemented' },
+    planning: { label: 'Планируется', cls: 'tag-planning' },
+  };
+
+  /* --- Data --- */
+  let allItems = [];
+  INITIATIVES.forEach(g => g.items.forEach(i => { allItems.push(i); i._customer = g.customer; i._dept = g.dept; }));
+
+  /* --- State --- */
+  let activeTechs = new Set();
+  let searchTerm = '';
+
+  /* --- Render --- */
+  function renderRef() {
+    const body = document.getElementById('refBody');
+    body.innerHTML = '<div class="ref-grid">' + TECH.map(t =>
+      `<div class="ref-item"><span class="ref-dot" style="background:${t.color}"></span><div><strong>${t.ru}</strong><div class="desc">${t.desc}</div></div></div>`
+    ).join('') + '</div>';
+  }
+
+  function renderFilters() {
+    const container = document.getElementById('techFilters');
+    container.innerHTML = '<span style="font-size:13px;font-weight:600;color:#475569;margin-right:4px">Фильтр:</span>' +
+      TECH.map(t =>
+        `<div class="tech-chip" data-tech="${t.id}" onclick="toggleTech('${t.id}')">
+          <span class="tdot" style="background:${t.color};width:8px;height:8px;border-radius:50%;display:inline-block"></span>
+          ${t.ru}
+        </div>`
+      ).join('') +
+      '<button class="reset-btn" onclick="resetFilters()">Сбросить</button>';
+  }
+
+  function sorted(items) {
+    if (!sortKey) return items.slice();
+    const copy = items.slice();
+    copy.sort((a, b) => {
+      let va, vb;
+      if (sortKey === 'title') { va = a.title; vb = b.title; }
+      else if (sortKey === 'complexity') { va = a.techs.length; vb = b.techs.length; }
+      else if (sortKey === 'status') { va = a.status; vb = b.status; }
+      return va < vb ? -sortDir : va > vb ? sortDir : 0;
+    });
+    return copy;
+  }
+
+  function renderGroups() {
+    const container = document.getElementById('groups');
+    container.innerHTML = INITIATIVES.map(g => {
+      const rows = sorted(g.items).map(item => genRow(item)).join('');
+      return `<div class="group">
+        <div class="group-header" onclick="toggleGroup(this)">
+          <h2>${g.customer} <span class="dept">${g.dept}</span> <span class="badge">${g.items.length}</span></h2>
+          <span class="arrow open">&#9660;</span>
+        </div>
+        <div class="group-body"><table>${genThead()}<tbody>${rows}</tbody></table></div>
+      </div>`;
+    }).join('');
+  }
+
+  let sortKey = '';
+  let sortDir = 1;
+
+  function genThead() {
+    const sortArrow = (key) => sortKey === key ? (sortDir === 1 ? ' ▲' : ' ▼') : ' ↕';
+    return '<thead><tr><th class="col-id">#</th>' +
+      '<th class="col-title sortable" onclick="toggleSort(\'title\')">Инициатива <span class="sarr">' + sortArrow('title') + '</span></th>' +
+      '<th class="col-comment">📝</th>' +
+      '<th class="col-complexity sortable" onclick="toggleSort(\'complexity\')">Сложность <span class="sarr">' + sortArrow('complexity') + '</span></th>' +
+      '<th class="col-status sortable" onclick="toggleSort(\'status\')">Статус <span class="sarr">' + sortArrow('status') + '</span></th>' +
+      TECH.map(t => `<th class="tech-cell" title="${t.ru}"><div class="tech-header"><span class="tdot-th" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${t.color}"></span>${t.ru.replace(/ \(.*/, '').trim()}</div></th>`).join('') +
+      '</tr></thead>';
+  }
+
+  function genRow(item) {
+    const s = STATUS_MAP[item.status] || STATUS_MAP.proposed;
+    return `<tr data-id="${item.id}">
+      <td class="col-id">${item.id}</td>
+      <td class="col-title"><div>${item.title}</div><div class="desc">${item.desc}</div></td>
+      <td class="col-comment"><button class="comment-btn ${getComment(item.id) ? 'has-note' : ''}" data-id="${item.id}" onclick="openComment(event, ${item.id})">💬</button></td>
+      <td class="col-complexity">${genComplexity(item)}</td>
+      <td class="col-status"><span class="tag ${s.cls}">${s.label}</span></td>
+      ${TECH.map(t => `<td class="tech-cell"><span class="tdot-cell ${item.techs.includes(t.id) ? 'active' : ''}" style="background:${t.color}"></span></td>`).join('')}
+    </tr>`;
+  }
+
+  function genComplexity(item) {
+    const n = item.techs.length;
+    const pct = Math.round((n / TECH.length) * 100);
+    const hue = 120 - (n / TECH.length) * 120;
+    return `<span class="complexity-bar"><span class="complexity-num">${n}</span><span class="bar-track"><span class="bar-fill" style="width:${pct}%;background:hsl(${hue},75%,50%)"></span></span></span>`;
+  }
+
+  /* --- Filter Logic --- */
+  function updateActiveTechs(id) {
+    if (activeTechs.has(id)) activeTechs.delete(id);
+    else activeTechs.add(id);
+  }
+
+  function updateChips() {
+    document.querySelectorAll('.tech-chip').forEach(chip => {
+      const id = chip.dataset.tech;
+      chip.classList.toggle('active', activeTechs.has(id));
+    });
+  }
+
+  function applyFilters() {
+    searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    let visibleCount = 0;
+
+    document.querySelectorAll('.group').forEach(group => {
+      let groupVisible = false;
+      group.querySelectorAll('tbody tr').forEach(row => {
+        const id = parseInt(row.dataset.id);
+        const item = allItems.find(i => i.id === id);
+        if (!item) return;
+
+        let show = true;
+        if (activeTechs.size > 0) {
+          if (!item.techs.some(t => activeTechs.has(t))) show = false;
+        }
+        if (show && searchTerm) {
+          const haystack = (item.title + ' ' + item.desc).toLowerCase();
+          if (!haystack.includes(searchTerm)) show = false;
+        }
+
+        row.classList.toggle('hidden', !show);
+        if (show) groupVisible = true;
+      });
+
+      group.style.display = groupVisible ? '' : 'none';
+      if (groupVisible) visibleCount += group.querySelectorAll('tbody tr:not(.hidden)').length;
+    });
+
+    const total = allItems.length;
+    const label = activeTechs.size || searchTerm
+      ? 'Всего инициатив: ' + total + ' | Отобрано: ' + visibleCount
+      : 'Всего инициатив: ' + total;
+    document.getElementById('counter').textContent = label;
+  }
+
+  function toggleTech(id) {
+    updateActiveTechs(id);
+    updateChips();
+    applyFilters();
+  }
+
+  function resetFilters() {
+    activeTechs.clear();
+    document.getElementById('searchInput').value = '';
+    updateChips();
+    applyFilters();
+  }
+
+  function toggleSort(key) {
+    if (sortKey === key) { sortDir = -sortDir; }
+    else { sortKey = key; sortDir = 1; }
+    renderGroups();
+    applyFilters();
+  }
+
+  function toggleGroup(header) {
+    const body = header.nextElementSibling;
+    const arrow = header.querySelector('.arrow');
+    body.classList.toggle('collapsed');
+    arrow.classList.toggle('open');
+  }
+
+  /* --- Comments --- */
+  function getComment(id) { return localStorage.getItem('oc_comment_' + id) || ''; }
+  function saveComment(id, text) {
+    if (text.trim()) localStorage.setItem('oc_comment_' + id, text.trim());
+    else localStorage.removeItem('oc_comment_' + id);
+  }
+
+  let openPopupId = null;
+
+  function openComment(ev, id) {
+    ev.stopPropagation();
+    closePopup();
+    const btn = ev.currentTarget;
+    const rect = btn.getBoundingClientRect();
+    const popup = document.getElementById('commentPopup');
+    const overlay = document.getElementById('commentOverlay');
+    const textarea = popup.querySelector('textarea');
+    const saved = popup.querySelector('.popup-saved');
+    const clearBtn = popup.querySelector('.popup-clear');
+
+    textarea.value = getComment(id);
+    saved.textContent = textarea.value ? 'Сохранено' : '';
+    popup.style.top = (rect.bottom + 6) + 'px';
+    popup.style.left = Math.min(rect.left - 120, window.innerWidth - 300) + 'px';
+    if (popup.style.left < 10) popup.style.left = '10px';
+    popup.classList.add('open');
+    overlay.classList.add('open');
+    openPopupId = id;
+    textarea.focus();
+
+    textarea.oninput = function() {
+      saveComment(id, this.value);
+      saved.textContent = this.value.trim() ? 'Сохранено' : '';
+      const b = document.querySelector('.comment-btn[data-id="' + id + '"]');
+      if (b) b.classList.toggle('has-note', !!this.value.trim());
+    };
+    clearBtn.onclick = function(e) {
+      e.stopPropagation();
+      textarea.value = '';
+      saveComment(id, '');
+      saved.textContent = '';
+      const b = document.querySelector('.comment-btn[data-id="' + id + '"]');
+      if (b) b.classList.remove('has-note');
+      textarea.focus();
+    };
+  }
+
+  function closePopup() {
+    document.getElementById('commentPopup').classList.remove('open');
+    document.getElementById('commentOverlay').classList.remove('open');
+    openPopupId = null;
+  }
+
+  /* --- Init --- */
+  renderRef();
+  renderFilters();
+  renderGroups();
+  applyFilters();
+
+  /* --- Input listener --- */
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+  document.getElementById('refHeader').addEventListener('click', function() {
+    document.getElementById('refBody').classList.toggle('open');
+    document.getElementById('refArrow').classList.toggle('open');
+  });
+</script>
+</body>
+</html>
