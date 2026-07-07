@@ -1584,8 +1584,8 @@
         allItems.push(i);
         i._customer = 'Дополнительные инициативы';
         i._dept = '';
-        i._services = [];
-        i._combinations = [];
+        if (!i._services) i._services = [];
+        if (!i._combinations) i._combinations = [];
       });
     } catch(e) { console.error('loadAdditional error:', e); }
   }
