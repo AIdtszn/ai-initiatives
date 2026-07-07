@@ -3,6 +3,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Карта инициатив — AI в социальной сфере Москвы</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #1a1a2e; padding: 20px; }
@@ -188,13 +189,56 @@
   .modal-comment-edit:hover { text-decoration: underline; }
   .modal-no-comment { font-size: 11px; color: #94a3b8; cursor: pointer; padding: 4px 0; }
   .modal-no-comment:hover { color: #2563eb; }
+
+  .submit-btn { display: inline-flex; align-items: center; gap: 6px; background: #2563eb; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: .15s; margin-left: 12px; }
+  .submit-btn:hover { background: #1d4ed8; }
+  .submit-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px; }
+  .form-group input[type="text"], .form-group textarea { width: 100%; padding: 8px 12px; border: 1px solid #d0d5dd; border-radius: 6px; font-size: 13px; font-family: inherit; outline: none; }
+  .form-group input[type="text"]:focus, .form-group textarea:focus { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,.15); }
+  .form-group textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
+  .form-row { display: flex; gap: 12px; }
+  .form-row .form-group { flex: 1; }
+
+  .file-drop { border: 2px dashed #d0d5dd; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: .15s; background: #fafafa; }
+  .file-drop:hover, .file-drop.dragover { border-color: #2563eb; background: #eff4ff; }
+  .file-drop-icon { font-size: 28px; margin-bottom: 6px; }
+  .file-drop-text { font-size: 13px; color: #64748b; }
+  .file-drop-text strong { color: #2563eb; }
+  .file-drop input { display: none; }
+  .file-info { display: none; font-size: 12px; color: #166534; background: #f0fdf4; padding: 6px 10px; border-radius: 6px; margin-top: 6px; }
+
+  .tech-grid { display: flex; flex-direction: column; gap: 8px; }
+  .tech-group-label { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+  .tech-check-row { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tech-check-row label { display: flex; align-items: center; gap: 4px; font-size: 12px; padding: 4px 10px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; background: #fafafa; transition: .1s; user-select: none; }
+  .tech-check-row label:hover { border-color: #94a3b8; }
+  .tech-check-row input[type="checkbox"] { accent-color: #2563eb; }
+
+  .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid #e2e8f0; }
+  .form-actions button { padding: 8px 20px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: .15s; }
+  .form-cancel { background: #fff; border: 1px solid #d0d5dd; color: #475569; }
+  .form-cancel:hover { background: #f1f5f9; }
+  .form-submit { background: #2563eb; border: none; color: #fff; }
+  .form-submit:hover { background: #1d4ed8; }
+  .form-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+  .submit-modal { max-width: 680px; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>Карта инициатив</h1>
   <div class="subtitle">Внедрение технологий искусственного интеллекта в социальной сфере города Москвы</div>
-  <div class="counter" id="counter">Загрузка...</div>
+  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px">
+    <div class="counter" id="counter">Загрузка...</div>
+    <button class="submit-btn" onclick="openSubmitModal()">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+      Добавить инициативу
+    </button>
+  </div>
 
   <div class="filters">
     <div class="search-row">
@@ -234,6 +278,51 @@
       <div class="tab-content" id="tabServices"></div>
       <div class="tab-content" id="tabRoadmap"></div>
       <div class="modal-comment-section" id="modalCommentSection"></div>
+    </div>
+  </div>
+
+  <div class="comment-overlay" id="submitOverlay" onclick="closeSubmitModal()"></div>
+  <div class="modal submit-modal" id="submitModal">
+    <div class="modal-header">
+      <h3>Добавить инициативу</h3>
+      <button class="modal-close" onclick="closeSubmitModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="submitModalBody">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="submitTitle">Название инициативы *</label>
+          <input type="text" id="submitTitle" placeholder="Например: ИИ-помощник для..." required>
+        </div>
+        <div class="form-group">
+          <label for="submitCustomer">Заказчик / ФИО</label>
+          <input type="text" id="submitCustomer" placeholder="Ваше имя">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="submitDept">Подразделение / Отдел</label>
+        <input type="text" id="submitDept" placeholder="Например: Управление стратегии долголетия">
+      </div>
+      <div class="form-group">
+        <label for="submitDesc">Описание инициативы *</label>
+        <textarea id="submitDesc" placeholder="Опишите суть инициативы, ожидаемый эффект, целевую аудиторию..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Загрузить PDF-документ</label>
+        <div class="file-drop" id="fileDrop">
+          <div class="file-drop-icon">&#128196;</div>
+          <div class="file-drop-text">Перетащите PDF-файл сюда или <strong>выберите файл</strong></div>
+          <input type="file" id="fileInput" accept=".pdf,application/pdf">
+        </div>
+        <div class="file-info" id="submitFileInfo"></div>
+      </div>
+      <div class="form-group">
+        <label>Технологии ИИ, используемые в инициативе *</label>
+        <div class="tech-grid" id="techCheckboxes"></div>
+      </div>
+      <div class="form-actions">
+        <button class="form-cancel" onclick="closeSubmitModal()">Отмена</button>
+        <button class="form-submit" id="submitBtn" onclick="handleSubmit()">Отправить</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1442,11 +1531,12 @@
   }
 
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') { closeModal(); closePopup(); }
+    if (e.key === 'Escape') { closeModal(); closePopup(); closeSubmitModal(); }
   });
 
   renderRef();
   renderFilters();
+  loadAdditional();
   renderGroups();
   applyFilters();
   syncChips();
@@ -1455,6 +1545,159 @@
   document.getElementById('refHeader').addEventListener('click', function() {
     document.getElementById('refBody').classList.toggle('open');
   });
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  const STORAGE_KEY = 'oc_additional';
+
+  function loadAdditional() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    try {
+      const items = JSON.parse(raw);
+      if (!items || !items.length) return;
+      INITIATIVES.push({
+        customer: 'Дополнительные инициативы',
+        dept: 'Предложения пользователей',
+        items: items
+      });
+      items.forEach(i => {
+        allItems.push(i);
+        i._customer = 'Дополнительные инициативы';
+        i._dept = '';
+        i._services = [];
+        i._combinations = [];
+      });
+    } catch(e) {}
+  }
+
+  function getNextId() {
+    let max = 0;
+    INITIATIVES.forEach(g => g.items.forEach(i => { if (i.id > max) max = i.id; }));
+    return max + 1;
+  }
+
+  function saveAdditional() {
+    const g = INITIATIVES.find(x => x.customer === 'Дополнительные инициативы');
+    if (g) localStorage.setItem(STORAGE_KEY, JSON.stringify(g.items));
+  }
+
+  function openSubmitModal() {
+    document.getElementById('submitOverlay').classList.add('open');
+    document.getElementById('submitModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    renderTechCheckboxes();
+    document.getElementById('submitTitle').focus();
+  }
+
+  function closeSubmitModal() {
+    document.getElementById('submitOverlay').classList.remove('open');
+    document.getElementById('submitModal').classList.remove('open');
+    document.body.style.overflow = '';
+    document.getElementById('submitTitle').value = '';
+    document.getElementById('submitDesc').value = '';
+    document.getElementById('submitCustomer').value = '';
+    document.getElementById('submitDept').value = '';
+    document.querySelectorAll('#techCheckboxes input[type="checkbox"]').forEach(function(cb) { cb.checked = false; });
+    document.getElementById('submitFileInfo').textContent = '';
+    document.getElementById('submitFileInfo').style.display = 'none';
+    _submittedFile = null;
+  }
+
+  function renderTechCheckboxes() {
+    const container = document.getElementById('techCheckboxes');
+    container.innerHTML = GROUPS.map(g =>
+      '<div><div class="tech-group-label" style="color:' + g.color + '">' + g.ru + '</div>' +
+      '<div class="tech-check-row">' +
+      g.techs.map(t =>
+        '<label><input type="checkbox" name="tech" value="' + t.id + '" style="accent-color:' + g.color + '"> ' + t.ru + '</label>'
+      ).join('') + '</div></div>'
+    ).join('');
+  }
+
+  let _submittedFile = null;
+
+  function initFileUpload() {
+    const drop = document.getElementById('fileDrop');
+    const input = document.getElementById('fileInput');
+    drop.addEventListener('click', function() { input.click(); });
+    drop.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('dragover'); });
+    drop.addEventListener('dragleave', function() { this.classList.remove('dragover'); });
+    drop.addEventListener('drop', function(e) { e.preventDefault(); this.classList.remove('dragover'); if (e.dataTransfer.files.length) handleFileSelect(e.dataTransfer.files[0]); });
+    input.addEventListener('change', function() { if (this.files.length) handleFileSelect(this.files[0]); });
+  }
+
+  function handleFileSelect(file) {
+    if (!file || file.type !== 'application/pdf') {
+      alert('Пожалуйста, выберите PDF-файл');
+      return;
+    }
+    _submittedFile = file;
+    const info = document.getElementById('submitFileInfo');
+    info.textContent = '\uD83D\uDCC4 ' + file.name + ' (' + (file.size / 1024).toFixed(0) + ' KB)';
+    info.style.display = 'block';
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const data = new Uint8Array(e.target.result);
+      pdfjsLib.getDocument({ data: data }).promise.then(function(pdf) {
+        const promises = [];
+        for (let i = 1; i <= pdf.numPages; i++) {
+          promises.push(pdf.getPage(i).then(function(page) {
+            return page.getTextContent().then(function(tc) {
+              return tc.items.map(function(item) { return item.str; }).join(' ');
+            });
+          }));
+        }
+        Promise.all(promises).then(function(pagesText) {
+          const fullText = pagesText.join('\n\n');
+          document.getElementById('submitDesc').value = fullText;
+          const firstLine = fullText.split('\n')[0].trim();
+          const titleEl = document.getElementById('submitTitle');
+          if (firstLine && firstLine.length < 200 && !titleEl.value) {
+            titleEl.value = firstLine;
+          }
+        });
+      });
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function handleSubmit() {
+    const title = document.getElementById('submitTitle').value.trim();
+    const desc = document.getElementById('submitDesc').value.trim();
+    const customer = document.getElementById('submitCustomer').value.trim() || 'Пользователь';
+    const dept = document.getElementById('submitDept').value.trim();
+    if (!title) { alert('Введите название инициативы'); return; }
+    if (!desc) { alert('Введите описание инициативы'); return; }
+    const techs = Array.from(document.querySelectorAll('#techCheckboxes input[name="tech"]:checked')).map(function(cb) { return cb.value; });
+    if (!techs.length) { alert('Выберите хотя бы одну технологию ИИ'); return; }
+    const newItem = {
+      id: getNextId(),
+      title: title,
+      techs: techs,
+      status: 'proposed',
+      desc: desc + (customer !== 'Пользователь' || dept ? '\n\n---\nДобавлено: ' + customer + (dept ? ' (' + dept + ')' : '') : ''),
+      _isAdditional: true
+    };
+    let additionalGroup = INITIATIVES.find(function(g) { return g.customer === 'Дополнительные инициативы'; });
+    if (!additionalGroup) {
+      additionalGroup = { customer: 'Дополнительные инициативы', dept: 'Предложения пользователей', items: [] };
+      INITIATIVES.push(additionalGroup);
+    }
+    additionalGroup.items.push(newItem);
+    allItems.push(newItem);
+    newItem._customer = 'Дополнительные инициативы';
+    newItem._dept = '';
+    newItem._services = [];
+    newItem._combinations = [];
+    saveAdditional();
+    closeSubmitModal();
+    renderGroups();
+    applyFilters();
+    updateGroupCounters();
+  }
+
+  initFileUpload();
 </script>
 </body>
 </html>
