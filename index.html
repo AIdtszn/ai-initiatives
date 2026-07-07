@@ -1533,12 +1533,14 @@
     if (e.key === 'Escape') { closeModal(); closePopup(); closeSubmitModal(); }
   });
 
-  renderRef();
-  renderFilters();
-  loadAdditional();
-  renderGroups();
-  applyFilters();
-  syncChips();
+  try {
+    renderRef();
+    renderFilters();
+    loadAdditional();
+    renderGroups();
+    applyFilters();
+    syncChips();
+  } catch(e) { console.error('Init error:', e); }
 
   document.getElementById('searchInput').addEventListener('input', applyFilters);
   document.getElementById('refHeader').addEventListener('click', function() {
@@ -1548,24 +1550,24 @@
   const STORAGE_KEY = 'oc_additional';
 
   function loadAdditional() {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
     try {
-      const items = JSON.parse(raw);
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      var items = JSON.parse(raw);
       if (!items || !items.length) return;
       INITIATIVES.push({
         customer: 'Дополнительные инициативы',
         dept: 'Предложения пользователей',
         items: items
       });
-      items.forEach(i => {
+      items.forEach(function(i) {
         allItems.push(i);
         i._customer = 'Дополнительные инициативы';
         i._dept = '';
         i._services = [];
         i._combinations = [];
       });
-    } catch(e) {}
+    } catch(e) { console.error('loadAdditional error:', e); }
   }
 
   function getNextId() {
