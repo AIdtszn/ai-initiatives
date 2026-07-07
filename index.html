@@ -15,24 +15,33 @@
   .search-row { margin-bottom: 12px; }
   .search-row input { width: 100%; padding: 9px 14px; border: 1px solid #d0d5dd; border-radius: 6px; font-size: 14px; outline: none; }
   .search-row input:focus { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,.15); }
-  .tech-filters { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  .tech-chip { display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; padding: 5px 12px; border-radius: 14px; border: 1px solid #d0d5dd; background: #fafafa; transition: .15s; user-select: none; }
-  .tech-chip:hover { border-color: #2563eb; background: #eff4ff; }
-  .tech-chip.active { border-color: #2563eb; background: #eff4ff; }
-  .tech-chip .tdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; transition: .15s; }
+  .filter-groups { display: flex; flex-direction: column; gap: 6px; }
+  .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+  .filter-label { font-size: 12px; font-weight: 600; color: #475569; min-width: 70px; }
+  .group-chip { display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; padding: 4px 12px; border-radius: 14px; border: 1px solid #d0d5dd; background: #fafafa; transition: .15s; user-select: none; }
+  .group-chip:hover { border-color: #2563eb; }
+  .group-chip.active { border-color: #2563eb; background: #eff4ff; }
+  .group-chip .gdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .sub-chip { display: flex; align-items: center; gap: 3px; font-size: 11px; cursor: pointer; padding: 2px 8px; border-radius: 10px; border: 1px solid #e2e8f0; background: #fff; transition: .15s; user-select: none; }
+  .sub-chip:hover { border-color: #94a3b8; }
+  .sub-chip.active { border-color: #2563eb; background: #eff4ff; }
+  .sub-chip .sdot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
   .reset-btn { font-size: 12px; color: #2563eb; background: none; border: none; cursor: pointer; padding: 4px 8px; }
   .reset-btn:hover { text-decoration: underline; }
 
   .ref-toggle { background: #fff; border-radius: 10px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); overflow: hidden; }
   .ref-header { padding: 12px 20px; cursor: pointer; font-size: 14px; font-weight: 600; color: #1e293b; display: flex; justify-content: space-between; align-items: center; user-select: none; }
   .ref-header:hover { background: #f8fafc; }
-  .ref-header .arrow { transition: transform .2s; font-size: 12px; }
   .ref-body { padding: 0 20px 16px; display: none; }
   .ref-body.open { display: block; }
-  .ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
-  .ref-item { display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 6px 10px; background: #f8fafc; border-radius: 6px; }
-  .ref-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .ref-item .desc { color: #64748b; font-size: 11px; }
+  .ref-group { margin-bottom: 12px; }
+  .ref-group:last-child { margin-bottom: 0; }
+  .ref-group-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .ref-group-title .rgdot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .ref-sub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 5px; padding-left: 18px; }
+  .ref-sub-item { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 4px 8px; background: #f8fafc; border-radius: 5px; }
+  .ref-sub-item .rsdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .ref-sub-item .desc { color: #64748b; font-size: 11px; }
 
   .group { background: #fff; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08); overflow: hidden; }
   .group-header { padding: 14px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; transition: background .15s; }
@@ -40,16 +49,15 @@
   .group-header h2 { font-size: 15px; font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 10px; }
   .group-header .badge { background: #e2e8f0; color: #475569; font-size: 12px; padding: 1px 10px; border-radius: 10px; font-weight: 500; }
   .group-header .dept { font-size: 12px; color: #64748b; font-weight: 400; }
-  .group-header .arrow { transition: transform .2s; font-size: 14px; color: #94a3b8; }
   .group-body { overflow-x: auto; }
   .group-body.collapsed { display: none; }
 
-  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 900px; }
-  thead th { background: #f1f5f9; padding: 10px 12px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; white-space: nowrap; position: sticky; top: 0; }
-  tbody td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px; }
+  thead th { background: #f1f5f9; padding: 10px 8px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; white-space: nowrap; position: sticky; top: 0; }
+  tbody td { padding: 9px 8px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
   tbody tr:hover { background: #f8fafc; }
   tbody tr.hidden { display: none; }
-  .col-id { width: 32px; text-align: center; color: #94a3b8; font-size: 11px; }
+  .col-id { width: 28px; text-align: center; color: #94a3b8; font-size: 11px; }
   .col-title { min-width: 200px; }
   .col-title .desc { font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.3; }
   .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
@@ -58,23 +66,15 @@
   .tag-implemented { background: #dcfce7; color: #166534; }
   .tag-planning { background: #f3e8ff; color: #6b21a8; }
 
-  .tech-cell { white-space: nowrap; text-align: center; min-width: 28px; }
-  .tdot-cell { display: inline-block; width: 10px; height: 10px; border-radius: 50%; opacity: .2; }
-  .tdot-cell.active { opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+  .group-cell { text-align: center; white-space: nowrap; min-width: 52px; }
+  .group-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; opacity: .15; transition: .15s; cursor: default; }
+  .group-dot.active { opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+  .group-dot-wrap { position: relative; display: inline-flex; }
+  .group-tip { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; font-size: 10px; padding: 3px 8px; border-radius: 4px; white-space: nowrap; pointer-events: none; z-index: 10; }
+  .group-tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: #1e293b; }
+  .group-dot-wrap:hover .group-tip { display: block; }
 
-  .tech-header { display: flex; flex-direction: column; align-items: center; font-size: 10px; line-height: 1.2; min-width: 52px; padding: 4px; }
-  .tech-header .tdot-th { margin-bottom: 2px; width: 12px; height: 12px; }
-  .sortable { cursor: pointer; user-select: none; }
-  .sortable:hover { color: #2563eb; }
-  .sarr { font-size: 10px; margin-left: 2px; }
-  .col-complexity { text-align: center; white-space: nowrap; min-width: 68px; }
-  .col-status { white-space: nowrap; }
-  .complexity-bar { display: inline-flex; align-items: center; gap: 5px; }
-  .complexity-bar .bar-track { width: 36px; height: 4px; background: #e2e8f0; border-radius: 3px; overflow: hidden; display: inline-block; }
-  .complexity-bar .bar-fill { height: 100%; border-radius: 3px; transition: width .3s; }
-  .complexity-num { font-size: 12px; font-weight: 600; color: #475569; min-width: 14px; }
-
-  .col-comment { text-align: center; width: 36px; }
+  .col-comment { text-align: center; width: 30px; }
   .comment-btn { background: none; border: none; cursor: pointer; font-size: 15px; padding: 2px 4px; border-radius: 4px; opacity: .35; transition: .15s; line-height: 1; }
   .comment-btn:hover { opacity: 1; background: #f1f5f9; }
   .comment-btn.has-note { opacity: 1; }
@@ -86,17 +86,24 @@
   .comment-popup .popup-saved { color: #10b981; }
   .comment-popup .popup-clear { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
   .comment-popup .popup-clear:hover { background: #fef2f2; }
-
   .comment-overlay { position: fixed; inset: 0; z-index: 999; display: none; }
   .comment-overlay.open { display: block; }
+
+  .sortable { cursor: pointer; user-select: none; }
+  .sortable:hover { color: #2563eb; }
+  .sarr { font-size: 10px; margin-left: 2px; }
+  .complexity-bar { display: inline-flex; align-items: center; gap: 5px; }
+  .complexity-bar .bar-track { width: 36px; height: 4px; background: #e2e8f0; border-radius: 3px; overflow: hidden; display: inline-block; }
+  .complexity-bar .bar-fill { height: 100%; border-radius: 3px; transition: width .3s; }
+  .complexity-num { font-size: 12px; font-weight: 600; color: #475569; min-width: 14px; }
 
   @media (max-width: 768px) {
     body { padding: 10px; }
     .filters { padding: 12px; }
     .group-header { padding: 12px 14px; }
-    thead th, tbody td { padding: 6px 8px; font-size: 12px; }
-    .tech-cell { min-width: 22px; }
-    .col-title { min-width: 140px; }
+    thead th, tbody td { padding: 6px 5px; font-size: 12px; }
+    .col-title { min-width: 120px; }
+    .group-cell { min-width: 36px; }
   }
 </style>
 </head>
@@ -111,7 +118,7 @@
     <div class="search-row">
       <input type="text" id="searchInput" placeholder="Поиск по названию или описанию...">
     </div>
-    <div class="tech-filters" id="techFilters"></div>
+    <div class="filter-groups" id="filterGroups"></div>
   </div>
 
   <div class="ref-toggle">
@@ -135,22 +142,54 @@
 </div>
 
 <script>
-  const TECH = [
-    { id: 'nlp', ru: 'Обработка естественного языка (NLP)', desc: 'Анализ текста, классификация, суммаризация, работа с языковыми моделями', color: '#6366f1' },
-    { id: 'speech', ru: 'Речевая аналитика', desc: 'Распознавание речи, транскрибация, анализ диалогов, синтез речи', color: '#0ea5e9' },
-    { id: 'voice_bio', ru: 'Голосовая биометрия', desc: 'Верификация личности по голосу, идентификация звонящего', color: '#8b5cf6' },
-    { id: 'emotion', ru: 'Анализ тональности и эмоций (Affective AI)', desc: 'Определение настроения, эмоциональной окраски, выявление экстренных состояний', color: '#f43f5e' },
-    { id: 'cv', ru: 'Компьютерное зрение', desc: 'Распознавание изображений, детекция объектов и силуэтов, анализ фото/видео', color: '#14b8a6' },
-    { id: 'predictive', ru: 'Предиктивная аналитика', desc: 'Прогнозирование, временные ряды, моделирование сценариев, анализ загрузки', color: '#f59e0b' },
-    { id: 'recsys', ru: 'Рекомендательные системы', desc: 'Персональные подборки, индивидуальные траектории, адресные предложения', color: '#ec4899' },
-    { id: 'genai', ru: 'Генеративный ИИ (GenAI / LLM)', desc: 'Генерация текста, программного кода, инструкций, сценариев и методических материалов', color: '#10b981' },
-    { id: 'knowledge', ru: 'Графы знаний и базы знаний', desc: 'Семантический поиск, единая база с интеллектуальным поиском по регламентам и НПА', color: '#3b82f6' },
-    { id: 'assistant', ru: 'Виртуальные ассистенты и чат-боты', desc: 'ИИ-консультанты, HR-капсулы, помощники операторов контакт-центров', color: '#a855f7' },
-    { id: 'anomaly', ru: 'Выявление аномалий', desc: 'Обнаружение отклонений в поведении, расходах, вовлечённости, рисков', color: '#ef4444' },
-    { id: 'digital_twin', ru: 'Цифровые двойники и симуляция', desc: 'Моделирование систем, цифровые паспорта учреждений, сценарное планирование', color: '#06b6d4' },
-    { id: 'idp', ru: 'Интеллектуальная обработка документов (IDP/OCR)', desc: 'Распознавание и классификация документов, автоматизация документооборота', color: '#eab308' },
-    { id: 'ivr', ru: 'Интерактивное голосовое меню (IVR)', desc: 'Автоматизация приёма звонков, тональный набор, умная маршрутизация', color: '#7c3aed' },
+  const GROUPS = [
+    {
+      id: 'llm', ru: 'LLM / Генеративный ИИ', color: '#6366f1',
+      techs: [
+        { id: 'nlp',       ru: 'Обработка естественного языка (NLP)',       desc: 'Анализ текста, классификация, суммаризация, работа с языковыми моделями' },
+        { id: 'genai',     ru: 'Генеративный ИИ (GenAI / LLM)',            desc: 'Генерация текста, кода, инструкций, сценариев и методических материалов' },
+        { id: 'assistant', ru: 'Виртуальные ассистенты и чат-боты',        desc: 'ИИ-консультанты, HR-капсулы, помощники операторов контакт-центров' },
+        { id: 'knowledge', ru: 'Графы знаний и базы знаний',               desc: 'Семантический поиск, единая база с интеллектуальным поиском' },
+        { id: 'emotion',   ru: 'Анализ тональности и эмоций',              desc: 'Определение настроения, эмоциональной окраски текста' },
+      ]
+    },
+    {
+      id: 'ml', ru: 'Машинное обучение (ML)', color: '#f59e0b',
+      techs: [
+        { id: 'predictive', ru: 'Предиктивная аналитика',                  desc: 'Прогнозирование, временные ряды, моделирование сценариев' },
+        { id: 'recsys',     ru: 'Рекомендательные системы',                desc: 'Персональные подборки, индивидуальные траектории' },
+        { id: 'anomaly',    ru: 'Выявление аномалий',                      desc: 'Обнаружение отклонений в поведении, расходах, вовлечённости' },
+      ]
+    },
+    {
+      id: 'cv', ru: 'Компьютерное зрение (CV)', color: '#14b8a6',
+      techs: [
+        { id: 'cv',  ru: 'Компьютерное зрение',                            desc: 'Распознавание изображений, детекция объектов и силуэтов' },
+        { id: 'idp', ru: 'Интеллектуальная обработка документов (IDP/OCR)', desc: 'Распознавание и классификация документов, автоматизация документооборота' },
+      ]
+    },
+    {
+      id: 'speech', ru: 'Речевые технологии', color: '#0ea5e9',
+      techs: [
+        { id: 'speech',    ru: 'Речевая аналитика',                        desc: 'Распознавание речи, транскрибация, анализ диалогов, синтез речи' },
+        { id: 'voice_bio', ru: 'Голосовая биометрия',                      desc: 'Верификация личности по голосу, идентификация звонящего' },
+        { id: 'ivr',       ru: 'Интерактивное голосовое меню (IVR)',       desc: 'Автоматизация приёма звонков, тональный набор, маршрутизация' },
+      ]
+    },
+    {
+      id: 'dt', ru: 'Цифровые двойники (DT)', color: '#06b6d4',
+      techs: [
+        { id: 'digital_twin', ru: 'Цифровые двойники и симуляция',         desc: 'Моделирование систем, цифровые паспорта учреждений, сценарное планирование' },
+      ]
+    },
   ];
+
+  /* Build lookup: tech id → group id */
+  const TECH_TO_GROUP = {};
+  GROUPS.forEach(g => g.techs.forEach(t => { TECH_TO_GROUP[t.id] = g.id; }));
+
+  /* All flat techs for iteration */
+  const ALL_TECHS = GROUPS.flatMap(g => g.techs.map(t => ({ ...t, group: g.id, color: g.color })));
 
   const INITIATIVES = [
     {
@@ -266,36 +305,49 @@
   INITIATIVES.forEach(g => g.items.forEach(i => { allItems.push(i); i._customer = g.customer; i._dept = g.dept; }));
 
   /* --- State --- */
+  let activeGroups = new Set();
   let activeTechs = new Set();
   let searchTerm = '';
+  let sortKey = '';
+  let sortDir = 1;
 
-  /* --- Render --- */
+  function groupOf(techId) { return TECH_TO_GROUP[techId]; }
+  function groupsOf(item) { const s = new Set(); item.techs.forEach(t => s.add(groupOf(t))); return s; }
+
+  /* --- Render: Reference --- */
   function renderRef() {
     const body = document.getElementById('refBody');
-    body.innerHTML = '<div class="ref-grid">' + TECH.map(t =>
-      `<div class="ref-item"><span class="ref-dot" style="background:${t.color}"></span><div><strong>${t.ru}</strong><div class="desc">${t.desc}</div></div></div>`
-    ).join('') + '</div>';
+    body.innerHTML = GROUPS.map(g =>
+      '<div class="ref-group"><div class="ref-group-title"><span class="rgdot" style="background:' + g.color + '"></span>' + g.ru + '</div>' +
+      '<div class="ref-sub-grid">' + g.techs.map(t =>
+        '<div class="ref-sub-item"><span class="rsdot" style="background:' + g.color + '"></span><div><strong>' + t.ru + '</strong><div class="desc">' + t.desc + '</div></div></div>'
+      ).join('') + '</div></div>'
+    ).join('');
   }
 
+  /* --- Render: Filters --- */
   function renderFilters() {
-    const container = document.getElementById('techFilters');
-    container.innerHTML = '<span style="font-size:13px;font-weight:600;color:#475569;margin-right:4px">Фильтр:</span>' +
-      TECH.map(t =>
-        `<div class="tech-chip" data-tech="${t.id}" onclick="toggleTech('${t.id}')">
-          <span class="tdot" style="background:${t.color};width:8px;height:8px;border-radius:50%;display:inline-block"></span>
-          ${t.ru}
-        </div>`
-      ).join('') +
-      '<button class="reset-btn" onclick="resetFilters()">Сбросить</button>';
+    const container = document.getElementById('filterGroups');
+    let html = '<div class="filter-row"><span style="font-size:13px;font-weight:600;color:#475569">Фильтр:</span>' +
+      GROUPS.map(g => `<div class="group-chip" data-group="${g.id}" onclick="toggleGroupTech('${g.id}')"><span class="gdot" style="background:${g.color}"></span>${g.ru}</div>`).join('') +
+      '<button class="reset-btn" onclick="resetFilters()">Сбросить</button></div>';
+
+    GROUPS.forEach(g => {
+      html += '<div class="filter-row"><span class="filter-label" style="color:' + g.color + '">' + g.id.toUpperCase() + ':</span>' +
+        g.techs.map(t => `<div class="sub-chip" data-tech="${t.id}" onclick="toggleTech('${t.id}')"><span class="sdot" style="background:${g.color}"></span>${t.ru}</div>`).join('') + '</div>';
+    });
+
+    container.innerHTML = html;
   }
 
+  /* --- Render: Groups (customer sections) --- */
   function sorted(items) {
     if (!sortKey) return items.slice();
     const copy = items.slice();
     copy.sort((a, b) => {
       let va, vb;
       if (sortKey === 'title') { va = a.title; vb = b.title; }
-      else if (sortKey === 'complexity') { va = a.techs.length; vb = b.techs.length; }
+      else if (sortKey === 'complexity') { va = groupsOf(a).size; vb = groupsOf(b).size; }
       else if (sortKey === 'status') { va = a.status; vb = b.status; }
       return va < vb ? -sortDir : va > vb ? sortDir : 0;
     });
@@ -309,57 +361,84 @@
       return `<div class="group">
         <div class="group-header" onclick="toggleGroup(this)">
           <h2>${g.customer} <span class="dept">${g.dept}</span> <span class="badge">${g.items.length}</span></h2>
-          <span class="arrow open">&#9660;</span>
+          <span class="arrow">&#9660;</span>
         </div>
         <div class="group-body"><table>${genThead()}<tbody>${rows}</tbody></table></div>
       </div>`;
     }).join('');
   }
 
-  let sortKey = '';
-  let sortDir = 1;
-
   function genThead() {
     const sortArrow = (key) => sortKey === key ? (sortDir === 1 ? ' ▲' : ' ▼') : ' ↕';
     return '<thead><tr><th class="col-id">#</th>' +
       '<th class="col-title sortable" onclick="toggleSort(\'title\')">Инициатива <span class="sarr">' + sortArrow('title') + '</span></th>' +
       '<th class="col-comment">📝</th>' +
-      '<th class="col-complexity sortable" onclick="toggleSort(\'complexity\')">Сложность <span class="sarr">' + sortArrow('complexity') + '</span></th>' +
+      '<th class="col-complexity sortable" onclick="toggleSort(\'complexity\')">Охват <span class="sarr">' + sortArrow('complexity') + '</span></th>' +
       '<th class="col-status sortable" onclick="toggleSort(\'status\')">Статус <span class="sarr">' + sortArrow('status') + '</span></th>' +
-      TECH.map(t => `<th class="tech-cell" title="${t.ru}"><div class="tech-header"><span class="tdot-th" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${t.color}"></span>${t.ru.replace(/ \(.*/, '').trim()}</div></th>`).join('') +
+      GROUPS.map(g => `<th class="group-cell" title="${g.ru}"><span class="gdot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${g.color}"></span> ${g.ru.replace(/\(.*/, '').trim()}</th>`).join('') +
       '</tr></thead>';
   }
 
   function genRow(item) {
     const s = STATUS_MAP[item.status] || STATUS_MAP.proposed;
+    const activeGroupIds = groupsOf(item);
     return `<tr data-id="${item.id}">
       <td class="col-id">${item.id}</td>
       <td class="col-title"><div>${item.title}</div><div class="desc">${item.desc}</div></td>
       <td class="col-comment"><button class="comment-btn ${getComment(item.id) ? 'has-note' : ''}" data-id="${item.id}" onclick="openComment(event, ${item.id})">💬</button></td>
       <td class="col-complexity">${genComplexity(item)}</td>
       <td class="col-status"><span class="tag ${s.cls}">${s.label}</span></td>
-      ${TECH.map(t => `<td class="tech-cell"><span class="tdot-cell ${item.techs.includes(t.id) ? 'active' : ''}" style="background:${t.color}"></span></td>`).join('')}
+      ${GROUPS.map(g => {
+        const active = activeGroupIds.has(g.id);
+        const subTechs = item.techs.filter(t => groupOf(t) === g.id).map(t => { const found = ALL_TECHS.find(x => x.id === t); return found ? found.ru : t; });
+        const tip = active ? subTechs.join(', ') : '';
+        return '<td class="group-cell"><div class="group-dot-wrap"><span class="group-dot ' + (active ? 'active' : '') + '" style="background:' + g.color + '"></span>' +
+          (tip ? '<span class="group-tip">' + tip + '</span>' : '') + '</div></td>';
+      }).join('')}
     </tr>`;
   }
 
   function genComplexity(item) {
-    const n = item.techs.length;
-    const pct = Math.round((n / TECH.length) * 100);
-    const hue = 120 - (n / TECH.length) * 120;
+    const n = groupsOf(item).size;
+    const pct = Math.round((n / GROUPS.length) * 100);
+    const hue = 120 - (n / GROUPS.length) * 120;
     return `<span class="complexity-bar"><span class="complexity-num">${n}</span><span class="bar-track"><span class="bar-fill" style="width:${pct}%;background:hsl(${hue},75%,50%)"></span></span></span>`;
   }
 
-  /* --- Filter Logic --- */
-  function updateActiveTechs(id) {
-    if (activeTechs.has(id)) activeTechs.delete(id);
-    else activeTechs.add(id);
+  /* --- Filters --- */
+  function syncChips() {
+    document.querySelectorAll('.group-chip').forEach(chip => {
+      const gid = chip.dataset.group;
+      const allActive = GROUPS.find(g => g.id === gid).techs.every(t => activeTechs.has(t.id));
+      const someActive = GROUPS.find(g => g.id === gid).techs.some(t => activeTechs.has(t.id));
+      chip.classList.toggle('active', allActive);
+      chip.style.borderColor = someActive ? GROUPS.find(g => g.id === gid).color : '';
+    });
+    document.querySelectorAll('.sub-chip').forEach(chip => {
+      chip.classList.toggle('active', activeTechs.has(chip.dataset.tech));
+    });
   }
 
-  function updateChips() {
-    document.querySelectorAll('.tech-chip').forEach(chip => {
-      const id = chip.dataset.tech;
-      chip.classList.toggle('active', activeTechs.has(id));
-    });
+  function toggleGroupTech(gid) {
+    const g = GROUPS.find(x => x.id === gid);
+    const all = g.techs.every(t => activeTechs.has(t.id));
+    if (all) { g.techs.forEach(t => activeTechs.delete(t.id)); }
+    else { g.techs.forEach(t => activeTechs.add(t.id)); }
+    syncChips();
+    applyFilters();
+  }
+
+  function toggleTech(id) {
+    if (activeTechs.has(id)) activeTechs.delete(id); else activeTechs.add(id);
+    syncChips();
+    applyFilters();
+  }
+
+  function resetFilters() {
+    activeTechs.clear();
+    document.getElementById('searchInput').value = '';
+    syncChips();
+    applyFilters();
   }
 
   function applyFilters() {
@@ -381,11 +460,9 @@
           const haystack = (item.title + ' ' + item.desc).toLowerCase();
           if (!haystack.includes(searchTerm)) show = false;
         }
-
         row.classList.toggle('hidden', !show);
         if (show) groupVisible = true;
       });
-
       group.style.display = groupVisible ? '' : 'none';
       if (groupVisible) visibleCount += group.querySelectorAll('tbody tr:not(.hidden)').length;
     });
@@ -395,19 +472,6 @@
       ? 'Всего инициатив: ' + total + ' | Отобрано: ' + visibleCount
       : 'Всего инициатив: ' + total;
     document.getElementById('counter').textContent = label;
-  }
-
-  function toggleTech(id) {
-    updateActiveTechs(id);
-    updateChips();
-    applyFilters();
-  }
-
-  function resetFilters() {
-    activeTechs.clear();
-    document.getElementById('searchInput').value = '';
-    updateChips();
-    applyFilters();
   }
 
   function toggleSort(key) {
@@ -482,8 +546,8 @@
   renderFilters();
   renderGroups();
   applyFilters();
+  syncChips();
 
-  /* --- Input listener --- */
   document.getElementById('searchInput').addEventListener('input', applyFilters);
   document.getElementById('refHeader').addEventListener('click', function() {
     document.getElementById('refBody').classList.toggle('open');
