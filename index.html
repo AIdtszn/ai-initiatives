@@ -21,11 +21,9 @@
   .group-chip { display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; padding: 4px 12px; border-radius: 14px; border: 1px solid #d0d5dd; background: #fafafa; transition: .15s; user-select: none; }
   .group-chip:hover { border-color: #2563eb; }
   .group-chip.active { border-color: #2563eb; background: #eff4ff; }
-  .group-chip .gdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
   .sub-chip { display: flex; align-items: center; gap: 3px; font-size: 11px; cursor: pointer; padding: 2px 8px; border-radius: 10px; border: 1px solid #e2e8f0; background: #fff; transition: .15s; user-select: none; }
   .sub-chip:hover { border-color: #94a3b8; }
   .sub-chip.active { border-color: #2563eb; background: #eff4ff; }
-  .sub-chip .sdot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
   .reset-btn { font-size: 12px; color: #2563eb; background: none; border: none; cursor: pointer; padding: 4px 8px; }
   .reset-btn:hover { text-decoration: underline; }
 
@@ -37,36 +35,37 @@
   .ref-group { margin-bottom: 12px; }
   .ref-group:last-child { margin-bottom: 0; }
   .ref-group-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .ref-group-title .rgdot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
   .ref-sub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 5px; padding-left: 18px; }
   .ref-sub-item { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 4px 8px; background: #f8fafc; border-radius: 5px; }
-  .ref-sub-item .rsdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .ref-sub-item .desc { color: #64748b; font-size: 11px; }
 
   .group { background: #fff; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08); overflow: hidden; }
   .group-header { padding: 14px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; transition: background .15s; }
   .group-header:hover { background: #f8fafc; }
-  .group-header h2 { font-size: 15px; font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 10px; }
+  .group-header h2 { font-size: 15px; font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .group-header .badge { background: #e2e8f0; color: #475569; font-size: 12px; padding: 1px 10px; border-radius: 10px; font-weight: 500; }
   .group-header .dept { font-size: 12px; color: #64748b; font-weight: 400; }
   .group-body { overflow-x: auto; }
   .group-body.collapsed { display: none; }
 
-  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px; }
-  thead th { background: #f1f5f9; padding: 10px 8px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; white-space: nowrap; position: sticky; top: 0; }
-  tbody td { padding: 9px 8px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 650px; }
+  thead th { background: #f1f5f9; padding: 10px 6px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; white-space: nowrap; position: sticky; top: 0; }
+  tbody td { padding: 9px 6px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
   tbody tr:hover { background: #f8fafc; }
   tbody tr.hidden { display: none; }
-  .col-id { width: 28px; text-align: center; color: #94a3b8; font-size: 11px; }
+  .col-id { width: 26px; text-align: center; color: #94a3b8; font-size: 11px; }
   .col-title { min-width: 200px; }
-  .col-title .desc { font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.3; }
+  .col-title .desc { font-size: 11px; color: #64748b; margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
   .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
   .tag-proposed { background: #fef3c7; color: #92400e; }
   .tag-pilot { background: #dbeafe; color: #1e40af; }
   .tag-implemented { background: #dcfce7; color: #166534; }
   .tag-planning { background: #f3e8ff; color: #6b21a8; }
 
-  .group-cell { text-align: center; white-space: nowrap; min-width: 52px; }
+  .expand-btn { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #10b981; background: none; color: #10b981; font-size: 13px; font-weight: 700; cursor: pointer; line-height: 1; margin-right: 6px; flex-shrink: 0; transition: .15s; }
+  .expand-btn:hover { background: #10b981; color: #fff; }
+
+  .group-cell { text-align: center; white-space: nowrap; min-width: 48px; }
   .group-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; opacity: .15; transition: .15s; cursor: default; }
   .group-dot.active { opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
   .group-dot-wrap { position: relative; display: inline-flex; }
@@ -74,8 +73,8 @@
   .group-tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: #1e293b; }
   .group-dot-wrap:hover .group-tip { display: block; }
 
-  .col-comment { text-align: center; width: 30px; }
-  .comment-btn { background: none; border: none; cursor: pointer; font-size: 15px; padding: 2px 4px; border-radius: 4px; opacity: .35; transition: .15s; line-height: 1; }
+  .col-comment { text-align: center; width: 28px; }
+  .comment-btn { background: none; border: none; cursor: pointer; font-size: 14px; padding: 2px 4px; border-radius: 4px; opacity: .35; transition: .15s; line-height: 1; }
   .comment-btn:hover { opacity: 1; background: #f1f5f9; }
   .comment-btn.has-note { opacity: 1; }
 
@@ -93,17 +92,38 @@
   .sortable:hover { color: #2563eb; }
   .sarr { font-size: 10px; margin-left: 2px; }
   .complexity-bar { display: inline-flex; align-items: center; gap: 5px; }
-  .complexity-bar .bar-track { width: 36px; height: 4px; background: #e2e8f0; border-radius: 3px; overflow: hidden; display: inline-block; }
+  .complexity-bar .bar-track { width: 32px; height: 4px; background: #e2e8f0; border-radius: 3px; overflow: hidden; display: inline-block; }
   .complexity-bar .bar-fill { height: 100%; border-radius: 3px; transition: width .3s; }
   .complexity-num { font-size: 12px; font-weight: 600; color: #475569; min-width: 14px; }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,.6); z-index: 2000; display: none; backdrop-filter: blur(2px); }
+  .modal-overlay.open { display: block; }
+  .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 2001; background: #fff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.25); width: 90%; max-width: 640px; max-height: 85vh; display: none; flex-direction: column; }
+  .modal.open { display: flex; }
+  .modal-header { display: flex; align-items: flex-start; gap: 12px; padding: 20px 24px 0; }
+  .modal-header h3 { font-size: 16px; line-height: 1.4; color: #0f172a; flex: 1; }
+  .modal-close { background: none; border: none; font-size: 20px; color: #94a3b8; cursor: pointer; padding: 2px 6px; border-radius: 4px; line-height: 1; }
+  .modal-close:hover { background: #f1f5f9; color: #475569; }
+  .modal-body { padding: 16px 24px 24px; overflow-y: auto; flex: 1; }
+  .modal-section { margin-bottom: 16px; }
+  .modal-section:last-child { margin-bottom: 0; }
+  .modal-label { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+  .modal-text { font-size: 13px; line-height: 1.6; color: #1e293b; white-space: pre-wrap; }
+  .modal-techs { display: flex; flex-wrap: wrap; gap: 5px; }
+  .modal-tech-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; border-radius: 10px; background: #f1f5f9; }
+  .modal-tech-tag .mtdot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .modal-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: #475569; margin-bottom: 12px; }
+  .modal-meta span { display: flex; align-items: center; gap: 4px; }
 
   @media (max-width: 768px) {
     body { padding: 10px; }
     .filters { padding: 12px; }
     .group-header { padding: 12px 14px; }
-    thead th, tbody td { padding: 6px 5px; font-size: 12px; }
+    thead th, tbody td { padding: 6px 4px; font-size: 11px; }
     .col-title { min-width: 120px; }
-    .group-cell { min-width: 36px; }
+    .group-cell { min-width: 32px; }
+    .modal { width: 95%; max-height: 90vh; }
+    .modal-header, .modal-body { padding-left: 16px; padding-right: 16px; }
   }
 </style>
 </head>
@@ -123,7 +143,7 @@
 
   <div class="ref-toggle">
     <div class="ref-header" id="refHeader">
-      <span>📖 Справочник технологий искусственного интеллекта</span>
+      <span>&#128218; Справочник технологий искусственного интеллекта</span>
       <span class="arrow" id="refArrow">&#9660;</span>
     </div>
     <div class="ref-body" id="refBody"></div>
@@ -138,6 +158,15 @@
       <span class="popup-saved"></span>
       <button class="popup-clear">Очистить</button>
     </div>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle"></h3>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
 
@@ -184,11 +213,8 @@
     },
   ];
 
-  /* Build lookup: tech id → group id */
   const TECH_TO_GROUP = {};
   GROUPS.forEach(g => g.techs.forEach(t => { TECH_TO_GROUP[t.id] = g.id; }));
-
-  /* All flat techs for iteration */
   const ALL_TECHS = GROUPS.flatMap(g => g.techs.map(t => ({ ...t, group: g.id, color: g.color })));
 
   const INITIATIVES = [
@@ -196,99 +222,99 @@
       customer: 'Авшарян Л.Н.', dept: 'Управление стратегии долголетия и специальных проектов',
       items: [
         { id: 1, title: 'Цифровой консультант по базе знаний', techs: ['nlp','knowledge','genai'], status: 'proposed',
-          desc: 'Ответы на вопросы работников на основании регламентов, инструкций и нормативных документов с обязательными ссылками на источники и учетом прав доступа' },
+          desc: 'Ответы на вопросы работников на основании регламентов, инструкций и нормативных документов с обязательными ссылками на источники и учетом прав доступа.\n\nОжидаемый эффект: сокращение времени поиска информации и количества консультаций между подразделениями.\nУправленческая ценность: обеспечение единых стандартов работы и сохранение организационных знаний.' },
         { id: 2, title: 'Персональная траектория долголетия', techs: ['recsys','predictive'], status: 'proposed',
-          desc: 'Создание индивидуальных рекомендаций по занятиям, мероприятиям, клубам и образовательным программам с учетом интересов, района проживания, физической доступности и истории участия' },
+          desc: 'Создание индивидуальных рекомендаций по занятиям, мероприятиям, клубам и образовательным программам с учетом интересов, района проживания, физической доступности и истории участия.\n\nОжидаемый эффект: рост вовлеченности, посещаемости и удержания участников. Снижение доли людей, которые зарегистрировались, но не начали регулярно участвовать.\nУправленческая ценность: переход от массового предложения услуг к адресной работе с различными группами старшего поколения.' },
         { id: 3, title: 'ИИ-диспетчер обращений и заявок', techs: ['nlp','predictive'], status: 'proposed',
-          desc: 'Автоматическая классификация обращений, поиск дублей, определение приоритета, подбор исполнителя, прогноз SLA и подготовка проекта ответа' },
+          desc: 'Автоматическая классификация обращений, поиск дублей, определение приоритета, подбор исполнителя, прогноз SLA и подготовка проекта ответа.\n\nОжидаемый эффект: сокращение времени обработки заявок, уменьшение числа ошибочных маршрутизаций и просрочек.\nУправленческая ценность: прозрачный контроль качества и скорости решения проблем участников и ЦМД.' },
         { id: 4, title: 'Прогноз посещаемости и загрузки ЦМД', techs: ['predictive'], status: 'proposed',
-          desc: 'Прогнозирование посещений по центрам, дням недели, времени, направлениям и мероприятиям с учетом сезонности и календаря' },
+          desc: 'Прогнозирование посещений по центрам, дням недели, времени, направлениям и мероприятиям с учетом сезонности и календаря.\n\nОжидаемый эффект: снижение перегрузки и простоев помещений, более точное расписание, эффективное распределение сотрудников.\nУправленческая ценность: обоснованное планирование ресурсов и развитие сети ЦМД на основании прогнозного спроса.' },
         { id: 5, title: 'Раннее выявление снижения вовлеченности', techs: ['anomaly','predictive'], status: 'proposed',
-          desc: 'Определение участников, которые стали реже посещать занятия или полностью прекратили участие. Формирование сценария мягкого контакта и альтернативных предложений' },
+          desc: 'Определение участников, которые стали реже посещать занятия или полностью прекратили участие. Формирование сценария мягкого контакта и альтернативных предложений.\n\nОжидаемый эффект: возвращение части участников, снижение социальной изоляции, повышение устойчивости вовлечения.\nУправленческая ценность: переход от фиксации оттока к профилактической работе. Использование — только с согласием и без автоматических социальных решений.' },
         { id: 6, title: 'ИИ-конструктор программ и мероприятий', techs: ['genai'], status: 'proposed',
-          desc: 'Подготовка концепции мероприятия, сценария, программы, чек-листа, распределения ролей, сметы, рисков и коммуникационных материалов' },
+          desc: 'Подготовка концепции мероприятия, сценария, программы, чек-листа, распределения ролей, сметы, рисков и коммуникационных материалов.\n\nОжидаемый эффект: сокращение времени подготовки мероприятий и повышение качества методических материалов.\nУправленческая ценность: масштабирование удачных форматов на разные округа и снижение зависимости от опыта отдельных сотрудников.' },
         { id: 7, title: 'Интеллектуальный анализ обратной связи', techs: ['nlp','emotion'], status: 'proposed',
-          desc: 'Обработка отзывов, обращений, результатов опросов и комментариев: выделение тем, повторяющихся проблем, эмоциональной окраски и динамики' },
+          desc: 'Обработка отзывов, обращений, результатов опросов и комментариев: выделение тем, повторяющихся проблем, эмоциональной окраски и динамики.\n\nОжидаемый эффект: быстрое обнаружение системных проблем и снижение объема ручной обработки обратной связи.\nУправленческая ценность: единая картина удовлетворенности по городу, округам, ЦМД и направлениям деятельности.' },
         { id: 8, title: 'ИИ-помощник для проверок ЦМД', techs: ['cv','idp'], status: 'proposed',
-          desc: 'Анализ чек-листов, документов и фотографий, поиск несоответствий, подготовка проекта акта и контроль устранения замечаний' },
+          desc: 'Анализ чек-листов, документов и фотографий, поиск несоответствий, подготовка проекта акта и контроль устранения замечаний.\n\nОжидаемый эффект: сокращение времени проверок, повышение полноты фиксации нарушений и снижение субъективности.\nУправленческая ценность: сопоставимое качество контроля по всей сети и возможность выявлять повторяющиеся системные проблемы.' },
         { id: 9, title: 'Интеллектуальное планирование развития сети', techs: ['predictive'], status: 'proposed',
-          desc: 'Анализ посещаемости, демографии районов, транспортной доступности, востребованных направлений и загрузки действующих объектов' },
+          desc: 'Анализ посещаемости, демографии районов, транспортной доступности, востребованных направлений и загрузки действующих объектов.\n\nОжидаемый эффект: более точный выбор территорий для открытия, расширения, ремонта или изменения специализации ЦМД.\nУправленческая ценность: долгосрочное развитие сети на основании данных, а не только экспертных оценок.' },
         { id: 10, title: 'Управленческий ИИ-дайджест', techs: ['nlp','genai'], status: 'proposed',
-          desc: 'Автоматическое формирование еженедельной записки: ключевая динамика, отклонения, проблемные зоны, лучшие практики и рекомендуемые решения' },
+          desc: 'Автоматическое формирование еженедельной записки: ключевая динамика, отклонения, проблемные зоны, лучшие практики и рекомендуемые решения.\n\nОжидаемый эффект: сокращение времени подготовки аналитических материалов для руководства.\nУправленческая ценность: единая и регулярно обновляемая картина состояния проекта с фокусом на действиях, а не только на показателях.' },
       ]
     },
     {
       customer: 'Медникова С.А.', dept: 'Директор (Служба контроля и бухгалтерского учета ГКУ)',
       items: [
         { id: 11, title: 'Единая онлайн-платформа передачи материальных ценностей («Электронная площадка»)', techs: ['idp'], status: 'proposed',
-          desc: 'Организация единой платформы размещения, поиска и передачи материальных ценностей между подведомственными учреждениями Департамента' },
+          desc: 'Организация единой платформы размещения и поиска для последующей передачи материальных ценностей между подведомственными Департаменту труда и социальной защиты населения города Москвы учреждениями.\n\nНа «Электронной площадке» подлежит размещению информация о материальных ценностях, которые планируется передавать между учреждениями. При активном использовании учреждения смогут наглядно видеть имеющиеся в наличии материальные ценности с их объемами, что позволит оперативно решать вопросы передачи и эффективно использовать средства бюджета города Москвы.\n\nФункционал: регистрация с ролями «Поставщик»/«Заказчик», размещение карточки товара (наименование, характеристики, балансовая стоимость, фото), поиск по каталогу, оформление заказа, автоматическая рассылка уведомлений, интеграция с 1С и МосЭДО.' },
       ]
     },
     {
       customer: 'Данько Т.В.', dept: 'Управление опеки и попечительства',
       items: [
         { id: 12, title: 'Сбор и анализ сведений о подопечных детях и опекунах из внешних источников', techs: ['nlp','anomaly'], status: 'proposed',
-          desc: 'Анализ соцсетей, СМИ, государственных реестров и баз данных для выявления суицидальной направленности среди подростков, вовлечения в противоправные действия либо нарушения прав' },
+          desc: 'Сбор и анализ сведений о подопечных детях либо их опекунах (при необходимости) из разных источников (соцсети, СМИ, государственные реестры, базы данных) для своевременного выявления случаев суицидальной направленности среди подростков, вовлечения подопечных в противоправные действия либо нарушения их прав, и проведения профилактических мероприятий.' },
         { id: 13, title: 'Мониторинг психологического состояния ребенка при беседе', techs: ['speech','emotion'], status: 'proposed',
-          desc: 'Оценка психологического состояния в момент проведения беседы в рамках обследования условий жизни' },
+          desc: 'Мониторинг психологического состояния ребенка в момент проведения с ним беседы в рамках обследования условий его жизни.' },
         { id: 14, title: 'Мониторинг расходования денежных средств на содержание подопечных', techs: ['anomaly'], status: 'proposed',
-          desc: 'Контроль целевого использования выплачиваемых средств с помощью ИИ-анализа транзакций' },
+          desc: 'Мониторинг расходования денежных средств, выплачиваемых на содержание подопечных.' },
         { id: 15, title: 'Система автоматического обнаружения событий «Побег» и «Нарушение режима»', techs: ['cv'], status: 'pilot',
-          desc: 'Использование детектора силуэтов ГИС ЕЦХД в ГБУ ЦССВ имени Ю.В. Никулина. Ведется подготовка к пилотированию' },
+          desc: 'Подготовка к пилотированию системы автоматического обнаружения событий «Побег» и «Нарушение режима» в ГБУ ЦССВ имени Ю.В. Никулина с использованием детектора силуэтов ГИС ЕЦХД.' },
         { id: 16, title: 'Пилотные VR- и роботизированные продукты для ЦССВ', techs: ['cv','speech'], status: 'pilot',
-          desc: 'VR Inclusion, экзоскелеты, автоматизированная уборка и цифровизация протоколирования — ЦССВ готовы участвовать в пилотном тестировании' },
+          desc: 'ЦССВ готовы принимать участие в реализации пилотного тестирования продуктов: VR Inclusion, экзоскелеты, автоматизированная уборка и цифровизация протоколирования.' },
       ]
     },
     {
       customer: 'Морозов А.Е.', dept: 'Управление содействия занятости населения (ЦЗН «Моя работа»)',
       items: [
         { id: 17, title: 'Сервис речевой аналитики', techs: ['speech'], status: 'implemented',
-          desc: 'Запись диалогов сотрудников и посетителей с последующим автоматическим анализом для оценки соблюдения стандартов общения' },
+          desc: 'Производится запись диалогов сотрудников и посетителей, с последующим автоматическим анализом, который позволяет оценивать соблюдение принятых стандартов в общении с клиентами и улучшать качество обслуживания.' },
         { id: 18, title: 'HR-капсулы', techs: ['assistant','genai'], status: 'implemented',
-          desc: 'Автономные устройства с виртуальным консультантом для составления резюме, подбора вакансий и программ обучения' },
+          desc: 'Автономные устройства с виртуальным консультантом, который помогает составить резюме, подобрать вакансии и программы обучения.' },
         { id: 19, title: 'Атлас профессий', techs: ['recsys','knowledge'], status: 'implemented',
-          desc: 'Подбор траектории обучения и анализ рынка труда по результатам профориентации' },
+          desc: 'Подбор траектории обучения и анализ рынка труда по результатам профориентационных мероприятий и выбранных профессий.' },
         { id: 20, title: 'Сервис транскрибации аудио- и видеозаписей', techs: ['speech'], status: 'implemented',
-          desc: 'Протоколирование видеовстреч с помощью автоматической расшифровки' },
+          desc: 'Сервис транскрибации аудио- и видеозаписей — применяется для протоколирования видеовстреч.' },
         { id: 21, title: 'Сервис формирования инструкций на основе видеозаписей', techs: ['cv','genai'], status: 'implemented',
-          desc: 'Подготовка предварительного текстового документа с изображениями для последующего изготовления пользовательской инструкции' },
+          desc: 'Сервис формирования инструкций на основе видеозаписей — применяется для подготовки предварительного текстового документа с изображениями, с целью последующего изготовления пользовательской инструкции.' },
         { id: 22, title: 'Использование нейросетей для написания web-кода', techs: ['genai'], status: 'implemented',
-          desc: 'Генерация лендингов и регистрационных форм с помощью общедоступных нейросетей' },
+          desc: 'Использование общедоступных нейросетей для написания программного кода web-приложений (лендинги, регистрационные формы).' },
         { id: 23, title: 'ИИ для обработки больших массивов данных и аналитики', techs: ['predictive','nlp'], status: 'implemented',
-          desc: 'Формирование статистических и аналитических данных на основе больших массивов информации' },
+          desc: 'Применение технологий искусственного интеллекта для обработки больших массивов информации для формирования статистических и аналитических данных.' },
       ]
     },
     {
       customer: 'Романова О.С.', dept: 'Управление организации социального обслуживания на дому',
       items: [
         { id: 24, title: 'Голосовые ИИ-технологии для автоматизации обзвонов и мониторинга 73 000 граждан', techs: ['speech','voice_bio','emotion','assistant'], status: 'proposed',
-          desc: 'Распознавание речи, верификация личности, экстренное реагирование, интеграция с голосовым ассистентом «Алиса» для граждан с ментальными дефицитами, ИИ-чекапы для оценки способности к самообслуживанию' },
+          desc: 'Интеграция голосовых ИИ-технологий — система автоматизации обзвонов и мониторинга состояния граждан, направленная на повышение безопасности, качества жизни и эффективности работы социальных служб.\n\nЦелевая аудитория: порядка 73 000 граждан, находящихся на социальном обслуживании на дому в городе Москве.\n\nФункции:\nа) Распознавание речи — анализ открытых ответов граждан для выявления признаков ухудшения жизненной ситуации (жалобы на здоровье, одиночество, бытовые проблемы).\nб) Верификация личности — подтверждение личности звонящего путём сравнения его голоса с голосовым архивом.\nв) Экстренное реагирование — мгновенная обработка критических вызовов и оперативная передача информации для оказания помощи.\nг) Интеграция с голосовым ассистентом «Алиса» — для граждан с ментальными дефицитами умная колонка выступает в роли «когнитивного проводника»: помощь в выполнении ежедневных рутин, защита от забывчивости (напомнить принять лекарства, выключить плиту).\nд) ИИ-чекапы — короткие опросы с маркерами изменения способности к самообслуживанию.\n\nОжидаемые результаты: увеличение срока действия индивидуальной программы при подтверждении ИИ стабильности состояния; оптимизация трудозатрат на функциональную диагностику примерно на 30%.' },
         { id: 25, title: 'Интеллектуальная фотофиксация контроля качества социальных услуг', techs: ['cv'], status: 'proposed',
-          desc: 'Верификация в реальном времени (наложение контура предыдущего кадра), сквозной фотоанализ из трёх источников, автоматическое выявление рисков изменения условий проживания' },
+          desc: 'Система оптимизации и повышения эффективности контроля качества и объема оказания социальных услуг за счет внедрения интеллектуальной фотофиксации.\n\nЦелевая аудитория — порядка 73 000 москвичей, находящихся на социальном обслуживании на дому.\n\nФункции:\nа) Верификация в реальном времени — автоматическое наложение полупрозрачного контура предыдущего кадра в момент съемки, что исключает фальсификацию, загрузку старых или чужих изображений.\nб) Сквозной фотоанализ — комплексное сопоставление фотографий квартиры из трех источников (базовые снимки инспектора, ежемесячные кадры соцработника, повторные снимки при плановом пересмотре).\nв) Автоматическое выявление рисков — ретроспективный анализ всей цепочки фотографий для самостоятельной оценки ИИ динамики изменения условий проживания.\n\nОжидаемые результаты: пересмотр частоты визитов социнспекторов (один раз в два года вместо двух раз в год); оптимизация трудозатрат примерно на 30%.' },
         { id: 26, title: 'ИИ-технология признания граждан нуждающимися в социальном обслуживании', techs: ['nlp','idp'], status: 'pilot',
-          desc: 'Внедрение в ИС «Система долговременного ухода и социальные стационары» совместно с ГКУ «Инфогород» для оптимизации трудозатрат' },
+          desc: 'Внедрение в ИС «Система долговременного ухода и социальные стационары» ИИ-технологии в процесс признания граждан нуждающимися в социальном обслуживании в целях оптимизации трудозатрат при рассмотрении вопроса о признании гражданина нуждающимся.\n\nРабота ведется совместно с ГКУ «Инфогород».' },
       ]
     },
     {
       customer: 'Табурчану А.В.', dept: 'Управление по социальной интеграции лиц с ограничениями жизнедеятельности',
       items: [
         { id: 27, title: 'ИИ-поддержка специалистов системы комплексной реабилитации', techs: ['assistant','knowledge','nlp','speech'], status: 'proposed',
-          desc: 'Интеллектуальная поддержка операторов контакт-центра и специалистов по маршрутизации, единая база знаний с интеллектуальным поиском, ИИ-помощник с прослушиванием звонков в реальном времени, интеграция с МИССО' },
+          desc: 'Внедрение технологий искусственного интеллекта в деятельность специалистов системы комплексной реабилитации:\n- интеллектуальная поддержка операторов контакт-центра;\n- интеллектуальная поддержка специалистов по маршрутизации;\n- автоматизация подготовки аналитических и справочных материалов;\n- создание единой базы знаний с интеллектуальным поиском;\n- интеллектуальный анализ обращений граждан.\n\nПример: ИИ-помощник для операторов контакт-центра ГБУ ЦСРД — прослушивание звонков в реальном времени, вывод на экран вспомогательной информации с вариантами ответов, ссылками на НПА, интеграция с МИССО (при звонке определяется ФИО, открывается карточка ПСУ в МИССО либо ограниченный дашборд).' },
         { id: 28, title: 'Цифровой двойник системы комплексной реабилитации', techs: ['digital_twin','predictive'], status: 'proposed',
-          desc: 'Мониторинг загрузки учреждений, коечного фонда и кадровых ресурсов, прогнозирование, моделирование сценариев, цифровые паспорта учреждений, автоматизированная отчётность' },
+          desc: 'Создание специализированных инструментов поддержки управления системой комплексной реабилитации:\n- мониторинг загрузки учреждений;\n- мониторинг коечного фонда и кадровых ресурсов;\n- прогнозирование загрузки;\n- моделирование различных сценариев развития системы;\n- создание цифровых паспортов учреждений;\n- автоматизированная подготовка аналитической отчетности.\n\nСовокупность указанных решений может стать основой цифрового двойника системы комплексной реабилитации города Москвы.' },
         { id: 29, title: 'Сервисы цифрового сопровождения граждан в реабилитации', techs: ['idp'], status: 'proposed',
-          desc: 'Электронная подача заявлений, цифровое сопровождение маршрута реабилитации, контроль статуса услуг, электронная запись, уведомления и документы' },
+          desc: 'Развитие сервисов цифрового сопровождения граждан, предусматривающих:\n- электронную подачу заявлений;\n- цифровое сопровождение маршрута комплексной реабилитации;\n- контроль статуса оказания услуг;\n- электронную запись в реабилитационные учреждения;\n- получение уведомлений и документов в электронном виде.\n\nВ перспективе — предоставление сервисов с использованием существующих городских цифровых платформ, обеспечив единое цифровое пространство получения медицинских услуг и услуг комплексной реабилитации.' },
       ]
     },
     {
       customer: 'Фирсова Т.И.', dept: 'Управление организации стационарного социального обслуживания',
       items: [
         { id: 30, title: 'Речевой анализатор экстренных состояний «ВербAI» (телефон 051)', techs: ['speech','emotion'], status: 'pilot',
-          desc: 'Пилотный проект для телефона неотложной психологической помощи. ДИТ проводит предпроектное обследование. Функционал ИИ-ассистента в реальном времени пока не реализован' },
+          desc: 'Пилотный проект «Речевой анализатор экстренных состояний «ВербAI» для телефона неотложной психологической помощи 051.\n\nДИТ проводит предпроектное обследование и уточняет функциональные требования. На текущем этапе функционал ИИ-ассистента в режиме реального времени не реализуется из-за технических ограничений инфраструктуры.' },
         { id: 31, title: 'ИИ-помощник Координационного центра стационарного социального обслуживания', techs: ['speech','assistant'], status: 'proposed',
-          desc: 'Прослушивание звонков в реальном времени, вывод вспомогательной информации, варианты ответов, ссылки на НПА, интеграция с ИС СДУ' },
+          desc: 'Внедрение ИИ-помощника для специалистов Координационного центра по вопросам стационарного социального обслуживания.\n\nПредполагается: прослушивание звонков в реальном времени, вывод на экран вспомогательной информации (варианты ответов, ссылки на нормативные акты), интеграция с ИС СДУ. При звонке система будет определять ФИО, открывать карточку гражданина в ИС СДУ (при наличии) либо показывать ограниченный дашборд с краткой информацией.\n\nПродукт должен интегрироваться с информационными системами ДТСЗН, ДЗМ, Госуслугами и др.' },
         { id: 32, title: 'IVR (интерактивное голосовое меню) в CRM-системе', techs: ['ivr','speech'], status: 'planning',
-          desc: 'Приветствие, тональный набор (DTMF), инструкции, маршрутизация, справочная информация, сбор данных до соединения, аналитика' },
+          desc: 'Внедрение IVR (интерактивного голосового меню) в CRM-системе.\n\nФункции: система приветствует звонящего, сообщает куда он попал, предлагает опции через тональный набор (DTMF), дает инструкции, маршрутизирует звонки, воспроизводит справочную информацию, переводит на сотрудника или группу, запускает другие сценарии меню.\n\nПреимущества интеграции IVR с CRM: автоматизация приёма звонков, умная маршрутизация, сбор данных до соединения, аналитика и отчётность, улучшение клиентского опыта.' },
       ]
     },
   ];
@@ -300,12 +326,9 @@
     planning: { label: 'Планируется', cls: 'tag-planning' },
   };
 
-  /* --- Data --- */
   let allItems = [];
   INITIATIVES.forEach(g => g.items.forEach(i => { allItems.push(i); i._customer = g.customer; i._dept = g.dept; }));
 
-  /* --- State --- */
-  let activeGroups = new Set();
   let activeTechs = new Set();
   let searchTerm = '';
   let sortKey = '';
@@ -314,33 +337,31 @@
   function groupOf(techId) { return TECH_TO_GROUP[techId]; }
   function groupsOf(item) { const s = new Set(); item.techs.forEach(t => s.add(groupOf(t))); return s; }
 
-  /* --- Render: Reference --- */
+  /* --- Reference --- */
   function renderRef() {
     const body = document.getElementById('refBody');
     body.innerHTML = GROUPS.map(g =>
-      '<div class="ref-group"><div class="ref-group-title"><span class="rgdot" style="background:' + g.color + '"></span>' + g.ru + '</div>' +
+      '<div class="ref-group"><div class="ref-group-title"><span class="ref-dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + g.color + ';margin-right:4px"></span>' + g.ru + '</div>' +
       '<div class="ref-sub-grid">' + g.techs.map(t =>
-        '<div class="ref-sub-item"><span class="rsdot" style="background:' + g.color + '"></span><div><strong>' + t.ru + '</strong><div class="desc">' + t.desc + '</div></div></div>'
+        '<div class="ref-sub-item"><span class="ref-dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:' + g.color + ';flex-shrink:0"></span><div><strong>' + t.ru + '</strong><div class="desc">' + t.desc + '</div></div></div>'
       ).join('') + '</div></div>'
     ).join('');
   }
 
-  /* --- Render: Filters --- */
+  /* --- Filters --- */
   function renderFilters() {
     const container = document.getElementById('filterGroups');
     let html = '<div class="filter-row"><span style="font-size:13px;font-weight:600;color:#475569">Фильтр:</span>' +
-      GROUPS.map(g => `<div class="group-chip" data-group="${g.id}" onclick="toggleGroupTech('${g.id}')"><span class="gdot" style="background:${g.color}"></span>${g.ru}</div>`).join('') +
+      GROUPS.map(g => `<div class="group-chip" data-group="${g.id}" onclick="toggleGroupTech('${g.id}')"><span class="gdot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${g.color}"></span>${g.ru}</div>`).join('') +
       '<button class="reset-btn" onclick="resetFilters()">Сбросить</button></div>';
-
     GROUPS.forEach(g => {
       html += '<div class="filter-row"><span class="filter-label" style="color:' + g.color + '">' + g.id.toUpperCase() + ':</span>' +
-        g.techs.map(t => `<div class="sub-chip" data-tech="${t.id}" onclick="toggleTech('${t.id}')"><span class="sdot" style="background:${g.color}"></span>${t.ru}</div>`).join('') + '</div>';
+        g.techs.map(t => `<div class="sub-chip" data-tech="${t.id}" onclick="toggleTech('${t.id}')"><span class="sdot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${g.color}"></span>${t.ru}</div>`).join('') + '</div>';
     });
-
     container.innerHTML = html;
   }
 
-  /* --- Render: Groups (customer sections) --- */
+  /* --- Groups rendering --- */
   function sorted(items) {
     if (!sortKey) return items.slice();
     const copy = items.slice();
@@ -358,61 +379,51 @@
     const container = document.getElementById('groups');
     container.innerHTML = INITIATIVES.map(g => {
       const rows = sorted(g.items).map(item => genRow(item)).join('');
-      return `<div class="group">
-        <div class="group-header" onclick="toggleGroup(this)">
-          <h2>${g.customer} <span class="dept">${g.dept}</span> <span class="badge">${g.items.length}</span></h2>
-          <span class="arrow">&#9660;</span>
-        </div>
-        <div class="group-body"><table>${genThead()}<tbody>${rows}</tbody></table></div>
-      </div>`;
+      return '<div class="group"><div class="group-header" onclick="toggleGroup(this)"><h2>' + g.customer +
+        ' <span class="dept">' + g.dept + '</span> <span class="badge">' + g.items.length + '</span></h2>' +
+        '<span class="arrow">&#9660;</span></div><div class="group-body"><table>' + genThead() + '<tbody>' + rows + '</tbody></table></div></div>';
     }).join('');
   }
 
   function genThead() {
-    const sortArrow = (key) => sortKey === key ? (sortDir === 1 ? ' ▲' : ' ▼') : ' ↕';
-    return '<thead><tr><th class="col-id">#</th>' +
-      '<th class="col-title sortable" onclick="toggleSort(\'title\')">Инициатива <span class="sarr">' + sortArrow('title') + '</span></th>' +
-      '<th class="col-comment">📝</th>' +
-      '<th class="col-complexity sortable" onclick="toggleSort(\'complexity\')">Охват <span class="sarr">' + sortArrow('complexity') + '</span></th>' +
-      '<th class="col-status sortable" onclick="toggleSort(\'status\')">Статус <span class="sarr">' + sortArrow('status') + '</span></th>' +
-      GROUPS.map(g => `<th class="group-cell" title="${g.ru}"><span class="gdot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${g.color}"></span> ${g.ru.replace(/\(.*/, '').trim()}</th>`).join('') +
+    const sa = (key) => sortKey === key ? (sortDir === 1 ? ' &#9650;' : ' &#9660;') : ' &#8645;';
+    return '<thead><tr><th class="col-id">#</th><th class="col-title sortable" onclick="toggleSort(\'title\')">Инициатива <span class="sarr">' + sa('title') + '</span></th>' +
+      '<th class="col-comment">&#128221;</th><th class="col-complexity sortable" onclick="toggleSort(\'complexity\')">Охват <span class="sarr">' + sa('complexity') + '</span></th>' +
+      '<th class="col-status sortable" onclick="toggleSort(\'status\')">Статус <span class="sarr">' + sa('status') + '</span></th>' +
+      GROUPS.map(g => '<th class="group-cell" title="' + g.ru + '"><span class="gdot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + g.color + '"></span> ' + g.ru.replace(/\(.*/, '').trim() + '</th>').join('') +
       '</tr></thead>';
   }
 
   function genRow(item) {
     const s = STATUS_MAP[item.status] || STATUS_MAP.proposed;
     const activeGroupIds = groupsOf(item);
-    return `<tr data-id="${item.id}">
-      <td class="col-id">${item.id}</td>
-      <td class="col-title"><div>${item.title}</div><div class="desc">${item.desc}</div></td>
-      <td class="col-comment"><button class="comment-btn ${getComment(item.id) ? 'has-note' : ''}" data-id="${item.id}" onclick="openComment(event, ${item.id})">💬</button></td>
-      <td class="col-complexity">${genComplexity(item)}</td>
-      <td class="col-status"><span class="tag ${s.cls}">${s.label}</span></td>
-      ${GROUPS.map(g => {
+    return '<tr data-id="' + item.id + '">' +
+      '<td class="col-id">' + item.id + '</td>' +
+      '<td class="col-title"><div><button class="expand-btn" onclick="openModal(' + item.id + ')" title="Подробнее">+</button>' + item.title + '</div><div class="desc">' + item.desc.split('\n')[0] + '</div></td>' +
+      '<td class="col-comment"><button class="comment-btn ' + (getComment(item.id) ? 'has-note' : '') + '" data-id="' + item.id + '" onclick="openComment(event, ' + item.id + ')">&#128172;</button></td>' +
+      '<td class="col-complexity">' + genComplexity(item) + '</td>' +
+      '<td class="col-status"><span class="tag ' + s.cls + '">' + s.label + '</span></td>' +
+      GROUPS.map(g => {
         const active = activeGroupIds.has(g.id);
-        const subTechs = item.techs.filter(t => groupOf(t) === g.id).map(t => { const found = ALL_TECHS.find(x => x.id === t); return found ? found.ru : t; });
+        const subTechs = item.techs.filter(t => groupOf(t) === g.id).map(t => { const f = ALL_TECHS.find(x => x.id === t); return f ? f.ru : t; });
         const tip = active ? subTechs.join(', ') : '';
-        return '<td class="group-cell"><div class="group-dot-wrap"><span class="group-dot ' + (active ? 'active' : '') + '" style="background:' + g.color + '"></span>' +
-          (tip ? '<span class="group-tip">' + tip + '</span>' : '') + '</div></td>';
-      }).join('')}
-    </tr>`;
+        return '<td class="group-cell"><div class="group-dot-wrap"><span class="group-dot ' + (active ? 'active' : '') + '" style="background:' + g.color + '"></span>' + (tip ? '<span class="group-tip">' + tip + '</span>' : '') + '</div></td>';
+      }).join('') + '</tr>';
   }
 
   function genComplexity(item) {
     const n = groupsOf(item).size;
     const pct = Math.round((n / GROUPS.length) * 100);
     const hue = 120 - (n / GROUPS.length) * 120;
-    return `<span class="complexity-bar"><span class="complexity-num">${n}</span><span class="bar-track"><span class="bar-fill" style="width:${pct}%;background:hsl(${hue},75%,50%)"></span></span></span>`;
+    return '<span class="complexity-bar"><span class="complexity-num">' + n + '</span><span class="bar-track"><span class="bar-fill" style="width:' + pct + '%;background:hsl(' + hue + ',75%,50%)"></span></span></span>';
   }
 
-  /* --- Filters --- */
+  /* --- Filter Logic --- */
   function syncChips() {
     document.querySelectorAll('.group-chip').forEach(chip => {
       const gid = chip.dataset.group;
       const allActive = GROUPS.find(g => g.id === gid).techs.every(t => activeTechs.has(t.id));
-      const someActive = GROUPS.find(g => g.id === gid).techs.some(t => activeTechs.has(t.id));
       chip.classList.toggle('active', allActive);
-      chip.style.borderColor = someActive ? GROUPS.find(g => g.id === gid).color : '';
     });
     document.querySelectorAll('.sub-chip').forEach(chip => {
       chip.classList.toggle('active', activeTechs.has(chip.dataset.tech));
@@ -424,38 +435,31 @@
     const all = g.techs.every(t => activeTechs.has(t.id));
     if (all) { g.techs.forEach(t => activeTechs.delete(t.id)); }
     else { g.techs.forEach(t => activeTechs.add(t.id)); }
-    syncChips();
-    applyFilters();
+    syncChips(); applyFilters();
   }
 
   function toggleTech(id) {
     if (activeTechs.has(id)) activeTechs.delete(id); else activeTechs.add(id);
-    syncChips();
-    applyFilters();
+    syncChips(); applyFilters();
   }
 
   function resetFilters() {
     activeTechs.clear();
     document.getElementById('searchInput').value = '';
-    syncChips();
-    applyFilters();
+    syncChips(); applyFilters();
   }
 
   function applyFilters() {
     searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
     let visibleCount = 0;
-
     document.querySelectorAll('.group').forEach(group => {
       let groupVisible = false;
       group.querySelectorAll('tbody tr').forEach(row => {
         const id = parseInt(row.dataset.id);
         const item = allItems.find(i => i.id === id);
         if (!item) return;
-
         let show = true;
-        if (activeTechs.size > 0) {
-          if (!item.techs.some(t => activeTechs.has(t))) show = false;
-        }
+        if (activeTechs.size > 0 && !item.techs.some(t => activeTechs.has(t))) show = false;
         if (show && searchTerm) {
           const haystack = (item.title + ' ' + item.desc).toLowerCase();
           if (!haystack.includes(searchTerm)) show = false;
@@ -466,19 +470,15 @@
       group.style.display = groupVisible ? '' : 'none';
       if (groupVisible) visibleCount += group.querySelectorAll('tbody tr:not(.hidden)').length;
     });
-
-    const total = allItems.length;
-    const label = activeTechs.size || searchTerm
-      ? 'Всего инициатив: ' + total + ' | Отобрано: ' + visibleCount
-      : 'Всего инициатив: ' + total;
-    document.getElementById('counter').textContent = label;
+    document.getElementById('counter').textContent = activeTechs.size || searchTerm
+      ? 'Всего инициатив: ' + allItems.length + ' | Отобрано: ' + visibleCount
+      : 'Всего инициатив: ' + allItems.length;
   }
 
   function toggleSort(key) {
-    if (sortKey === key) { sortDir = -sortDir; }
+    if (sortKey === key) sortDir = -sortDir;
     else { sortKey = key; sortDir = 1; }
-    renderGroups();
-    applyFilters();
+    renderGroups(); applyFilters();
   }
 
   function toggleGroup(header) {
@@ -495,8 +495,6 @@
     else localStorage.removeItem('oc_comment_' + id);
   }
 
-  let openPopupId = null;
-
   function openComment(ev, id) {
     ev.stopPropagation();
     closePopup();
@@ -507,17 +505,14 @@
     const textarea = popup.querySelector('textarea');
     const saved = popup.querySelector('.popup-saved');
     const clearBtn = popup.querySelector('.popup-clear');
-
     textarea.value = getComment(id);
     saved.textContent = textarea.value ? 'Сохранено' : '';
     popup.style.top = (rect.bottom + 6) + 'px';
     popup.style.left = Math.min(rect.left - 120, window.innerWidth - 300) + 'px';
-    if (popup.style.left < 10) popup.style.left = '10px';
+    if (parseInt(popup.style.left) < 10) popup.style.left = '10px';
     popup.classList.add('open');
     overlay.classList.add('open');
-    openPopupId = id;
     textarea.focus();
-
     textarea.oninput = function() {
       saveComment(id, this.value);
       saved.textContent = this.value.trim() ? 'Сохранено' : '';
@@ -538,8 +533,49 @@
   function closePopup() {
     document.getElementById('commentPopup').classList.remove('open');
     document.getElementById('commentOverlay').classList.remove('open');
-    openPopupId = null;
   }
+
+  /* --- Modal --- */
+  function openModal(id) {
+    const item = allItems.find(i => i.id === id);
+    if (!item) return;
+    const techGroups = {};
+    item.techs.forEach(tid => {
+      const gid = groupOf(tid);
+      if (!techGroups[gid]) techGroups[gid] = [];
+      const t = ALL_TECHS.find(x => x.id === tid);
+      if (t) techGroups[gid].push(t);
+    });
+
+    document.getElementById('modalTitle').textContent = item.title;
+    const s = STATUS_MAP[item.status] || STATUS_MAP.proposed;
+    document.getElementById('modalBody').innerHTML =
+      '<div class="modal-meta">' +
+      '<span>&#128101; ' + item._customer + ' (' + item._dept + ')</span>' +
+      '<span class="tag ' + s.cls + '">' + s.label + '</span>' +
+      '<span>&#128200; Охват: ' + groupsOf(item).size + ' из ' + GROUPS.length + ' групп</span>' +
+      '</div>' +
+      '<div class="modal-section"><div class="modal-label">Описание</div><div class="modal-text">' + item.desc + '</div></div>' +
+      '<div class="modal-section"><div class="modal-label">Технологии (' + item.techs.length + ')</div><div class="modal-techs">' +
+      Object.entries(techGroups).map(([gid, techs]) =>
+        techs.map(t => '<span class="modal-tech-tag"><span class="mtdot" style="background:' + t.color + '"></span>' + t.ru + '</span>').join('')
+      ).join('') + '</div></div>' +
+      (getComment(id) ? '<div class="modal-section"><div class="modal-label">Ваша заметка</div><div class="modal-text" style="color:#64748b;font-size:12px">' + getComment(id) + '</div></div>' : '');
+
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.getElementById('modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closeModal(); closePopup(); }
+  });
 
   /* --- Init --- */
   renderRef();
@@ -551,7 +587,6 @@
   document.getElementById('searchInput').addEventListener('input', applyFilters);
   document.getElementById('refHeader').addEventListener('click', function() {
     document.getElementById('refBody').classList.toggle('open');
-    document.getElementById('refArrow').classList.toggle('open');
   });
 </script>
 </body>
