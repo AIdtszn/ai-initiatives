@@ -1554,6 +1554,8 @@
     if (e.key === 'Escape') { closeModal(); closePopup(); closeSubmitModal(); }
   });
 
+  const STORAGE_KEY = 'oc_additional';
+
   try {
     renderRef();
     renderFilters();
@@ -1567,8 +1569,6 @@
   document.getElementById('refHeader').addEventListener('click', function() {
     document.getElementById('refBody').classList.toggle('open');
   });
-
-  const STORAGE_KEY = 'oc_additional';
 
   function loadAdditional() {
     try {
