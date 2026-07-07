@@ -314,10 +314,6 @@
         </div>
         <div class="file-info" id="submitFileInfo"></div>
       </div>
-      <div class="form-group">
-        <label>Технологии ИИ, используемые в инициативе *</label>
-        <div class="tech-grid" id="techCheckboxes"></div>
-      </div>
       <div class="form-actions">
         <button class="form-cancel" onclick="closeSubmitModal()">Отмена</button>
         <button class="form-submit" id="submitBtn" onclick="handleSubmit()">Отправить</button>
@@ -1585,7 +1581,6 @@
     document.getElementById('submitOverlay').classList.add('open');
     document.getElementById('submitModal').classList.add('open');
     document.body.style.overflow = 'hidden';
-    renderTechCheckboxes();
     document.getElementById('submitTitle').focus();
   }
 
@@ -1597,21 +1592,39 @@
     document.getElementById('submitDesc').value = '';
     document.getElementById('submitCustomer').value = '';
     document.getElementById('submitDept').value = '';
-    document.querySelectorAll('#techCheckboxes input[type="checkbox"]').forEach(function(cb) { cb.checked = false; });
     document.getElementById('submitFileInfo').textContent = '';
     document.getElementById('submitFileInfo').style.display = 'none';
     _submittedFile = null;
   }
 
-  function renderTechCheckboxes() {
-    const container = document.getElementById('techCheckboxes');
-    container.innerHTML = GROUPS.map(g =>
-      '<div><div class="tech-group-label" style="color:' + g.color + '">' + g.ru + '</div>' +
-      '<div class="tech-check-row">' +
-      g.techs.map(t =>
-        '<label><input type="checkbox" name="tech" value="' + t.id + '" style="accent-color:' + g.color + '"> ' + t.ru + '</label>'
-      ).join('') + '</div></div>'
-    ).join('');
+  function detectTechs(text) {
+    var lower = text.toLowerCase();
+    var found = [];
+    ALL_TECHS.forEach(function(t) {
+      var keywords = [t.ru.toLowerCase(), t.desc.toLowerCase()];
+      var techWords = t.id.replace(/_/g, ' ');
+      keywords.push(techWords);
+      var match = false;
+      keywords.forEach(function(kw) {
+        if (kw.length > 3 && lower.indexOf(kw) !== -1) match = true;
+      });
+      if (t.id === 'nlp' && (lower.indexOf('nlp') !== -1 || lower.indexOf('естествен') !== -1)) match = true;
+      if (t.id === 'genai' && (lower.indexOf('генератив') !== -1 || lower.indexOf('genai') !== -1 || lower.indexOf('llm') !== -1)) match = true;
+      if (t.id === 'assistant' && (lower.indexOf('ассистент') !== -1 || lower.indexOf('чат-бот') !== -1 || lower.indexOf('виртуальн') !== -1)) match = true;
+      if (t.id === 'knowledge' && (lower.indexOf('база знан') !== -1 || lower.indexOf('граф знан') !== -1)) match = true;
+      if (t.id === 'emotion' && (lower.indexOf('тональн') !== -1 || lower.indexOf('эмоц') !== -1)) match = true;
+      if (t.id === 'predictive' && (lower.indexOf('прогноз') !== -1 || lower.indexOf('предиктив') !== -1 || lower.indexOf('предсказа') !== -1)) match = true;
+      if (t.id === 'recsys' && (lower.indexOf('рекомендател') !== -1 || lower.indexOf('подбор') !== -1)) match = true;
+      if (t.id === 'anomaly' && (lower.indexOf('аномал') !== -1 || lower.indexOf('отклонен') !== -1)) match = true;
+      if (t.id === 'cv' && (lower.indexOf('компьютерн') !== -1 || lower.indexOf('изображен') !== -1 || lower.indexOf('детекц') !== -1)) match = true;
+      if (t.id === 'idp' && (lower.indexOf('idp') !== -1 || lower.indexOf('ocr') !== -1 || lower.indexOf('документ') !== -1)) match = true;
+      if (t.id === 'speech' && (lower.indexOf('реч') !== -1 || lower.indexOf('аудио') !== -1 || lower.indexOf('транскриб') !== -1)) match = true;
+      if (t.id === 'voice_bio' && (lower.indexOf('биометр') !== -1 || lower.indexOf('голос') !== -1)) match = true;
+      if (t.id === 'ivr' && (lower.indexOf('ivr') !== -1 || lower.indexOf('голосов') !== -1)) match = true;
+      if (t.id === 'digital_twin' && ((lower.indexOf('цифров') !== -1 && lower.indexOf('двойн') !== -1) || lower.indexOf('digital twin') !== -1)) match = true;
+      if (match) found.push(t.id);
+    });
+    return found.filter(function(v, i, a) { return a.indexOf(v) === i; });
   }
 
   let _submittedFile = null;
@@ -1686,8 +1699,8 @@
     const dept = document.getElementById('submitDept').value.trim();
     if (!title) { alert('Введите название инициативы'); return; }
     if (!desc) { alert('Введите описание инициативы'); return; }
-    const techs = Array.from(document.querySelectorAll('#techCheckboxes input[name="tech"]:checked')).map(function(cb) { return cb.value; });
-    if (!techs.length) { alert('Выберите хотя бы одну технологию ИИ'); return; }
+    var techs = detectTechs(title + ' ' + desc);
+    if (!techs.length) techs = ['nlp'];
     const newItem = {
       id: getNextId(),
       title: title,
