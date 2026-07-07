@@ -1497,7 +1497,8 @@
       '<div class="rm-block-label">&#127959; Архитектура</div><div class="rm-arch">' + r.arch + '</div>' +
       '<div class="rm-block-label">&#128203; Компоненты и этапы внедрения</div>' +
       '<table class="rm-stages"><tr><th>Компонент / Этап</th><th>Трудоёмкость</th><th>Зависимости</th></tr>' +
-      r.stages.map(st => '<tr><td><strong>' + st.name + '</strong></td><td>' + st.effort + '</td><td>' + (st.deps.length ? st.deps.join(', ') : '—') + '</td></tr>').join('') + '</table>' +
+      r.stages.map(st => '<tr><td><strong>' + st.name + '</strong></td><td>' + st.effort + '</td><td>' + (st.deps.length ? st.deps.join(', ') : '—') + '</td></tr>').join('') +
+      (function() { var total = 0; r.stages.forEach(function(s) { var m = s.effort.match(/(\d+)/); if (m) total += parseInt(m[1], 10); }); return total ? '<tr style="background:#f1f5f9;font-weight:600"><td>Итого</td><td>' + total + ' нед</td><td></td></tr>' : ''; })() + '</table>' +
       '<div class="rm-block-label">&#128736; Технологический стек</div>' +
       '<table class="stack-table"><tr><th>Компонент</th><th>Применение</th><th>Статус</th></tr>' + stackHtml + '</table>' +
       '<div class="rm-block-label">&#9888; Ключевые риски</div><ul class="rm-list">' + r.risks.map(rr => '<li>' + rr + '</li>').join('') + '</ul>' +
