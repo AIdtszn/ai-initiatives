@@ -65,6 +65,7 @@
   .expand-btn { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #10b981; background: none; color: #10b981; font-size: 13px; font-weight: 700; cursor: pointer; line-height: 1; margin-right: 6px; flex-shrink: 0; transition: .15s; }
   .expand-btn:hover { background: #10b981; color: #fff; }
 
+  .gcount { font-size: 10px; font-weight: 400; color: #94a3b8; margin-left: 2px; }
   .group-cell { text-align: center; white-space: nowrap; min-width: 48px; }
   .group-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; opacity: .15; transition: .15s; cursor: default; }
   .group-dot.active { opacity: 1; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
@@ -366,10 +367,8 @@
     if (!sortKey) return items.slice();
     const copy = items.slice();
     copy.sort((a, b) => {
-      let va, vb;
-      if (sortKey === 'title') { va = a.title; vb = b.title; }
-      else if (sortKey === 'complexity') { va = groupsOf(a).size; vb = groupsOf(b).size; }
-      else if (sortKey === 'status') { va = a.status; vb = b.status; }
+      const va = sortKeyOf(sortKey, a);
+      const vb = sortKeyOf(sortKey, b);
       return va < vb ? -sortDir : va > vb ? sortDir : 0;
     });
     return copy;
@@ -390,7 +389,7 @@
     return '<thead><tr><th class="col-id">#</th><th class="col-title sortable" onclick="toggleSort(\'title\')">Инициатива <span class="sarr">' + sa('title') + '</span></th>' +
       '<th class="col-comment">&#128221;</th><th class="col-complexity sortable" onclick="toggleSort(\'complexity\')">Охват <span class="sarr">' + sa('complexity') + '</span></th>' +
       '<th class="col-status sortable" onclick="toggleSort(\'status\')">Статус <span class="sarr">' + sa('status') + '</span></th>' +
-      GROUPS.map(g => '<th class="group-cell" title="' + g.ru + '"><span class="gdot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + g.color + '"></span> ' + g.ru.replace(/\(.*/, '').trim() + '</th>').join('') +
+      GROUPS.map(g => '<th class="group-cell sortable" onclick="toggleSort(\'' + g.id + '\')" title="' + g.ru + '"><span class="gdot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + g.color + '"></span> ' + g.ru.replace(/\(.*/, '').trim() + ' <span class="gcount" data-g="' + g.id + '"></span><span class="sarr">' + sa(g.id) + '</span></th>').join('') +
       '</tr></thead>';
   }
 
@@ -449,6 +448,21 @@
     syncChips(); applyFilters();
   }
 
+  function updateGroupCounters() {
+    const visibleItems = allItems.filter(item => {
+      const row = document.querySelector('tr[data-id="' + item.id + '"]');
+      return row && !row.classList.contains('hidden');
+    });
+    GROUPS.forEach(g => {
+      const used = new Set();
+      visibleItems.forEach(item => {
+        item.techs.forEach(t => { if (groupOf(t) === g.id) used.add(t); });
+      });
+      const el = document.querySelector('.gcount[data-g="' + g.id + '"]');
+      if (el) el.textContent = used.size + '/' + g.techs.length;
+    });
+  }
+
   function applyFilters() {
     searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
     let visibleCount = 0;
@@ -473,12 +487,20 @@
     document.getElementById('counter').textContent = activeTechs.size || searchTerm
       ? 'Всего инициатив: ' + allItems.length + ' | Отобрано: ' + visibleCount
       : 'Всего инициатив: ' + allItems.length;
+    updateGroupCounters();
   }
 
   function toggleSort(key) {
     if (sortKey === key) sortDir = -sortDir;
     else { sortKey = key; sortDir = 1; }
     renderGroups(); applyFilters();
+  }
+
+  function sortKeyOf(key, item) {
+    if (key === 'title') return item.title;
+    if (key === 'complexity') return groupsOf(item).size;
+    if (key === 'status') return item.status;
+    return item.techs.some(t => groupOf(t) === key) ? 1 : 0;
   }
 
   function toggleGroup(header) {
