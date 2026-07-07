@@ -1374,6 +1374,7 @@
     modalItemId = id;
     document.getElementById('modalTitle').textContent = item.title;
 
+    renderAnalysisBanner(item);
     renderTabBar(item, tabIndex || 0);
     renderDescriptionTab(item);
     renderServicesTab(item);
@@ -1384,6 +1385,25 @@
     document.getElementById('modalOverlay').classList.add('open');
     document.getElementById('modal').classList.add('open');
     document.body.style.overflow = 'hidden';
+  }
+
+  function renderAnalysisBanner(item) {
+    var banner = document.getElementById('analyzeBanner');
+    if (!banner) {
+      var body = document.getElementById('modalBody');
+      banner = document.createElement('div');
+      banner.id = 'analyzeBanner';
+      body.insertBefore(banner, body.firstChild);
+    }
+    if (item._isAdditional && (!item._services || !item._services.length)) {
+      banner.innerHTML = '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">' +
+        '<span style="font-size:13px;color:#1e40af">🔍 <strong>Инициатива требует анализа</strong> — заполните табы «Сервисы Москвы» и «Разработка»</span>' +
+        '<button onclick="analyzeItem(' + item.id + ')" style="background:#2563eb;color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer">Провести анализ</button>' +
+        '</div>';
+      banner.style.display = '';
+    } else {
+      banner.style.display = 'none';
+    }
   }
 
   function renderTabBar(item, activeIndex) {
@@ -1423,7 +1443,9 @@
     const svcs = item._services || [];
     const combos = item._combinations || [];
     if (!svcs.length) {
-      document.getElementById('tabServices').innerHTML = '<div style="color:#94a3b8;font-size:13px;font-style:italic;padding:12px 0">Для данной инициативы готовые сервисы Москвы не применимы. Требуется самостоятельная разработка.</div>';
+      document.getElementById('tabServices').innerHTML = (item._isAdditional
+        ? '<div style="color:#94a3b8;font-size:13px;font-style:italic;padding:12px 0">Для данной инициативы анализ ещё не проведён. Используйте кнопку «Провести анализ» выше.</div>'
+        : '<div style="color:#94a3b8;font-size:13px;font-style:italic;padding:12px 0">Для данной инициативы готовые сервисы Москвы не применимы. Требуется самостоятельная разработка.</div>');
       return;
     }
     const pm = svcs.filter(s => MOSCOW_SERVICES.find(ms => ms.id === s.serviceId)?.circuit === 'pm');
@@ -1459,7 +1481,9 @@
 
   function renderRoadmapTab(item) {
     if (!item.roadmap) {
-      document.getElementById('tabRoadmap').innerHTML = '<div style="color:#166534;background:#f0fdf4;border-radius:8px;padding:20px;text-align:center;font-size:14px"><span style="font-size:24px">✅</span><br><br><strong>Инициатива уже внедрена.</strong><br><span style="color:#475569;font-size:13px">Roadmap для самостоятельной разработки не предусмотрен.</span></div>';
+      document.getElementById('tabRoadmap').innerHTML = (item._isAdditional
+        ? '<div style="color:#94a3b8;background:#f8fafc;border-radius:8px;padding:20px;text-align:center;font-size:14px">🔍<br><br><strong>Анализ не проведён.</strong><br><span style="color:#64748b;font-size:13px">Нажмите «Провести анализ» чтобы сгенерировать roadmap.</span></div>'
+        : '<div style="color:#166534;background:#f0fdf4;border-radius:8px;padding:20px;text-align:center;font-size:14px"><span style="font-size:24px">✅</span><br><br><strong>Инициатива уже внедрена.</strong><br><span style="color:#475569;font-size:13px">Roadmap для самостоятельной разработки не предусмотрен.</span></div>');
       return;
     }
     const r = item.roadmap;
@@ -1627,6 +1651,91 @@
     return found.filter(function(v, i, a) { return a.indexOf(v) === i; });
   }
 
+  var TECH_SERVICE_MAP = {
+    'nlp':         { services: [2, 6, 4, 22, 26], arch: 'NLP-конвейер: предобработка текста → семантический анализ → классификация/извлечение → генерация ответа', stages: [{n:'Сбор и разметка данных', e:'2 нед'},{n:'Разработка NLP-пайплайна', e:'3 нед'},{n:'Интеграция и тестирование', e:'2 нед'},{n:'Пилотирование', e:'2 нед'}], stack: [{n:'RuBERT / DeepPavlov',u:'NLP-модели для русского языка',o:true},{n:'FastAPI',u:'Бэкенд для NLP-сервисов',o:true}], risks: ['Качество и объём размеченных данных','Галлюцинации LLM'], kpis: ['Точность классификации — >85%','F1 — >0.8'] },
+    'genai':       { services: [2, 1, 8, 11, 22], arch: 'LLM-пайплайн: промпт-инжиниринг → генерация (текст, код, изображения) → постобработка', stages: [{n:'Формирование библиотеки промптов', e:'1 нед'},{n:'Настройка LLM-генерации', e:'3 нед'},{n:'Интеграция с UI', e:'2 нед'},{n:'Пилот', e:'2 нед'}], stack: [{n:'Llama 3 / Mistral',u:'LLM для генерации',o:true},{n:'LangChain',u:'Оркестрация промптов',o:true},{n:'FastAPI',u:'Бэкенд',o:true}], risks: ['Качество выходных данных','Безопасность промптов'], kpis: ['ROUGE-L — >0.6','Время генерации — <3 с'] },
+    'assistant':   { services: [2, 22, 25], arch: 'Conversational AI: NLU → диалоговый менеджмент → генерация ответа → интеграция с CRM', stages: [{n:'Проектирование сценариев', e:'2 нед'},{n:'NLU-модель (intent classification)', e:'3 нед'},{n:'Интеграция с системами', e:'2 нед'},{n:'Пилотирование', e:'2 нед'}], stack: [{n:'Rasa / DeepPavlov',u:'NLU-модель ассистента',o:true},{n:'FastAPI',u:'Бэкенд',o:true},{n:'React',u:'UI чата',o:true}], risks: ['Покрытие интентов','Качество NLU на редких запросах'], kpis: ['F1 интентов — >0.9','CSAT — >4.0'] },
+    'knowledge':   { services: [6, 2], arch: 'База знаний + RAG: индексация → векторный поиск → LLM-генерация с контекстом', stages: [{n:'Сбор и подготовка корпуса', e:'2 нед'},{n:'Векторная индексация', e:'2 нед'},{n:'RAG-пайплайн', e:'3 нед'},{n:'UI и пилот', e:'2 нед'}], stack: [{n:'Qdrant / FAISS',u:'Векторное хранилище',o:true},{n:'LangChain',u:'RAG-оркестрация',o:true},{n:'Llama 3',u:'LLM',o:true}], risks: ['Качество исходных документов','Галлюцинации'], kpis: ['Точность retrieval — >90%','Время ответа — <5 с'] },
+    'emotion':     { services: [2, 4, 22], arch: 'Sentiment analysis pipeline: сбор текстов → предобработка → классификация тональности → дашборд', stages: [{n:'Разметка тональности', e:'2 нед'},{n:'Модель классификации', e:'3 нед'},{n:'Дашборд аналитики', e:'2 нед'}], stack: [{n:'RuBERT',u:'Sentiment classification',o:true},{n:'FastAPI',u:'Бэкенд',o:true},{n:'Apache Superset',u:'Дашборд',o:true}], risks: ['Субъективность разметки','Многоязычность'], kpis: ['Точность — >85%','F1 — >0.8'] },
+    'predictive':  { services: [12], arch: 'Time series / ML pipeline: сбор исторических данных → feature engineering → прогнозная модель → дашборд', stages: [{n:'Сбор исторических данных', e:'1 нед'},{n:'Feature engineering', e:'2 нед'},{n:'Построение и валидация модели', e:'3 нед'},{n:'Дашборд', e:'2 нед'}], stack: [{n:'Prophet / LightGBM',u:'Прогнозная модель',o:true},{n:'Python',u:'Feature engineering',o:true},{n:'Superset',u:'Дашборд',o:true}], risks: ['Качество исторических данных','Изменение внешних факторов'], kpis: ['MAPE — <15%','Точность прогноза — >85%'] },
+    'recsys':      { services: [2, 22], arch: 'Рекомендательная система: профилирование → collaborative + content-based фильтрация → ранжирование', stages: [{n:'Сбор профилей и истории', e:'2 нед'},{n:'Content-based recommender', e:'2 нед'},{n:'Collaborative filtering', e:'2 нед'},{n:'Гибридный ранжировщик', e:'2 нед'}], stack: [{n:'LightFM / Implicit',u:'Рекомендательная система',o:true},{n:'scikit-learn',u:'Content-based модели',o:true},{n:'PostgreSQL',u:'Хранение профилей',o:false}], risks: ['Холодный старт','Качество данных'], kpis: ['CTR — >15%','Precision@10 — >0.4'] },
+    'anomaly':     { services: [6], arch: 'Anomaly detection pipeline: поток данных → feature extraction → Isolation Forest / Autoencoder → алерт', stages: [{n:'Интеграция источников', e:'2 нед'},{n:'Feature engineering', e:'2 нед'},{n:'Модель детекции аномалий', e:'3 нед'},{n:'Система алертов', e:'2 нед'}], stack: [{n:'scikit-learn (Isolation Forest)',u:'Детекция аномалий',o:true},{n:'PyOD',u:'Библиотека методов',o:true},{n:'ClickHouse',u:'Хранилище временных рядов',o:true}], risks: ['Дисбаланс классов','Ложные срабатывания'], kpis: ['Precision — >60%','Recall — >90%'] },
+    'cv':          { services: [17, 18, 14], arch: 'CV-пайплайн: видеопоток/изображение → детекция объектов → трекинг → анализ сцены', stages: [{n:'Сбор и разметка данных', e:'2 нед'},{n:'Модель детекции (YOLO)', e:'4 нед'},{n:'Трекинг и логика', e:'2 нед'},{n:'Пилот', e:'3 нед'}], stack: [{n:'YOLO',u:'Детекция объектов',o:true},{n:'OpenCV',u:'Обработка изображений',o:true},{n:'DeepSORT',u:'Трекинг',o:true}], risks: ['Качество видео/фото','Освещение'], kpis: ['mAP — >0.75','FPS — >15'] },
+    'idp':         { services: [6, 7, 10], arch: 'IDP-конвейер: OCR → извлечение полей → структурирование → экспорт в ИС', stages: [{n:'Анализ типов документов', e:'1 нед'},{n:'OCR-модуль (PaddleOCR)', e:'2 нед'},{n:'NLP-извлечение полей', e:'3 нед'},{n:'Интеграция', e:'2 нед'}], stack: [{n:'PaddleOCR / Tesseract',u:'OCR-распознавание',o:true},{n:'RuBERT',u:'Извлечение полей',o:true},{n:'FastAPI',u:'Бэкенд',o:true}], risks: ['Качество сканов','Разнообразие шаблонов'], kpis: ['Точность OCR — >95%','Точность извлечения — >85%'] },
+    'speech':      { services: [3, 5, 12], arch: 'Речевой пайплайн: аудиопоток → VAD → ASR → NLP-анализ → генерация протокола', stages: [{n:'Сбор аудиоданных', e:'1 нед'},{n:'ASR-модуль (Whisper)', e:'3 нед'},{n:'NLP-анализ расшифровок', e:'2 нед'},{n:'Интеграция', e:'2 нед'}], stack: [{n:'Whisper',u:'ASR-транскрибация',o:true},{n:'Silero',u:'VAD',o:true},{n:'FastAPI',u:'Бэкенд',o:true}], risks: ['Качество аудио','Акцент/диалекты'], kpis: ['WER — <10%','Время обработки — <5 мин'] },
+    'voice_bio':   { services: [3], arch: 'Голосовая биометрия: аудиопоток → экстракция эмбеддингов → верификация/идентификация', stages: [{n:'Сбор голосовых образцов', e:'2 нед'},{n:'Модель экстракции эмбеддингов', e:'3 нед'},{n:'Верификация и интеграция', e:'2 нед'}], stack: [{n:'ECAPA-TDNN',u:'Голосовая биометрия',o:true},{n:'Silero',u:'VAD',o:true}], risks: ['Качество микрофона','Шум'], kpis: ['EER — <3%','Точность верификации — >95%'] },
+    'ivr':         { services: [3, 2], arch: 'IVR-система: дерево звонка → DTMF/голосовой ввод → маршрутизация → аналитика', stages: [{n:'Проектирование сценариев IVR', e:'2 нед'},{n:'Настройка IVR-платформы', e:'2 нед'},{n:'ASR для голосового ввода', e:'3 нед'},{n:'Интеграция с CRM', e:'2 нед'}], stack: [{n:'Asterisk / FreePBX',u:'IVR-платформа',o:true},{n:'Whisper',u:'ASR',o:true},{n:'FastAPI',u:'Маршрутизация',o:true}], risks: ['Сложная структура меню','Качество распознавания'], kpis: ['Доля без оператора — >40%','Точность маршрутизации — >95%'] },
+    'digital_twin':{ services: [6, 12], arch: 'Цифровой двойник: ETL из источников → имитационная модель → сценарное моделирование → дашборд', stages: [{n:'Сбор данных учреждений', e:'3 нед'},{n:'Имитационная модель', e:'4 нед'},{n:'Сценарное моделирование', e:'3 нед'},{n:'Дашборд управления', e:'2 нед'}], stack: [{n:'SimPy / AnyLogic',u:'Имитационное моделирование',o:true},{n:'ClickHouse',u:'Хранилище данных',o:true},{n:'Superset',u:'Дашборд',o:true}], risks: ['Качество данных','Сложность моделирования'], kpis: ['Точность прогноза — >85%','Сокращение отчётов — на 70%'] }
+  };
+
+  function getServiceName(id) { var s = MOSCOW_SERVICES.find(function(x) { return x.id === id; }); return s ? s.name : id; }
+
+  function analyzeItem(id) {
+    var item = allItems.find(function(i) { return i.id === id; });
+    if (!item || !item._isAdditional) return;
+    var services = [];
+    var allSvcIds = [];
+    item.techs.forEach(function(tid) {
+      var mapping = TECH_SERVICE_MAP[tid];
+      if (mapping) {
+        mapping.services.forEach(function(sid) {
+          if (allSvcIds.indexOf(sid) === -1) allSvcIds.push(sid);
+        });
+      }
+    });
+    allSvcIds.forEach(function(sid) {
+      var svc = MOSCOW_SERVICES.find(function(s) { return s.id === sid; });
+      if (svc) {
+        var techNames = item.techs.filter(function(t) {
+          var m = TECH_SERVICE_MAP[t];
+          return m && m.services.indexOf(sid) !== -1;
+        }).map(function(t) { var f = ALL_TECHS.find(function(x) { return x.id === t; }); return f ? f.ru : t; });
+        services.push({
+          serviceId: sid,
+          usage: 'Автоматически подобрано для: ' + techNames.join(', ') + '. ' + svc.desc,
+          process: ['Запрос пользователя','Обработка через ' + svc.name,'Выдача результата']
+        });
+      }
+    });
+    item._services = services;
+    var techData = item.techs.map(function(t) { return TECH_SERVICE_MAP[t]; }).filter(function(x) { return x; });
+    var archParts = techData.map(function(t) { return t.arch; }).filter(function(v, i, a) { return a.indexOf(v) === i; });
+    var allStages = [];
+    var allStack = [];
+    var allRisks = [];
+    var allKpis = [];
+    techData.forEach(function(t) {
+      t.stages.forEach(function(st) {
+        if (!allStages.find(function(x) { return x.n === st.n; })) allStages.push({ name: st.n, effort: st.e, deps: [] });
+      });
+      t.stack.forEach(function(st) {
+        if (!allStack.find(function(x) { return x.n === st.n; })) allStack.push({ name: st.n, usage: st.u, os: st.o });
+      });
+      t.risks.forEach(function(r) { if (allRisks.indexOf(r) === -1) allRisks.push(r); });
+      t.kpis.forEach(function(k) { if (allKpis.indexOf(k) === -1) allKpis.push(k); });
+    });
+    if (allStages.length) {
+      for (var si = 1; si < allStages.length; si++) {
+        allStages[si].deps = [allStages[si - 1].name];
+      }
+    }
+    item.roadmap = {
+      arch: archParts.join(' + ') || 'Комплексное решение на базе технологий ИИ',
+      stages: allStages.length ? allStages : [{ name:'Предпроектное обследование', effort:'2 нед', deps:[] },{ name:'Разработка решения', effort:'4 нед', deps:['Предпроектное обследование'] },{ name:'Тестирование и пилот', effort:'3 нед', deps:['Разработка решения'] },{ name:'Внедрение', effort:'2 нед', deps:['Тестирование и пилот'] }],
+      stack: allStack.length ? allStack : [{ name:'Python', usage:'Основной язык разработки', os: true },{ name:'FastAPI', usage:'Бэкенд', os: true }],
+      risks: allRisks.length ? allRisks : ['Неполнота требований','Интеграция с существующими ИС'],
+      kpis: allKpis.length ? allKpis : ['Сокращение ручного труда — на 30%','Точность обработки — >85%']
+    };
+    item._combinations = [{
+      name: 'Автоматическая комбинация сервисов',
+      desc: 'Подобрано на основе технологий: ' + item.techs.map(function(t) { var f = ALL_TECHS.find(function(x) { return x.id === t; }); return f ? f.ru : t; }).join(', '),
+      services: allSvcIds,
+      flow: ['Исходные данные'].concat(allSvcIds.map(function(sid) { return getServiceName(sid); })).concat(['Результат'])
+    }];
+    saveAdditional();
+    openInitiativeModal(id, 0);
+  }
+
   let _submittedFile = null;
 
   function initFileUpload() {
@@ -1654,7 +1763,9 @@
   }
 
   function handleFileSelect(file) {
-    if (!file || file.type !== 'application/pdf') {
+    if (!file) return;
+    var isPdf = file.type === 'application/pdf' || file.type === 'application/x-pdf' || file.name.toLowerCase().endsWith('.pdf');
+    if (!isPdf) {
       alert('Пожалуйста, выберите PDF-файл');
       return;
     }
