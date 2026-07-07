@@ -64,6 +64,8 @@
 
   .expand-btn { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #10b981; background: none; color: #10b981; font-size: 13px; font-weight: 700; cursor: pointer; line-height: 1; margin-right: 4px; flex-shrink: 0; transition: .15s; }
   .expand-btn:hover { background: #10b981; color: #fff; }
+  .delete-btn { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #ef4444; background: none; color: #ef4444; font-size: 11px; font-weight: 700; cursor: pointer; line-height: 1; margin-right: 4px; flex-shrink: 0; transition: .15s; vertical-align: middle; }
+  .delete-btn:hover { background: #ef4444; color: #fff; }
 
   .gcount { font-size: 10px; font-weight: 400; color: #94a3b8; margin-left: 2px; }
   .group-cell { text-align: center; white-space: nowrap; min-width: 48px; }
@@ -1223,7 +1225,7 @@
     const activeGroupIds = groupsOf(item);
     return '<tr data-id="' + item.id + '">' +
       '<td class="col-id">' + item.id + '</td>' +
-      '<td class="col-title"><div><button class="expand-btn" onclick="openInitiativeModal(' + item.id + ', 0)" title="Подробнее">+</button>' + item.title + '</div><div class="desc">' + item.desc.split('\n')[0] + '</div></td>' +
+      '<td class="col-title"><div><button class="expand-btn" onclick="openInitiativeModal(' + item.id + ', 0)" title="Подробнее">+</button>' + (item._isAdditional ? '<button class="delete-btn" onclick="deleteAdditionalItem(' + item.id + ', event)" title="Удалить">✕</button>' : '') + item.title + '</div><div class="desc">' + item.desc.split('\n')[0] + '</div></td>' +
       '<td class="col-comment"><button class="comment-btn ' + (getComment(item.id) ? 'has-note' : '') + '" data-id="' + item.id + '" onclick="openComment(event, ' + item.id + ')">&#128172;</button></td>' +
       '<td class="col-complexity">' + genComplexity(item) + '</td>' +
       '<td class="col-status"><span class="tag ' + s.cls + '">' + s.label + '</span></td>' +
@@ -1600,6 +1602,24 @@
   function saveAdditional() {
     const g = INITIATIVES.find(x => x.customer === 'Дополнительные инициативы');
     if (g) localStorage.setItem(STORAGE_KEY, JSON.stringify(g.items));
+  }
+
+  function deleteAdditionalItem(id, ev) {
+    if (ev) ev.stopPropagation();
+    if (!confirm('Удалить инициативу "' + (allItems.find(function(i) { return i.id === id; }) || {}).title + '"?')) return;
+    var g = INITIATIVES.find(function(x) { return x.customer === 'Дополнительные инициативы'; });
+    if (!g) return;
+    g.items = g.items.filter(function(i) { return i.id !== id; });
+    allItems = allItems.filter(function(i) { return i.id !== id; });
+    if (!g.items.length) {
+      INITIATIVES.splice(INITIATIVES.indexOf(g), 1);
+      localStorage.removeItem(STORAGE_KEY);
+    } else {
+      saveAdditional();
+    }
+    renderGroups();
+    applyFilters();
+    updateGroupCounters();
   }
 
   function openSubmitModal() {
