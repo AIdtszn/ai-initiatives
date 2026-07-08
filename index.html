@@ -227,18 +227,59 @@
   .form-submit:disabled { opacity: .5; cursor: not-allowed; }
 
   .submit-modal { max-width: 680px; }
+
+  .login-overlay { position: fixed; inset: 0; background: rgba(15,23,42,.7); backdrop-filter: blur(4px); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+  .login-overlay.open { display: flex; }
+  .login-overlay:not(.open) { display: none; }
+  .login-modal { background: #fff; border-radius: 16px; padding: 40px 36px; width: 360px; max-width: 90vw; box-shadow: 0 25px 50px rgba(0,0,0,.25); text-align: center; }
+  .login-title { font-size: 20px; font-weight: 700; color: #16213e; margin-bottom: 4px; }
+  .login-subtitle { font-size: 13px; color: #64748b; margin-bottom: 24px; }
+  .login-modal input { width: 100%; padding: 10px 14px; border: 1px solid #d0d5dd; border-radius: 8px; font-size: 15px; outline: none; text-align: center; letter-spacing: .1em; }
+  .login-modal input:focus { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,.15); }
+  .login-error { color: #ef4444; font-size: 12px; min-height: 20px; margin-top: 8px; }
+  .login-btn { width: 100%; margin-top: 16px; padding: 10px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: .15s; }
+  .login-btn:hover { background: #1d4ed8; }
+  .role-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 4px 12px; border-radius: 14px; font-weight: 500; cursor: default; }
+  .role-badge.editor { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+  .role-badge.viewer { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+  .logout-link { font-size: 12px; color: #94a3b8; cursor: pointer; margin-left: 4px; }
+  .logout-link:hover { color: #ef4444; text-decoration: underline; }
+  .ref-sub-item { cursor: pointer; transition: background .15s; }
+  .ref-sub-item:hover { background: #eef2ff; }
+
+  .ref-product-list { display: flex; flex-direction: column; gap: 8px; }
+  .ref-product-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
+  .ref-product-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .ref-product-name { font-size: 13px; font-weight: 600; color: #0f172a; }
+  .ref-product-usage { font-size: 12px; color: #475569; line-height: 1.4; margin-bottom: 6px; }
+  .ref-product-meta { display: flex; flex-wrap: wrap; gap: 4px; }
+  .ref-product-initiative { font-size: 10px; padding: 2px 8px; border-radius: 4px; background: #e0f2fe; color: #075985; white-space: nowrap; }
+  .ref-modal-body { padding: 16px 24px 24px; overflow-y: auto; flex: 1; }
+
+  .group-tab-bar { display: flex; border-bottom: 1px solid #e2e8f0; padding: 0 20px; gap: 0; background: #fafbfc; }
+  .group-tab { padding: 7px 16px; font-size: 12px; font-weight: 500; color: #64748b; background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: .15s; }
+  .group-tab:hover { color: #1e293b; background: #f1f5f9; }
+  .group-tab.active { color: #2563eb; border-bottom-color: #2563eb; background: #fff; }
+  .group-tab-content { display: none; }
+  .group-tab-content.active { display: block; }
+  .org-check-col { text-align: center; min-width: 100px; max-width: 130px; font-size: 11px; font-weight: 500; color: #475569; line-height: 1.3; }
+  .org-check-cell { text-align: center; vertical-align: middle; }
+  .org-check-cell input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: #2563eb; }
 </style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="container">
-  <h1>Карта инициатив</h1>
-  <div class="subtitle">Внедрение технологий искусственного интеллекта в социальной сфере города Москвы</div>
+  <h1>Реестр ИИ-инициатив по внедрению технологий искусственного интеллекта в сфере труда и социальной защиты г. Москвы</h1>
+  <div style="font-size:12px;color:#64748b;margin-bottom:12px">Прототип разработал Мячин Д.А.</div>
   <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px">
+    <button class="submit-btn" onclick="exportToExcel()" style="background:#059669">📥 Скачать Excel</button>
     <div class="counter" id="counter">Загрузка...</div>
-    <button class="submit-btn" onclick="openSubmitModal()">
+    <button class="submit-btn" onclick="openSubmitModal()" id="addInitiativeBtn">
       <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
       Добавить инициативу
     </button>
+    <span id="roleBadge" style="display:none"></span>
   </div>
 
   <div class="filters">
@@ -321,6 +362,15 @@
         <button class="form-submit" id="submitBtn" onclick="handleSubmit()">Отправить</button>
       </div>
     </div>
+  </div>
+
+  <div class="modal-overlay" id="refModalOverlay" onclick="closeRefModal()"></div>
+  <div class="modal" id="refModal">
+    <div class="modal-header">
+      <h3 id="refModalTitle"></h3>
+      <button class="modal-close" onclick="closeRefModal()">&times;</button>
+    </div>
+    <div class="ref-modal-body" id="refModalBody"></div>
   </div>
 </div>
 
@@ -1170,6 +1220,36 @@
   let sortKey = '';
   let sortDir = 1;
 
+  const PASSWORDS = { editor: 'editor2026', viewer: 'viewer2026' };
+  let orgFlagsCache = {};
+  let commentsCache = {};
+  window.ocRole = null;
+
+  function setRole(role) {
+    window.ocRole = role;
+    sessionStorage.setItem('oc_role', role);
+    var badge = document.getElementById('roleBadge');
+    if (role === 'editor') {
+      badge.innerHTML = '<span class="role-badge editor">✏️ Редактор <span class="logout-link" onclick="handleLogout()">[выйти]</span></span>';
+    } else {
+      badge.innerHTML = '<span class="role-badge viewer">👁 Наблюдатель <span class="logout-link" onclick="handleLogout()">[выйти]</span></span>';
+    }
+    badge.style.display = '';
+    if (role !== 'editor') {
+      var btn = document.getElementById('addInitiativeBtn');
+      if (btn) btn.style.display = 'none';
+    }
+  }
+
+  function handleLogout() { sessionStorage.removeItem('oc_role'); location.reload(); }
+
+  function handleLogin() {
+    var pass = document.getElementById('loginPass').value;
+    if (pass === PASSWORDS.editor) { setRole('editor'); finishLogin(); }
+    else if (pass === PASSWORDS.viewer) { setRole('viewer'); finishLogin(); }
+    else { document.getElementById('loginError').textContent = 'Неверный пароль'; }
+  }
+
   function groupOf(techId) { return TECH_TO_GROUP[techId]; }
   function groupsOf(item) { const s = new Set(); item.techs.forEach(t => s.add(groupOf(t))); return s; }
 
@@ -1177,9 +1257,105 @@
     document.getElementById('refBody').innerHTML = GROUPS.map(g =>
       '<div class="ref-group"><div class="ref-group-title"><span class="ref-dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + g.color + ';margin-right:4px"></span>' + g.ru + '</div>' +
       '<div class="ref-sub-grid">' + g.techs.map(t =>
-        '<div class="ref-sub-item"><span class="ref-dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:' + g.color + ';flex-shrink:0"></span><div><strong>' + t.ru + '</strong><div class="desc">' + t.desc + '</div></div></div>'
+        '<div class="ref-sub-item" onclick="openRefModal(\'' + t.id + '\')" title="Нажмите, чтобы увидеть технологические продукты"><span class="ref-dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:' + g.color + ';flex-shrink:0"></span><div><strong>' + t.ru + '</strong><div class="desc">' + t.desc + '</div></div></div>'
       ).join('') + '</div></div>'
     ).join('');
+  }
+
+  function getTechProducts(techId) {
+    var map = {};
+    allItems.forEach(function(item) {
+      if (!item.techs || !item.techs.includes(techId)) return;
+      if (!item.roadmap || !item.roadmap.stack) return;
+      item.roadmap.stack.forEach(function(s) {
+        if (!map[s.name]) {
+          map[s.name] = { name: s.name, os: s.os, usages: [], initiatives: [] };
+        }
+        if (map[s.name].usages.indexOf(s.usage) === -1) {
+          map[s.name].usages.push(s.usage);
+        }
+        if (map[s.name].initiatives.indexOf(item.title) === -1) {
+          map[s.name].initiatives.push(item.title);
+        }
+      });
+    });
+    return Object.keys(map).sort().map(function(k) { return map[k]; });
+  }
+
+  function openRefModal(techId) {
+    var tech = ALL_TECHS.find(function(t) { return t.id === techId; });
+    if (!tech) return;
+    var products = getTechProducts(techId);
+    var overlay = document.getElementById('refModalOverlay');
+    var modal = document.getElementById('refModal');
+    document.getElementById('refModalTitle').textContent = '\uD83D\uDEE0 ' + tech.ru;
+
+    var html;
+    if (!products.length) {
+      html = '<div style="color:#94a3b8;font-size:13px;font-style:italic;padding:20px;text-align:center">Для данной технологии технологические продукты не найдены</div>';
+    } else {
+      html = '<div style="color:#475569;font-size:12px;margin-bottom:12px;font-weight:500">Найдено продуктов: ' + products.length + '</div><div class="ref-product-list">';
+      products.forEach(function(p) {
+        var usageText = p.usages.length > 1 ? p.usages[0] : (p.usages[0] || '');
+        html += '<div class="ref-product-item">' +
+          '<div class="ref-product-header">' +
+          '<span class="ref-product-name">' + p.name + '</span>' +
+          '<span class="rm-tag ' + (p.os ? 'rm-tag-os' : 'rm-tag-prop') + '">' + (p.os ? 'OS' : '\u2699') + '</span>' +
+          '</div>' +
+          '<div class="ref-product-usage">' + usageText + '</div>' +
+          '<div class="ref-product-meta">' + p.initiatives.map(function(init) {
+            return '<span class="ref-product-initiative">' + init + '</span>';
+          }).join('') + '</div>' +
+          '</div>';
+      });
+      html += '</div>';
+    }
+    document.getElementById('refModalBody').innerHTML = html;
+    overlay.classList.add('open');
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeRefModal() {
+    document.getElementById('refModalOverlay').classList.remove('open');
+    document.getElementById('refModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function exportToExcel() {
+    if (typeof XLSX === 'undefined') { alert('Библиотека XLSX не загружена. Попробуйте обновить страницу.'); return; }
+    var data = [];
+    var header = ['ID', 'Инициатива', 'Заказчик', 'Подразделение', 'Описание', 'Комментарий', 'Охват (групп)', 'Статус',
+      'LLM / Генеративный ИИ', 'ML / Машинное обучение', 'CV / Компьютерное зрение', 'Speech / Речевые технологии', 'DT / Цифровые двойники',
+      'ЛСИ', 'ИДПО+Решения ДИТ', 'Внешний подрядчик'];
+    data.push(header);
+    allItems.forEach(function(item) {
+      var comment = (getComment(item.id) || '').replace(/\n/g, ' ');
+      var groups = groupsOf(item);
+      var flags = getOrgFlags(item.id);
+      data.push([
+        item.id,
+        item.title,
+        item._customer || '',
+        item._dept || '',
+        item.desc.split('\n')[0],
+        comment,
+        groups.size,
+        STATUS_MAP[item.status] ? STATUS_MAP[item.status].label : item.status,
+        groups.has('llm') ? 'Да' : 'Нет',
+        groups.has('ml') ? 'Да' : 'Нет',
+        groups.has('cv') ? 'Да' : 'Нет',
+        groups.has('speech') ? 'Да' : 'Нет',
+        groups.has('dt') ? 'Да' : 'Нет',
+        flags.lsi ? 'Да' : 'Нет',
+        flags.idpo ? 'Да' : 'Нет',
+        flags.external ? 'Да' : 'Нет',
+      ]);
+    });
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.aoa_to_sheet(data);
+    XLSX.utils.book_append_sheet(wb, ws, 'Инициативы');
+    XLSX.writeFile(wb, 'Реестр_ИИ_инициатив.xlsx');
   }
 
   function renderFilters() {
@@ -1201,17 +1377,61 @@
     return copy;
   }
 
+  function getOrgFlags(id) {
+    var cached = orgFlagsCache[id];
+    if (cached) return { lsi: cached.lsi, idpo: cached.idpo, external: cached.external };
+    try { return JSON.parse(localStorage.getItem('oc_org_' + id)) || {}; } catch(e) { return {}; }
+  }
+
+  function setOrgFlag(id, field, value) {
+    if (window.ocRole !== 'editor') return;
+    if (!orgFlagsCache[id]) orgFlagsCache[id] = {};
+    orgFlagsCache[id][field] = value;
+    localStorage.setItem('oc_org_' + id, JSON.stringify({ lsi: orgFlagsCache[id].lsi, idpo: orgFlagsCache[id].idpo, external: orgFlagsCache[id].external }));
+    var rec = orgFlagsCache[id];
+    if (rec._id) {
+      fetch('./.herenow/data/org_flags/' + rec._id, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ lsi: !!rec.lsi, idpo: !!rec.idpo, external: !!rec.external }) }).catch(function(){});
+    } else {
+      fetch('./.herenow/data/org_flags', { method: 'POST', headers: { 'content-type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify({ initiative_id: id, lsi: !!rec.lsi, idpo: !!rec.idpo, external: !!rec.external }) })
+        .then(function(r){ return r.json(); })
+        .then(function(d){ if (d.record) orgFlagsCache[id]._id = d.record.id; })
+        .catch(function(){});
+    }
+  }
+
+  function switchGroupTab(btn, mode) {
+    var bar = btn.parentElement;
+    var body = bar.parentElement;
+    bar.querySelectorAll('.group-tab').forEach(function(t) { t.classList.remove('active'); });
+    btn.classList.add('active');
+    body.querySelectorAll('.group-tab-content').forEach(function(c) { c.classList.remove('active'); });
+    body.querySelector('.' + mode + '-content').classList.add('active');
+  }
+
   function renderGroups() {
     const container = document.getElementById('groups');
-    container.innerHTML = INITIATIVES.map(g => {
-      const rows = sorted(g.items).map(item => genRow(item)).join('');
+    container.innerHTML = INITIATIVES.map(function(g, gi) {
+      const techRows = sorted(g.items).map(function(item) { return genRow(item, 'tech'); }).join('');
+      const orgRows = sorted(g.items).map(function(item) { return genRow(item, 'org'); }).join('');
       return '<div class="group"><div class="group-header" onclick="toggleGroup(this)"><h2>' + g.customer +
         ' <span class="dept">' + g.dept + '</span> <span class="badge">' + g.items.length + '</span></h2>' +
-        '<span class="arrow">&#9660;</span></div><div class="group-body"><table>' + genThead() + '<tbody>' + rows + '</tbody></table></div></div>';
+        '<span class="arrow">&#9660;</span></div><div class="group-body">' +
+        '<div class="group-tab-bar">' +
+        '<button class="group-tab active" onclick="switchGroupTab(this,\'tech\')">🔬 Технологический анализ</button>' +
+        '<button class="group-tab" onclick="switchGroupTab(this,\'org\')">🏢 Организационное управление</button>' +
+        '</div>' +
+        '<div class="group-tab-content tech-content active"><table>' + genThead('tech') + '<tbody>' + techRows + '</tbody></table></div>' +
+        '<div class="group-tab-content org-content"><table>' + genThead('org') + '<tbody>' + orgRows + '</tbody></table></div>' +
+        '</div></div>';
     }).join('');
   }
 
-  function genThead() {
+  function genThead(mode) {
+    if (mode === 'org') {
+      return '<thead><tr><th class="col-id">#</th><th class="col-title">Инициатива</th><th class="col-comment">&#128221;</th><th class="col-status">Статус</th>' +
+        '<th class="org-check-col">ЛСИ</th><th class="org-check-col">ИДПО+Решения ДИТ<br><span style="font-weight:400;font-size:10px">(обучаем команду-инициатора)</span></th><th class="org-check-col">Внешний подрядчик<br><span style="font-weight:400;font-size:10px">(с привлечением доп. финансирования)</span></th>' +
+        '</tr></thead>';
+    }
     const sa = (key) => sortKey === key ? (sortDir === 1 ? ' &#9650;' : ' &#9660;') : ' &#8645;';
     return '<thead><tr><th class="col-id">#</th><th class="col-title sortable" onclick="toggleSort(\'title\')">Инициатива <span class="sarr">' + sa('title') + '</span></th>' +
       '<th class="col-comment">&#128221;</th><th class="col-complexity sortable" onclick="toggleSort(\'complexity\')">Охват <span class="sarr">' + sa('complexity') + '</span></th>' +
@@ -1220,13 +1440,29 @@
       '</tr></thead>';
   }
 
-  function genRow(item) {
+  function genRow(item, mode) {
+    var isViewer = window.ocRole !== 'editor';
+    var disabledAttr = isViewer ? 'disabled' : '';
+    var commentHidden = isViewer ? 'style="display:none"' : '';
+    var deleteHidden = (item._isAdditional && !isViewer) ? '' : 'style="display:none"';
     const s = STATUS_MAP[item.status] || STATUS_MAP.proposed;
+    if (mode === 'org') {
+      var flags = getOrgFlags(item.id);
+      return '<tr data-id="' + item.id + '">' +
+        '<td class="col-id">' + item.id + '</td>' +
+        '<td class="col-title"><div><button class="expand-btn" onclick="openInitiativeModal(' + item.id + ', 0)" title="Подробнее">+</button>' + (item._isAdditional ? '<button class="delete-btn" ' + deleteHidden + ' onclick="deleteAdditionalItem(' + item.id + ', event)" title="Удалить">✕</button>' : '') + item.title + '</div><div class="desc">' + item.desc.split('\n')[0] + '</div></td>' +
+        '<td class="col-comment"><button class="comment-btn ' + (getComment(item.id) ? 'has-note' : '') + '" ' + commentHidden + ' data-id="' + item.id + '" onclick="openComment(event, ' + item.id + ')">&#128172;</button></td>' +
+        '<td class="col-status"><span class="tag ' + s.cls + '">' + s.label + '</span></td>' +
+        '<td class="org-check-cell"><input type="checkbox" ' + disabledAttr + ' ' + (flags.lsi ? 'checked' : '') + ' onchange="setOrgFlag(' + item.id + ',\'lsi\',this.checked)"></td>' +
+        '<td class="org-check-cell"><input type="checkbox" ' + disabledAttr + ' ' + (flags.idpo ? 'checked' : '') + ' onchange="setOrgFlag(' + item.id + ',\'idpo\',this.checked)"></td>' +
+        '<td class="org-check-cell"><input type="checkbox" ' + disabledAttr + ' ' + (flags.external ? 'checked' : '') + ' onchange="setOrgFlag(' + item.id + ',\'external\',this.checked)"></td>' +
+        '</tr>';
+    }
     const activeGroupIds = groupsOf(item);
     return '<tr data-id="' + item.id + '">' +
       '<td class="col-id">' + item.id + '</td>' +
-      '<td class="col-title"><div><button class="expand-btn" onclick="openInitiativeModal(' + item.id + ', 0)" title="Подробнее">+</button>' + (item._isAdditional ? '<button class="delete-btn" onclick="deleteAdditionalItem(' + item.id + ', event)" title="Удалить">✕</button>' : '') + item.title + '</div><div class="desc">' + item.desc.split('\n')[0] + '</div></td>' +
-      '<td class="col-comment"><button class="comment-btn ' + (getComment(item.id) ? 'has-note' : '') + '" data-id="' + item.id + '" onclick="openComment(event, ' + item.id + ')">&#128172;</button></td>' +
+      '<td class="col-title"><div><button class="expand-btn" onclick="openInitiativeModal(' + item.id + ', 0)" title="Подробнее">+</button>' + (item._isAdditional ? '<button class="delete-btn" ' + deleteHidden + ' onclick="deleteAdditionalItem(' + item.id + ', event)" title="Удалить">✕</button>' : '') + item.title + '</div><div class="desc">' + item.desc.split('\n')[0] + '</div></td>' +
+      '<td class="col-comment"><button class="comment-btn ' + (getComment(item.id) ? 'has-note' : '') + '" ' + commentHidden + ' data-id="' + item.id + '" onclick="openComment(event, ' + item.id + ')">&#128172;</button></td>' +
       '<td class="col-complexity">' + genComplexity(item) + '</td>' +
       '<td class="col-status"><span class="tag ' + s.cls + '">' + s.label + '</span></td>' +
       GROUPS.map(g => {
@@ -1272,18 +1508,21 @@
     let visibleCount = 0;
     document.querySelectorAll('.group').forEach(group => {
       let groupVisible = false;
+      var seen = {};
       group.querySelectorAll('tbody tr').forEach(row => {
         const id = parseInt(row.dataset.id);
+        if (seen[id]) return;
+        seen[id] = true;
         const item = allItems.find(i => i.id === id);
         if (!item) return;
         let show = true;
         if (activeTechs.size > 0 && !item.techs.some(t => activeTechs.has(t))) show = false;
         if (show && searchTerm) { if (!(item.title + ' ' + item.desc).toLowerCase().includes(searchTerm)) show = false; }
-        row.classList.toggle('hidden', !show);
+        group.querySelectorAll('tr[data-id="' + id + '"]').forEach(function(r) { r.classList.toggle('hidden', !show); });
         if (show) groupVisible = true;
       });
       group.style.display = groupVisible ? '' : 'none';
-      if (groupVisible) visibleCount += group.querySelectorAll('tbody tr:not(.hidden)').length;
+      if (groupVisible) visibleCount += group.querySelectorAll('.tech-content tbody tr:not(.hidden)').length;
     });
     document.getElementById('counter').textContent = activeTechs.size || searchTerm
       ? 'Всего инициатив: ' + allItems.length + ' | Отобрано: ' + visibleCount : 'Всего инициатив: ' + allItems.length;
@@ -1292,7 +1531,7 @@
 
   function updateGroupCounters() {
     document.querySelectorAll('.group').forEach(group => {
-      const table = group.querySelector('table');
+      const table = group.querySelector('.tech-content table');
       if (!table) return;
       const rows = table.querySelectorAll('tbody tr:not(.hidden)');
       GROUPS.forEach(g => {
@@ -1327,12 +1566,28 @@
     arrow.classList.toggle('open');
   }
 
-  function getComment(id) { return localStorage.getItem('oc_comment_' + id) || ''; }
+  function getComment(id) {
+    var cached = commentsCache[id];
+    if (cached && cached.text !== undefined) return cached.text;
+    return localStorage.getItem('oc_comment_' + id) || '';
+  }
   function saveComment(id, text) {
+    if (window.ocRole !== 'editor') return;
+    if (!commentsCache[id]) commentsCache[id] = {};
+    commentsCache[id].text = text;
     if (text.trim()) localStorage.setItem('oc_comment_' + id, text.trim()); else localStorage.removeItem('oc_comment_' + id);
+    if (commentsCache[id]._id) {
+      fetch('./.herenow/data/comments/' + commentsCache[id]._id, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: text.trim() }) }).catch(function(){});
+    } else if (text.trim()) {
+      fetch('./.herenow/data/comments', { method: 'POST', headers: { 'content-type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify({ initiative_id: id, text: text.trim() }) })
+        .then(function(r){ return r.json(); })
+        .then(function(d){ if (d.record) commentsCache[id]._id = d.record.id; })
+        .catch(function(){});
+    }
   }
 
   function openComment(ev, id) {
+    if (window.ocRole !== 'editor') return;
     ev.stopPropagation(); closePopup();
     const btn = ev.currentTarget;
     const rect = btn.getBoundingClientRect();
@@ -1509,6 +1764,8 @@
 
   function renderModalComment(item) {
     const section = document.getElementById('modalCommentSection');
+    if (window.ocRole !== 'editor') { section.innerHTML = ''; section.style.display = 'none'; return; }
+    section.style.display = '';
     const text = getComment(item.id);
     if (text) {
       section.innerHTML = '<div class="modal-comment-label">&#128221; Ваша заметка <span class="modal-comment-edit" onclick="editModalComment(' + item.id + ')">редактировать</span></div><div class="modal-comment-text">' + text + '</div>';
@@ -1553,20 +1810,62 @@
   }
 
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') { closeModal(); closePopup(); closeSubmitModal(); }
+    if (e.key === 'Escape') { closeModal(); closePopup(); closeSubmitModal(); closeRefModal(); }
   });
 
   const STORAGE_KEY = 'oc_additional';
 
-  try {
-    renderRef();
-    renderFilters();
-    loadAdditional();
-    renderGroups();
-    applyFilters();
-    syncChips();
-  } catch(e) { console.error('Init error:', e); }
+  function loadOrgFlagsFromServer() {
+    return fetch('./.herenow/data/org_flags?limit=1000').then(function(r){
+      if (!r.ok) throw new Error('fetch failed');
+      return r.json();
+    }).then(function(d){
+      if (d.records) d.records.forEach(function(r){ orgFlagsCache[r.initiative_id] = { lsi: r.lsi, idpo: r.idpo, external: r.external, _id: r.id }; });
+    }).catch(function(){});
+  }
 
+  function loadCommentsFromServer() {
+    return fetch('./.herenow/data/comments?limit=1000').then(function(r){
+      if (!r.ok) throw new Error('fetch failed');
+      return r.json();
+    }).then(function(d){
+      if (d.records) d.records.forEach(function(r){ commentsCache[r.initiative_id] = { text: r.text, _id: r.id }; });
+    }).catch(function(){});
+  }
+
+  function finishLogin() {
+    document.getElementById('loginOverlay').classList.remove('open');
+    Promise.all([loadOrgFlagsFromServer(), loadCommentsFromServer()]).then(function(){
+      renderRef();
+      renderFilters();
+      loadAdditional();
+      renderGroups();
+      applyFilters();
+      syncChips();
+      if (window.ocRole !== 'editor') applyViewerGating();
+    }).catch(function(){
+      renderRef();
+      renderFilters();
+      loadAdditional();
+      renderGroups();
+      applyFilters();
+      syncChips();
+      if (window.ocRole !== 'editor') applyViewerGating();
+    });
+  }
+
+  function applyViewerGating() {
+    document.querySelectorAll('.org-check-cell input[type="checkbox"]').forEach(function(cb){ cb.disabled = true; cb.style.cursor = 'not-allowed'; });
+  }
+
+  var savedRole = sessionStorage.getItem('oc_role');
+  if (savedRole === 'editor' || savedRole === 'viewer') {
+    setRole(savedRole);
+    finishLogin();
+  }
+
+  document.getElementById('loginBtn').addEventListener('click', handleLogin);
+  document.getElementById('loginPass').addEventListener('keydown', function(e){ if (e.key === 'Enter') handleLogin(); });
   document.getElementById('searchInput').addEventListener('input', applyFilters);
   document.getElementById('refHeader').addEventListener('click', function() {
     document.getElementById('refBody').classList.toggle('open');
@@ -1605,6 +1904,7 @@
   }
 
   function deleteAdditionalItem(id, ev) {
+    if (window.ocRole !== 'editor') return;
     if (ev) ev.stopPropagation();
     if (!confirm('Удалить инициативу "' + (allItems.find(function(i) { return i.id === id; }) || {}).title + '"?')) return;
     var g = INITIATIVES.find(function(x) { return x.customer === 'Дополнительные инициативы'; });
@@ -1623,6 +1923,7 @@
   }
 
   function openSubmitModal() {
+    if (window.ocRole !== 'editor') return;
     document.getElementById('submitOverlay').classList.add('open');
     document.getElementById('submitModal').classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -1825,6 +2126,7 @@
   }
 
   function handleSubmit() {
+    if (window.ocRole !== 'editor') return;
     const title = document.getElementById('submitTitle').value.trim();
     const desc = document.getElementById('submitDesc').value.trim();
     const customer = document.getElementById('submitCustomer').value.trim() || 'Пользователь';
@@ -1861,5 +2163,16 @@
 
   initFileUpload();
 </script>
+
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-modal">
+    <div class="login-title">Реестр ИИ-инициатив</div>
+    <div class="login-subtitle">Введите пароль для доступа</div>
+    <input type="password" id="loginPass" placeholder="Пароль" autocomplete="off">
+    <div class="login-error" id="loginError"></div>
+    <button class="login-btn" id="loginBtn">Войти</button>
+  </div>
+</div>
+
 </body>
 </html>

@@ -1,0 +1,22 @@
+{
+  "collections": {
+    "org_flags": {
+      "fields": {
+        "initiative_id": { "type": "integer", "required": true },
+        "lsi": { "type": "boolean", "default": false },
+        "idpo": { "type": "boolean", "default": false },
+        "external": { "type": "boolean", "default": false }
+      },
+      "access": { "read": "public", "insert": "public", "update": "public", "delete": "owner" },
+      "publicMutation": "open"
+    },
+    "comments": {
+      "fields": {
+        "initiative_id": { "type": "integer", "required": true },
+        "text": { "type": "string", "maxLength": 5000 }
+      },
+      "access": { "read": "public", "insert": "public", "update": "public", "delete": "owner" },
+      "publicMutation": "open"
+    }
+  }
+}

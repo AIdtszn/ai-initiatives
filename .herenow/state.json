@@ -1,0 +1,13 @@
+{
+  "publishes": {
+    "spruce-muse-aab3": {
+      "siteUrl": "https://spruce-muse-aab3.here.now/",
+      "claimToken": "604c74271d2c1755ae24f1187fc54e9182ee3443844f9aefe654dac75cd90f94",
+      "claimUrl": "https://here.now/claim?slug=spruce-muse-aab3&token=604c74271d2c1755ae24f1187fc54e9182ee3443844f9aefe654dac75cd90f94",
+      "expiresAt": "2026-07-09T08:10:15.101Z"
+    },
+    "centered-voyage-njgd": {
+      "siteUrl": "https://centered-voyage-njgd.here.now/"
+    }
+  }
+}
