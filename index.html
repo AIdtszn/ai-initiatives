@@ -374,6 +374,16 @@
   </div>
 </div>
 
+<div class="login-overlay open" id="loginOverlay">
+  <div class="login-modal">
+    <div class="login-title">Реестр ИИ-инициатив</div>
+    <div class="login-subtitle">Введите пароль для доступа</div>
+    <input type="password" id="loginPass" placeholder="Пароль" autocomplete="off">
+    <div class="login-error" id="loginError"></div>
+    <button class="login-btn" id="loginBtn">Войти</button>
+  </div>
+</div>
+
 <script>
   const GROUPS = [
     {
@@ -2163,16 +2173,6 @@
 
   initFileUpload();
 </script>
-
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-modal">
-    <div class="login-title">Реестр ИИ-инициатив</div>
-    <div class="login-subtitle">Введите пароль для доступа</div>
-    <input type="password" id="loginPass" placeholder="Пароль" autocomplete="off">
-    <div class="login-error" id="loginError"></div>
-    <button class="login-btn" id="loginBtn">Войти</button>
-  </div>
-</div>
 
 </body>
 </html>
