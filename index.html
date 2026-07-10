@@ -378,9 +378,13 @@
   <div class="login-modal">
     <div class="login-title">Реестр ИИ-инициатив</div>
     <div class="login-subtitle">Введите пароль для доступа</div>
+    <div style="font-size:11px;color:#94a3b8;margin-bottom:16px;line-height:1.6">
+      Роль редактора: <strong>editor2026</strong><br>
+      Роль наблюдателя: <strong>viewer2026</strong>
+    </div>
     <input type="password" id="loginPass" placeholder="Пароль" autocomplete="off">
     <div class="login-error" id="loginError"></div>
-    <button class="login-btn" id="loginBtn">Войти</button>
+    <button class="login-btn" id="loginBtn" onclick="handleLogin()">Войти</button>
   </div>
 </div>
 
@@ -1845,23 +1849,15 @@
 
   function finishLogin() {
     document.getElementById('loginOverlay').classList.remove('open');
-    Promise.all([loadOrgFlagsFromServer(), loadCommentsFromServer()]).then(function(){
-      renderRef();
-      renderFilters();
-      loadAdditional();
-      renderGroups();
-      applyFilters();
-      syncChips();
-      if (window.ocRole !== 'editor') applyViewerGating();
-    }).catch(function(){
-      renderRef();
-      renderFilters();
-      loadAdditional();
-      renderGroups();
-      applyFilters();
-      syncChips();
-      if (window.ocRole !== 'editor') applyViewerGating();
-    });
+    renderRef();
+    renderFilters();
+    loadAdditional();
+    renderGroups();
+    applyFilters();
+    syncChips();
+    if (window.ocRole !== 'editor') applyViewerGating();
+    loadOrgFlagsFromServer().then(function(){ renderGroups(); applyFilters(); }).catch(function(){});
+    loadCommentsFromServer().catch(function(){});
   }
 
   function applyViewerGating() {
@@ -2171,7 +2167,7 @@
     updateGroupCounters();
   }
 
-  initFileUpload();
+  try { initFileUpload(); } catch(e) {}
 </script>
 
 </body>
