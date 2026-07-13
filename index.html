@@ -466,6 +466,7 @@
     var idx = current.indexOf(catId);
     if (idx === -1) current.push(catId); else current.splice(idx, 1);
     setCategories(id, current);
+    renderModalCategories(id);
   }
   function detectCategories(text) {
     var lower = text.toLowerCase();
@@ -1848,27 +1849,36 @@
       if (t) techGroups[gid].push(t);
     });
     const s = STATUS_MAP[item.status] || STATUS_MAP.proposed;
-    var modalCats = getCategories(item.id);
-    var isViewer = window.ocRole !== 'editor';
-    var catSection = '<div class="modal-section"><div class="modal-label">Категория применения</div><div class="modal-techs">' +
-      (modalCats.length ? modalCats.map(function(cid) {
-        var c = CATEGORIES.find(function(x) { return x.id === cid; });
-        return c ? '<span class="cat-badge" style="background:' + c.color + '">' + c.ru + '</span>' : '';
-      }).join('') : '<span style="color:#94a3b8;font-size:13px">Не назначена</span>');
-    if (!isViewer) {
-      catSection += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">' +
-        CATEGORIES.map(function(c) {
-          var on = modalCats.indexOf(c.id) !== -1;
-          return '<button class="cat-toggle' + (on ? ' on' : '') + '" style="background:' + (on ? c.color : '#e2e8f0') + ';color:' + (on ? '#fff' : '#475569') + '" onclick="event.stopPropagation();toggleItemCategory(' + item.id + ',\'' + c.id + '\')">' + c.ru + '</button>';
-        }).join('') + '</div>';
-    }
-    catSection += '</div>';
     document.getElementById('tabDescription').innerHTML =
       '<div class="modal-meta"><span>&#128101; ' + item._customer + ' (' + item._dept + ')</span><span class="tag ' + s.cls + '">' + s.label + '</span><span>&#128200; Охват: ' + groupsOf(item).size + ' из ' + GROUPS.length + ' групп</span></div>' +
       '<div class="modal-section"><div class="modal-label">Описание</div><div class="modal-text">' + item.desc + '</div></div>' +
       '<div class="modal-section"><div class="modal-label">Технологии (' + item.techs.length + ')</div><div class="modal-techs">' +
       Object.entries(techGroups).map(([, techs]) => techs.map(t => '<span class="modal-tech-tag"><span class="mtdot" style="background:' + t.color + '"></span>' + t.ru + '</span>').join('')).join('') + '</div></div>' +
-      catSection;
+      '<div class="modal-section" id="catModalSection"><div class="modal-label">Категория применения</div><div class="modal-techs" id="catModalBody"></div></div>';
+    renderModalCategories(item.id);
+  }
+
+  function renderModalCategories(id) {
+    var body = document.getElementById('catModalBody');
+    if (!body) return;
+    var cats = getCategories(id);
+    var html = '';
+    if (cats.length) {
+      html = cats.map(function(cid) {
+        var c = CATEGORIES.find(function(x) { return x.id === cid; });
+        return c ? '<span class="cat-badge" style="background:' + c.color + '">' + c.ru + '</span>' : '';
+      }).join('');
+    } else {
+      html = '<span style="color:#94a3b8;font-size:13px">Не назначена</span>';
+    }
+    if (window.ocRole === 'editor') {
+      html += '<div style="margin-top:6px;font-size:11px;color:#94a3b8">Назначить:</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:2px">' +
+        CATEGORIES.map(function(c) {
+          var on = cats.indexOf(c.id) !== -1;
+          return '<button class="cat-toggle' + (on ? ' on' : '') + '" style="background:' + (on ? c.color : '#e2e8f0') + ';color:' + (on ? '#fff' : '#475569') + '" onclick="event.stopPropagation();toggleItemCategory(' + id + ',\'' + c.id + '\')">' + c.ru + '</button>';
+        }).join('') + '</div>';
+    }
+    body.innerHTML = html;
   }
 
   function renderServicesTab(item) {
