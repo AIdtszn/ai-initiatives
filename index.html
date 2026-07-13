@@ -1335,6 +1335,7 @@
     'Управление по социальной интеграции лиц с ограничениями жизнедеятельности': 'Шалыгина О.В.',
     'Управление организации стационарного социального обслуживания': 'Шалыгина О.В.',
   };
+  const CURATORS = ['Филиппов В.Э.', 'Келлер П.А.', 'Александрова А.Б.', 'Шалыгина О.В.'];
 
   let allItems = [];
   INITIATIVES.forEach(g => g.items.forEach(i => {
@@ -1355,6 +1356,7 @@
 
   let activeTechs = new Set();
   let activeCategories = new Set();
+  let activeCurators = new Set();
   let searchTerm = '';
   let sortKey = '';
   let sortDir = 1;
@@ -1522,8 +1524,11 @@
     });
     html += '<div class="filter-row" style="margin-top:6px;border-top:1px solid #e2e8f0;padding-top:6px"><span style="font-size:13px;font-weight:600;color:#475569">Категория:</span>' +
       CATEGORIES.map(c => '<div class="cat-chip" data-cat="' + c.id + '" onclick="toggleCat(\'' + c.id + '\')"><span class="sdot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:' + c.color + '"></span>' + c.ru + '</div>').join('') + '</div>';
+    html += '<div class="filter-row" style="margin-top:4px"><span style="font-size:13px;font-weight:600;color:#475569">Куратор:</span>' +
+      CURATORS.map(n => '<div class="cat-chip curator-chip" data-cur="' + n + '" onclick="toggleCurator(\'' + n + '\')">' + n + '</div>').join('') + '</div>';
     container.innerHTML = html;
     syncCatChips();
+    syncCuratorChips();
   }
 
   function sorted(items) {
@@ -1657,6 +1662,14 @@
     syncCatChips(); applyFilters();
   }
 
+  function syncCuratorChips() {
+    document.querySelectorAll('.curator-chip').forEach(function(chip) { chip.classList.toggle('active', activeCurators.has(chip.dataset.cur)); });
+  }
+  function toggleCurator(name) {
+    if (activeCurators.has(name)) activeCurators.delete(name); else activeCurators.add(name);
+    syncCuratorChips(); applyFilters();
+  }
+
   function toggleGroupTech(gid) {
     const g = GROUPS.find(x => x.id === gid);
     const all = g.techs.every(t => activeTechs.has(t.id));
@@ -1669,7 +1682,7 @@
     syncChips(); applyFilters();
   }
 
-  function resetFilters() { activeTechs.clear(); activeCategories.clear(); document.getElementById('searchInput').value = ''; syncChips(); syncCatChips(); applyFilters(); }
+  function resetFilters() { activeTechs.clear(); activeCategories.clear(); activeCurators.clear(); document.getElementById('searchInput').value = ''; syncChips(); syncCatChips(); syncCuratorChips(); applyFilters(); }
 
   function applyFilters() {
     searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -1686,6 +1699,7 @@
         let show = true;
         if (activeTechs.size > 0 && !item.techs.some(t => activeTechs.has(t))) show = false;
         if (activeCategories.size > 0 && !getCategories(id).some(c => activeCategories.has(c))) show = false;
+        if (activeCurators.size > 0 && !activeCurators.has(DEPUTY_MAP[item._dept])) show = false;
         if (show && searchTerm) { if (!(item.title + ' ' + item.desc).toLowerCase().includes(searchTerm)) show = false; }
         group.querySelectorAll('tr[data-id="' + id + '"]').forEach(function(r) { r.classList.toggle('hidden', !show); });
         if (show) groupVisible = true;
