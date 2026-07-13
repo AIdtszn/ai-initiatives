@@ -1872,10 +1872,10 @@
       html = '<span style="color:#94a3b8;font-size:13px">Не назначена</span>';
     }
     if (window.ocRole === 'editor') {
-      html += '<div style="margin-top:6px;font-size:11px;color:#94a3b8">Назначить:</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:2px">' +
+      html += '<div style="margin-top:16px;font-size:11px;color:#94a3b8">Назначить:</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:2px">' +
         CATEGORIES.map(function(c) {
           var on = cats.indexOf(c.id) !== -1;
-          return '<button class="cat-toggle' + (on ? ' on' : '') + '" style="background:' + (on ? c.color : '#e2e8f0') + ';color:' + (on ? '#fff' : '#475569') + '" onclick="event.stopPropagation();toggleItemCategory(' + id + ',\'' + c.id + '\')">' + c.ru + '</button>';
+          return '<button class="cat-toggle' + (on ? ' on' : '') + '" style="background:#e2e8f0;color:' + (on ? '#2563eb' : '#475569') + ';border-color:' + (on ? '#2563eb' : '#d0d5dd') + ';font-weight:' + (on ? '600' : '400') + '" onclick="event.stopPropagation();toggleItemCategory(' + id + ',\'' + c.id + '\')">' + (on ? '✓ ' : '') + c.ru + '</button>';
         }).join('') + '</div>';
     }
     body.innerHTML = html;
