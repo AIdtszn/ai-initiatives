@@ -1298,6 +1298,20 @@
   let commentsCache = {};
   window.ocRole = null;
 
+  const DEFAULT_ORG_FLAGS = {
+    1: {lsi:0,idpo:1,external:0}, 2: {lsi:0,idpo:0,external:1}, 3: {lsi:0,idpo:1,external:0},
+    4: {lsi:0,idpo:1,external:0}, 5: {lsi:0,idpo:0,external:1}, 6: {lsi:0,idpo:1,external:1},
+    7: {lsi:0,idpo:1,external:0}, 8: {lsi:0,idpo:1,external:0}, 9: {lsi:0,idpo:0,external:1},
+    10: {lsi:0,idpo:1,external:0}, 11: {lsi:0,idpo:1,external:1}, 12: {lsi:1,idpo:0,external:1},
+    13: {lsi:1,idpo:0,external:1}, 14: {lsi:0,idpo:0,external:1}, 15: {lsi:1,idpo:0,external:1},
+    16: {lsi:1,idpo:0,external:1}, 17: {lsi:0,idpo:0,external:0}, 18: {lsi:0,idpo:0,external:0},
+    19: {lsi:0,idpo:0,external:0}, 20: {lsi:1,idpo:0,external:0}, 21: {lsi:0,idpo:0,external:0},
+    22: {lsi:0,idpo:0,external:0}, 23: {lsi:0,idpo:0,external:0}, 24: {lsi:0,idpo:1,external:0},
+    25: {lsi:1,idpo:0,external:1}, 26: {lsi:0,idpo:0,external:1}, 27: {lsi:0,idpo:0,external:1},
+    28: {lsi:0,idpo:0,external:1}, 29: {lsi:0,idpo:0,external:1}, 30: {lsi:0,idpo:1,external:1},
+    31: {lsi:0,idpo:1,external:1}, 32: {lsi:0,idpo:0,external:1},
+  };
+
   function setRole(role) {
     window.ocRole = role;
     sessionStorage.setItem('oc_role', role);
@@ -1453,7 +1467,11 @@
   function getOrgFlags(id) {
     var cached = orgFlagsCache[id];
     if (cached) return { lsi: cached.lsi, idpo: cached.idpo, external: cached.external };
-    try { return JSON.parse(localStorage.getItem('oc_org_' + id)) || {}; } catch(e) { return {}; }
+    try {
+      var ls = localStorage.getItem('oc_org_' + id);
+      if (ls) return JSON.parse(ls);
+    } catch(e) {}
+    return DEFAULT_ORG_FLAGS[id] || {};
   }
 
   function setOrgFlag(id, field, value) {
