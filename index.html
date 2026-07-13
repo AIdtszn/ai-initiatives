@@ -1482,7 +1482,7 @@
     var data = [];
     var header = ['ID', 'Инициатива', 'Заказчик', 'Подразделение', 'Описание', 'Комментарий', 'Охват (групп)', 'Статус',
       'LLM / Генеративный ИИ', 'ML / Машинное обучение', 'CV / Компьютерное зрение', 'Speech / Речевые технологии', 'DT / Цифровые двойники',
-      'ЛСИ', 'ИДПО+Решения ДИТ', 'Внешний подрядчик'];
+      'ЛСИ', 'ИДПО+Решения ДИТ', 'Внешний подрядчик', 'Куратор', 'Категория'];
     data.push(header);
     allItems.forEach(function(item) {
       var comment = (getComment(item.id) || '').replace(/\n/g, ' ');
@@ -1505,6 +1505,8 @@
         flags.lsi ? 'Да' : 'Нет',
         flags.idpo ? 'Да' : 'Нет',
         flags.external ? 'Да' : 'Нет',
+        DEPUTY_MAP[item._dept] || '',
+        getCategories(item.id).map(function(cid) { var c = CATEGORIES.find(function(x) { return x.id === cid; }); return c ? c.ru : ''; }).filter(Boolean).join(', '),
       ]);
     });
     var wb = XLSX.utils.book_new();
