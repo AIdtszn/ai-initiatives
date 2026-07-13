@@ -1327,6 +1327,15 @@
     planning: { label: 'Планируется', cls: 'tag-planning' },
   };
 
+  const DEPUTY_MAP = {
+    'Управление стратегии долголетия и специальных проектов': 'Филиппов В.Э.',
+    'Управление опеки и попечительства': 'Келлер П.А.',
+    'Управление организации социального обслуживания на дому': 'Келлер П.А.',
+    'Управление содействия занятости населения (ЦЗН «Моя работа»)': 'Александрова А.Б.',
+    'Управление по социальной интеграции лиц с ограничениями жизнедеятельности': 'Шалыгина О.В.',
+    'Управление организации стационарного социального обслуживания': 'Шалыгина О.В.',
+  };
+
   let allItems = [];
   INITIATIVES.forEach(g => g.items.forEach(i => {
     allItems.push(i);
@@ -1850,7 +1859,9 @@
     });
     const s = STATUS_MAP[item.status] || STATUS_MAP.proposed;
     document.getElementById('tabDescription').innerHTML =
-      '<div class="modal-meta"><span>&#128101; ' + item._customer + ' (' + item._dept + ')</span><span class="tag ' + s.cls + '">' + s.label + '</span><span>&#128200; Охват: ' + groupsOf(item).size + ' из ' + GROUPS.length + ' групп</span></div>' +
+      '<div class="modal-meta"><span>&#128101; ' + item._customer + ' (' + item._dept + ')</span>' +
+      (DEPUTY_MAP[item._dept] ? '<span style="font-size:13px;color:#64748b">&#128736; Куратор: ' + DEPUTY_MAP[item._dept] + '</span>' : '') +
+      '<span class="tag ' + s.cls + '">' + s.label + '</span><span>&#128200; Охват: ' + groupsOf(item).size + ' из ' + GROUPS.length + ' групп</span></div>' +
       '<div class="modal-section"><div class="modal-label">Описание</div><div class="modal-text">' + item.desc + '</div></div>' +
       '<div class="modal-section"><div class="modal-label">Технологии (' + item.techs.length + ')</div><div class="modal-techs">' +
       Object.entries(techGroups).map(([, techs]) => techs.map(t => '<span class="modal-tech-tag"><span class="mtdot" style="background:' + t.color + '"></span>' + t.ru + '</span>').join('')).join('') + '</div></div>' +
