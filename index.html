@@ -24,6 +24,13 @@
   .sub-chip { display: flex; align-items: center; gap: 3px; font-size: 11px; cursor: pointer; padding: 2px 8px; border-radius: 10px; border: 1px solid #e2e8f0; background: #fff; transition: .15s; user-select: none; }
   .sub-chip:hover { border-color: #94a3b8; }
   .sub-chip.active { border-color: #2563eb; background: #eff4ff; }
+  .cat-chip { display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; padding: 4px 12px; border-radius: 14px; border: 1px solid #d0d5dd; background: #fafafa; transition: .15s; user-select: none; }
+  .cat-chip:hover { border-color: #475569; }
+  .cat-chip.active { border-color: #2563eb; background: #eff4ff; }
+  .cat-badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 8px; color: #fff; }
+  .cat-toggle { font-size: 11px; cursor: pointer; padding: 2px 8px; border-radius: 6px; border: 1px solid #d0d5dd; transition: .15s; }
+  .cat-toggle.on { border-color: transparent; }
+  .cat-toggle:hover { opacity: .8; }
   .reset-btn { font-size: 12px; color: #2563eb; background: none; border: none; cursor: pointer; padding: 4px 8px; }
   .reset-btn:hover { text-decoration: underline; }
 
@@ -434,6 +441,40 @@
   const TECH_TO_GROUP = {};
   GROUPS.forEach(g => g.techs.forEach(t => { TECH_TO_GROUP[t.id] = g.id; }));
   const ALL_TECHS = GROUPS.flatMap(g => g.techs.map(t => ({ ...t, group: g.id, color: g.color })));
+
+  const CATEGORIES = [
+    { id: 'admin',   ru: 'Оптимизация административной деятельности', color: '#8b5cf6' },
+    { id: 'worker',  ru: 'Для сотрудников Соцблока',                 color: '#f59e0b' },
+    { id: 'citizen', ru: 'Для граждан',                              color: '#10b981' },
+  ];
+  const INITIATIVE_CATEGORIES = {};
+  function getCategories(id) {
+    var c = INITIATIVE_CATEGORIES[id];
+    if (c) return c.slice();
+    try { var v = JSON.parse(localStorage.getItem('oc_cat_' + id)); if (v) { INITIATIVE_CATEGORIES[id] = v; return v.slice(); } } catch(e) {}
+    return [];
+  }
+  function setCategories(id, arr) {
+    if (window.ocRole !== 'editor') return;
+    INITIATIVE_CATEGORIES[id] = arr.slice();
+    if (arr.length) localStorage.setItem('oc_cat_' + id, JSON.stringify(arr)); else localStorage.removeItem('oc_cat_' + id);
+    renderGroups(); applyFilters();
+  }
+  function toggleItemCategory(id, catId) {
+    if (window.ocRole !== 'editor') return;
+    var current = getCategories(id);
+    var idx = current.indexOf(catId);
+    if (idx === -1) current.push(catId); else current.splice(idx, 1);
+    setCategories(id, current);
+  }
+  function detectCategories(text) {
+    var lower = text.toLowerCase();
+    var found = [];
+    if (['сотрудник','работник','документооборот','отчёт','отчет','отчётность','отчетность','заявк','контрол','кадр','hr','персонал','контакт-центр','кц','планировани','нагрузк','эффективность','внутренн','регламент','инспекци','поручен','call-центр','оператор'].some(function(kw) { return lower.indexOf(kw) !== -1; })) found.push('admin');
+    if (['соцработник','социальн','соцзащит','специалист','опек','попечител','стационар','реабилитаци','интернат','центр помощи','учрежден','ведомств','межведомствен','соцобслуживан','дом-интернат','нсу','соцсфер'].some(function(kw) { return lower.indexOf(kw) !== -1; })) found.push('worker');
+    if (['граждан','жител','населен','пациент','заявител','семь','родител','ребёнк','ребенк','дет','пожил','инвалид','льгот','пособи','выплат','ветеран','многодет','малоимущ','услуг','портал','госуслуг','mos.ru','запись','приём','прием','обращен','жалоб'].some(function(kw) { return lower.indexOf(kw) !== -1; })) found.push('citizen');
+    return found.filter(function(v, i, a) { return a.indexOf(v) === i; });
+  }
 
   const INITIATIVES = [
     {
@@ -1286,9 +1327,24 @@
   };
 
   let allItems = [];
-  INITIATIVES.forEach(g => g.items.forEach(i => { allItems.push(i); i._customer = g.customer; i._dept = g.dept; i._services = INITIATIVE_SERVICES[i.id] || []; i._combinations = INITIATIVE_COMBINATIONS[i.id] || []; }));
+  INITIATIVES.forEach(g => g.items.forEach(i => {
+    allItems.push(i);
+    i._customer = g.customer; i._dept = g.dept;
+    i._services = INITIATIVE_SERVICES[i.id] || [];
+    i._combinations = INITIATIVE_COMBINATIONS[i.id] || [];
+    i._categories = getCategories(i.id);
+    if (!i._categories.length) {
+      var detected = detectCategories(i.title + ' ' + i.desc);
+      if (detected.length) { INITIATIVE_CATEGORIES[i.id] = detected; localStorage.setItem('oc_cat_' + i.id, JSON.stringify(detected)); i._categories = detected; }
+    }
+  }));
+  // manual override for initiative #33
+  if (!getCategories(33).length) { INITIATIVE_CATEGORIES[33] = ['admin','worker']; localStorage.setItem('oc_cat_33', JSON.stringify(['admin','worker'])); }
+  var idx33 = allItems.findIndex(i => i.id === 33);
+  if (idx33 !== -1 && !allItems[idx33]._categories.length) allItems[idx33]._categories = ['admin','worker'];
 
   let activeTechs = new Set();
+  let activeCategories = new Set();
   let searchTerm = '';
   let sortKey = '';
   let sortDir = 1;
@@ -1454,7 +1510,10 @@
       html += '<div class="filter-row"><span class="filter-label" style="color:' + g.color + '">' + g.id.toUpperCase() + ':</span>' +
         g.techs.map(t => '<div class="sub-chip" data-tech="' + t.id + '" onclick="toggleTech(\'' + t.id + '\')"><span class="sdot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:' + g.color + '"></span>' + t.ru + '</div>').join('') + '</div>';
     });
+    html += '<div class="filter-row" style="margin-top:6px;border-top:1px solid #e2e8f0;padding-top:6px"><span style="font-size:13px;font-weight:600;color:#475569">Категория:</span>' +
+      CATEGORIES.map(c => '<div class="cat-chip" data-cat="' + c.id + '" onclick="toggleCat(\'' + c.id + '\')"><span class="sdot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:' + c.color + '"></span>' + c.ru + '</div>').join('') + '</div>';
     container.innerHTML = html;
+    syncCatChips();
   }
 
   function sorted(items) {
@@ -1580,6 +1639,14 @@
     document.querySelectorAll('.sub-chip').forEach(chip => chip.classList.toggle('active', activeTechs.has(chip.dataset.tech)));
   }
 
+  function syncCatChips() {
+    document.querySelectorAll('.cat-chip').forEach(function(chip) { chip.classList.toggle('active', activeCategories.has(chip.dataset.cat)); });
+  }
+  function toggleCat(id) {
+    if (activeCategories.has(id)) activeCategories.delete(id); else activeCategories.add(id);
+    syncCatChips(); applyFilters();
+  }
+
   function toggleGroupTech(gid) {
     const g = GROUPS.find(x => x.id === gid);
     const all = g.techs.every(t => activeTechs.has(t.id));
@@ -1592,7 +1659,7 @@
     syncChips(); applyFilters();
   }
 
-  function resetFilters() { activeTechs.clear(); document.getElementById('searchInput').value = ''; syncChips(); applyFilters(); }
+  function resetFilters() { activeTechs.clear(); activeCategories.clear(); document.getElementById('searchInput').value = ''; syncChips(); syncCatChips(); applyFilters(); }
 
   function applyFilters() {
     searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -1608,6 +1675,7 @@
         if (!item) return;
         let show = true;
         if (activeTechs.size > 0 && !item.techs.some(t => activeTechs.has(t))) show = false;
+        if (activeCategories.size > 0 && !getCategories(id).some(c => activeCategories.has(c))) show = false;
         if (show && searchTerm) { if (!(item.title + ' ' + item.desc).toLowerCase().includes(searchTerm)) show = false; }
         group.querySelectorAll('tr[data-id="' + id + '"]').forEach(function(r) { r.classList.toggle('hidden', !show); });
         if (show) groupVisible = true;
@@ -1780,11 +1848,27 @@
       if (t) techGroups[gid].push(t);
     });
     const s = STATUS_MAP[item.status] || STATUS_MAP.proposed;
+    var modalCats = getCategories(item.id);
+    var isViewer = window.ocRole !== 'editor';
+    var catSection = '<div class="modal-section"><div class="modal-label">Категория применения</div><div class="modal-techs">' +
+      (modalCats.length ? modalCats.map(function(cid) {
+        var c = CATEGORIES.find(function(x) { return x.id === cid; });
+        return c ? '<span class="cat-badge" style="background:' + c.color + '">' + c.ru + '</span>' : '';
+      }).join('') : '<span style="color:#94a3b8;font-size:13px">Не назначена</span>');
+    if (!isViewer) {
+      catSection += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">' +
+        CATEGORIES.map(function(c) {
+          var on = modalCats.indexOf(c.id) !== -1;
+          return '<button class="cat-toggle' + (on ? ' on' : '') + '" style="background:' + (on ? c.color : '#e2e8f0') + ';color:' + (on ? '#fff' : '#475569') + '" onclick="event.stopPropagation();toggleItemCategory(' + item.id + ',\'' + c.id + '\')">' + c.ru + '</button>';
+        }).join('') + '</div>';
+    }
+    catSection += '</div>';
     document.getElementById('tabDescription').innerHTML =
       '<div class="modal-meta"><span>&#128101; ' + item._customer + ' (' + item._dept + ')</span><span class="tag ' + s.cls + '">' + s.label + '</span><span>&#128200; Охват: ' + groupsOf(item).size + ' из ' + GROUPS.length + ' групп</span></div>' +
       '<div class="modal-section"><div class="modal-label">Описание</div><div class="modal-text">' + item.desc + '</div></div>' +
       '<div class="modal-section"><div class="modal-label">Технологии (' + item.techs.length + ')</div><div class="modal-techs">' +
-      Object.entries(techGroups).map(([, techs]) => techs.map(t => '<span class="modal-tech-tag"><span class="mtdot" style="background:' + t.color + '"></span>' + t.ru + '</span>').join('')).join('') + '</div></div>';
+      Object.entries(techGroups).map(([, techs]) => techs.map(t => '<span class="modal-tech-tag"><span class="mtdot" style="background:' + t.color + '"></span>' + t.ru + '</span>').join('')).join('') + '</div></div>' +
+      catSection;
   }
 
   function renderServicesTab(item) {
@@ -1971,6 +2055,11 @@
         i._dept = '';
         if (!i._services) i._services = [];
         if (!i._combinations) i._combinations = [];
+        if (!i._categories || !i._categories.length) {
+          var ad = detectCategories(i.title + ' ' + (i.desc || ''));
+          i._categories = ad.length ? ad : [];
+          if (ad.length) { INITIATIVE_CATEGORIES[i.id] = ad; localStorage.setItem('oc_cat_' + i.id, JSON.stringify(ad)); }
+        }
       });
     } catch(e) { console.error('loadAdditional error:', e); }
   }
@@ -2218,14 +2307,17 @@
     if (!desc) { alert('Введите описание инициативы'); return; }
     var techs = detectTechs(title + ' ' + desc);
     if (!techs.length) techs = ['nlp'];
+    var detectedCats = detectCategories(title + ' ' + desc);
     const newItem = {
       id: getNextId(),
       title: title,
       techs: techs,
       status: 'proposed',
       desc: desc + (customer !== 'Пользователь' || dept ? '\n\n---\nДобавлено: ' + customer + (dept ? ' (' + dept + ')' : '') : ''),
-      _isAdditional: true
+      _isAdditional: true,
+      _categories: detectedCats
     };
+    if (detectedCats.length) setCategories(newItem.id, detectedCats);
     let additionalGroup = INITIATIVES.find(function(g) { return g.customer === 'Дополнительные инициативы'; });
     if (!additionalGroup) {
       additionalGroup = { customer: 'Дополнительные инициативы', dept: 'Предложения пользователей', items: [] };
