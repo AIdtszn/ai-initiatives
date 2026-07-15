@@ -74,6 +74,99 @@
   .delete-btn { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #ef4444; background: none; color: #ef4444; font-size: 11px; font-weight: 700; cursor: pointer; line-height: 1; margin-right: 4px; flex-shrink: 0; transition: .15s; vertical-align: middle; }
   .delete-btn:hover { background: #ef4444; color: #fff; }
 
+  .sidebar-overlay { position: fixed; inset: 0; background: rgba(15,23,42,.3); z-index: 2999; display: none; }
+  .sidebar-overlay.open { display: block; }
+  .sidebar { position: fixed; top: 0; right: -520px; width: 520px; height: 100vh; background: #fff; z-index: 3000; box-shadow: -4px 0 24px rgba(0,0,0,.12); display: flex; flex-direction: column; transition: right .3s ease; }
+  .sidebar.open { right: 0; }
+  .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; }
+  .sidebar-header h3 { font-size: 15px; font-weight: 600; color: #0f172a; }
+  .sidebar-close { background: none; border: none; font-size: 20px; color: #94a3b8; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
+  .sidebar-close:hover { background: #f1f5f9; color: #475569; }
+  .sidebar-body { flex: 1; overflow-y: auto; padding: 20px; }
+
+  .s-score-btn { background: none; border: 1px solid #d0d5dd; border-radius: 6px; font-size: 13px; padding: 3px 10px; cursor: pointer; color: #475569; transition: .15s; }
+  .s-score-btn:hover { border-color: #2563eb; color: #2563eb; }
+
+  .health-card { background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; }
+  .health-ring { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+  .health-ring svg { transform: rotate(-90deg); }
+  .health-ring-bg { fill: none; stroke: #e2e8f0; stroke-width: 8; }
+  .health-ring-fg { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+  .health-number { position: absolute; font-size: 32px; font-weight: 700; color: #0f172a; }
+  .health-label { font-size: 12px; color: #64748b; margin-top: 4px; }
+  .health-verdict { font-size: 14px; font-weight: 600; margin-top: 8px; }
+
+  .sw-section { margin-bottom: 16px; }
+  .sw-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .sw-list { list-style: none; padding: 0; margin: 0; }
+  .sw-list li { font-size: 12px; padding: 4px 0; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #f8fafc; }
+  .sw-list li:last-child { border-bottom: none; }
+  .sw-strength { color: #166534; }
+  .sw-weakness { color: #b91c1c; }
+  .sw-neutral { color: #475569; }
+
+  .domain-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+  .domain-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #f8fafc; cursor: pointer; user-select: none; }
+  .domain-arrow { font-size: 10px; color: #94a3b8; transition: transform .2s; margin-right: 6px; }
+  .domain-card.collapsed .domain-arrow { transform: rotate(-90deg); }
+  .domain-card.collapsed .domain-body { display: none; }
+  .domain-header:hover { background: #f1f5f9; }
+  .domain-title { font-size: 13px; font-weight: 600; color: #0f172a; }
+  .domain-score { font-size: 13px; font-weight: 600; }
+  .domain-body { padding: 8px 14px 14px; }
+  .param-name { font-size: 12px; font-weight: 500; color: #1e293b; display:flex; align-items:center; }
+  .param-desc { font-size: 10px; color: #94a3b8; }
+
+  .sidebar-info-icon { cursor: pointer; font-size: 14px; color: #94a3b8; vertical-align: middle; margin-left: 4px; }
+  .sidebar-info-icon:hover { color: #2563eb; }
+  .sidebar-section-hint { margin-top:4px; font-size:12px; color:#94a3b8; text-align:center; }
+
+  .p-influence { font-size:10px; color:#64748b; margin-right:2px; white-space:nowrap; }
+  .p-score-select { padding:3px 6px; border:1px solid #d0d5dd; border-radius:4px; font-size:11px; background:#fff; outline:none; cursor:pointer; max-width:180px; }
+  .p-score-select:focus { border-color:#2563eb; }
+  .param-val { font-size:12px; font-weight:600; min-width:18px; text-align:center; color:#475569; }
+  .param-control { display:flex; flex-direction:column; gap:4px; min-width:0; flex:1; }
+  .param-score-col { display:flex; align-items:center; gap:6px; }
+  .param-text-col { width:100%; }
+  .p-textarea { width:100%; box-sizing:border-box; min-height:48px; padding:5px 8px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; line-height:1.4; font-family:inherit; resize:vertical; outline:none; }
+  .p-textarea:focus { border-color:#2563eb; }
+  .p-text { width:100%; box-sizing:border-box; padding:4px 8px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; outline:none; }
+  .p-text:focus { border-color:#2563eb; }
+  .p-checklist { display:flex; flex-direction:column; gap:3px; margin-top:2px; }
+  .p-chk-item { display:flex; align-items:flex-start; gap:4px; font-size:11px; line-height:1.3; color:#1e293b; cursor:pointer; }
+  .p-chk-item input[type="checkbox"] { margin-top:1px; accent-color:#2563eb; cursor:pointer; }
+  .param-auto-label { font-size:9px; color:#2563eb; font-style:italic; margin-left:4px; vertical-align:middle; }
+  .param-kill-label { font-size:9px; color:#dc2626; font-weight:600; margin-left:4px; vertical-align:middle; }
+  .param-row { padding:6px 0; border-bottom:1px solid #f1f5f9; }
+  .param-row:last-child { border-bottom:none; }
+  .conditional-hide { display:none; }
+  .param-info { margin-bottom:4px; }
+
+  .modal-methodology .modal-body { max-height:60vh; }
+  .modal-methodology .modal-section { margin-bottom:12px; }
+  .modal-methodology .modal-section:last-child { margin-bottom:0; }
+  .modal-methodology .modal-text { font-size:13px; line-height:1.6; color:#1e293b; }
+
+  .eisenhower-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+  .eisenhower-title { font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 12px; text-align: center; }
+  .eisenhower-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; width: 100%; aspect-ratio: 1; border: 1px solid #e2e8f0; border-radius: 6px; }
+  .eisenhower-cell { position: relative; padding: 8px; min-height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: help; }
+  .eisenhower-cell:hover::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 10px; line-height: 1.4; white-space: pre-line; width: 220px; text-align: left; z-index: 3100; box-shadow: 0 4px 12px rgba(0,0,0,.25); pointer-events: none; }
+  .eisenhower-cell:hover::before { content: ''; position: absolute; bottom: calc(100% + 2px); left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: #1e293b; z-index: 3100; pointer-events: none; }
+  .eisenhower-cell:nth-child(1) { background: #f0fdf4; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; } /* quick wins */
+  .eisenhower-cell:nth-child(2) { background: #fefce8; border-bottom: 1px solid #e2e8f0; } /* major projects */
+  .eisenhower-cell:nth-child(3) { background: #f8fafc; border-right: 1px solid #e2e8f0; } /* fill-ins */
+  .eisenhower-cell:nth-child(4) { background: #fef2f2; } /* thankless */
+  .eisenhower-cell-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+  .eisenhower-dot { width: 16px; height: 16px; border-radius: 50%; position: absolute; transform: translate(-50%,-50%); border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.2); z-index: 1; }
+  .eisenhower-axis-x { position: relative; height: 20px; display: flex; justify-content: space-between; padding: 0 10px; font-size: 10px; color: #94a3b8; margin-top: 4px; }
+  .eisenhower-axis-y { position: absolute; left: -30px; top: 50%; transform: rotate(-90deg) translateX(-50%); font-size: 10px; color: #94a3b8; white-space: nowrap; }
+
+  @media (max-width: 768px) {
+    .sidebar { width: 100%; right: -100%; }
+    .eisenhower-grid { aspect-ratio: auto; min-height: 200px; }
+  }
+
   .gcount { font-size: 10px; font-weight: 400; color: #94a3b8; margin-left: 2px; }
   .group-cell { text-align: center; white-space: nowrap; min-width: 48px; }
   .group-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; opacity: .15; transition: .15s; cursor: default; }
@@ -272,6 +365,25 @@
   .org-check-col { text-align: center; min-width: 100px; max-width: 130px; font-size: 11px; font-weight: 500; color: #475569; line-height: 1.3; }
   .org-check-cell { text-align: center; vertical-align: middle; }
   .org-check-cell input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: #2563eb; }
+
+  .print-passport { display:none; }
+  .export-btn { background: none; border:1px solid #d0d5dd; border-radius:6px; font-size:12px; padding:4px 10px; cursor:pointer; color:#475569; transition:.15s; }
+  .export-btn:hover { border-color:#2563eb; color:#2563eb; }
+
+  @media print {
+    body > :not(.print-passport) { display:none !important; }
+    .print-passport { display:block; position:absolute; left:0; top:0; width:100%; padding:16px 20px; font-family:'Helvetica',Arial,sans-serif; color:#000; }
+    .print-passport h2 { font-size:16px; margin:0 0 4px; }
+    .print-passport h3 { font-size:13px; margin:12px 0 4px; border-bottom:1px solid #ccc; padding-bottom:2px; }
+    .print-passport .p-meta { font-size:10px; color:#555; margin-bottom:10px; }
+    .print-passport table { width:100%; border-collapse:collapse; font-size:9px; margin-bottom:10px; page-break-inside:avoid; }
+    .print-passport th { background:#f0f0f0; text-align:left; padding:3px 5px; border:1px solid #ccc; font-weight:600; }
+    .print-passport td { padding:2px 5px; border:1px solid #ccc; vertical-align:top; }
+    .print-passport .p-summary { display:flex; gap:16px; margin:8px 0; }
+    .print-passport .p-summary-item { flex:1; padding:6px 10px; border:1px solid #ddd; border-radius:4px; background:#fafafa; }
+    .print-passport .p-summary-item strong { font-size:11px; }
+    .print-passport .p-summary-item span { font-size:9px; color:#555; }
+  }
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -294,6 +406,11 @@
       <input type="text" id="searchInput" placeholder="Поиск по названию или описанию...">
     </div>
     <div class="filter-groups" id="filterGroups"></div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:11px;color:#64748b;font-weight:500">Экспорт реестра:</span>
+      <button class="export-btn" onclick="downloadRegistryPDF()" title="Скачать сводный реестр в PDF">⬇ Реестр PDF</button>
+      <button class="export-btn" onclick="downloadRegistryExcel()" title="Скачать сводный реестр в Excel">⬇ Реестр Excel</button>
+    </div>
   </div>
 
   <div class="ref-toggle">
@@ -319,6 +436,7 @@
   <div class="modal" id="modal">
     <div class="modal-header">
       <h3 id="modalTitle"></h3>
+      <button class="s-score-btn" onclick="openSidebar(modalItemId)" title="Оценка инициативы">📋</button>
       <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
     <div class="modal-body" id="modalBody">
@@ -326,8 +444,100 @@
       <div class="tab-content active" id="tabDescription"></div>
       <div class="tab-content" id="tabServices"></div>
       <div class="tab-content" id="tabRoadmap"></div>
+      <div class="tab-content" id="tabEval"></div>
       <div class="modal-comment-section" id="modalCommentSection"></div>
     </div>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h3 id="sidebarTitle">📋 Паспорт инициативы</h3>
+      <button class="sidebar-close" onclick="closeSidebar()">&times;</button>
+    </div>
+    <div class="sidebar-body" id="sidebarBody"></div>
+  </div>
+
+  <div class="modal-overlay" id="methodologyOverlay" onclick="closeMethodologyModal()"></div>
+  <div class="modal modal-methodology" id="methodologyModal">
+    <div class="modal-header">
+      <h3>📐 Методология расчёта оценки</h3>
+      <button class="modal-close" onclick="closeMethodologyModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-label">Индекс потенциала инициативы (0–100)</div>
+        <div class="modal-text" style="margin-bottom:8px">Взвешенная сумма средних баллов по 6 доменам:</div>
+        <div style="font-size:12px;line-height:1.7;padding:8px 12px;background:#f8fafc;border-radius:6px;margin-bottom:8px">
+          <b>HealthIndex</b> = Σ(domain.weight% × avg(domain.params) / 5 × 100)<br>
+          <span style="color:#64748b">где avg(domain.params) — среднее арифметическое баллов всех подпараметров домена (0–5)</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;font-size:11px;margin-top:4px">
+          <span>Эффект — <b>25%</b> <span style="color:#64748b;font-size:10px">(3 взвешенных подпараметра)</span></span>
+          <span>Стратегическое соответствие — <b>20%</b> <span style="color:#64748b;font-size:10px">(вектор развития)</span></span>
+          <span>Ресурсы и команда — <b>10%</b> <span style="color:#64748b;font-size:10px">(исполнительская)</span></span>
+          <span>Техническая сложность — <b>15%</b> <span style="color:#dc2626;font-size:10px">(ограничитель)</span></span>
+          <span>Финансирование — <b>10%</b> <span style="color:#64748b;font-size:10px">(базовое условие)</span></span>
+          <span>Риски — <b>20%</b> <span style="color:#dc2626;font-size:10px">(жёсткий ограничитель)</span></span>
+        </div>
+        <div style="font-size:11px;color:#475569;margin-top:6px;padding:8px 10px;background:#f8fafc;border-radius:6px">
+          <b>Принцип:</b> Ценность (Эффект + Стратегия = <b>45%</b>) превалирует над Затратами (Ресурсы + Финансы = <b>20%</b>). Риски (<b>20%</b>) и Техническая сложность (<b>15%</b>) выступают ограничителями с негативным сентиментом.
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-label">Шкала оценки подпараметров</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;font-size:11px;margin-top:4px">
+          <span><b>1</b> — Низкое влияние</span><span><b>3</b> — Среднее влияние</span>
+          <span><b>5</b> — Высокое влияние</span><span></span>
+        </div>
+        <div style="font-size:11px;color:#64748b;margin-top:6px">Булевы параметры (Да/Нет) маппятся в <b>5</b> или <b>0</b> баллов соответственно. Чеклист «Метрики эффективности»: каждый пункт = <b>+0.5</b>, макс <b>5</b> баллов.</div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-label">Сентимент доменов</div>
+        <div class="modal-text" style="font-size:12px">
+          Домены с <b>negative sentiment</b> (Техническая сложность, Риски) — высокая оценка их подпараметров является <b>минусом</b> для проекта. При расчёте Индекс потенциала инициативы их скор инвертируется: <nobr><code>effective = 5 − raw</code></nobr>. Таким образом, низкая техническая сложность (1) даёт вклад 4/5, а высокая (5) — 0/5.
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-label">Авто-параметры</div>
+        <div class="modal-text" style="font-size:12px">Параметры с пометкой «авто» заполняются автоматически на основе текста описания, roadmap и подключённых сервисов. Эксперт может переопределить значение вручную.</div>
+        <ul style="font-size:11px;color:#475569;margin:6px 0 0;padding-left:18px">
+          <li><b>Наличие и качество данных</b> — по ключевым словам в описании и стадиям roadmap</li>
+          <li><b>Типовые решения</b> — по количеству подключённых сервисов Москвы</li>
+        </ul>
+      </div>
+      <div class="modal-section">
+        <div class="modal-label">Домен «Эффект» — взвешенные параметры</div>
+        <div class="modal-text" style="font-size:12px">Каждый подпараметр домена имеет собственный вес (paramWeight), сумма = 25% от Индекс потенциала инициативы:</div>
+        <ul style="font-size:11px;color:#475569;margin:6px 0 0;padding-left:18px">
+          <li><b>Влияние на процессы</b> — вес 10% (выбор: Для граждан=5 / Для сотрудников=3 / Нет пользователя=1)</li>
+          <li><b>Тип ИИ</b> — вес 5% (Фоновый ИИ=5 / Инструмент оптимизации=3)</li>
+          <li><b>Метрики эффективности</b> — вес 10% (чеклист, 10 пунктов × 0.5, макс 5)</li>
+        </ul>
+      </div>
+      <div class="modal-section">
+        <div class="modal-label">⛔ Стоп-факторы (Kill Criteria)</div>
+        <div class="modal-text" style="font-size:12px">
+          <b>Неустранимый риск по 152-ФЗ</b> — критический стоп-фактор. Если выставлен в «Да», проект блокируется вне зависимости от Индекс потенциала инициативы. Блокировка отображается красным баннером в сайдбаре и вкладке оценки. Индекс потенциала инициативы при этом продолжает рассчитываться (оценка остаётся видимой), но проект не рекомендуется к реализации.
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-label">Матрица категории проекта</div>
+        <div class="modal-text" style="font-size:12px">
+          <b>Ось X (Сложность)</b> — среднее по доменам «Техническая сложность» и «Ресурсы и команда»<br>
+          <b>Ось Y (Ценность)</b> — среднее по доменам «Эффект» и «Стратегическое соответствие»<br>
+          <b>Квадранты:</b> Быстрые победы (высокая ценность, низкая сложность), Крупные проекты (высокая ценность, высокая сложность), Текущие задачи (низкая ценность, низкая сложность), Неблагодарные (низкая ценность, высокая сложность).
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-label">Правила заполнения</div>
+        <div class="modal-text" style="font-size:12px">
+          Все поля с текстовым вводом сохраняются автоматически при потере фокуса. Баллы и тексты хранятся в localStorage браузера и восстанавливаются при повторном открытии. Для авто-параметров можно ввести экспертное заключение — оно не сбрасывается при пересчёте.
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="sidebar-body" id="sidebarBody"></div>
   </div>
 
   <div class="comment-overlay" id="submitOverlay" onclick="closeSubmitModal()"></div>
@@ -350,6 +560,10 @@
       <div class="form-group">
         <label for="submitDept">Подразделение / Отдел</label>
         <input type="text" id="submitDept" placeholder="Например: Управление стратегии долголетия">
+      </div>
+      <div class="form-group">
+        <label for="submitCurator">Куратор инициативы</label>
+        <input type="text" id="submitCurator" placeholder="ФИО куратора">
       </div>
       <div class="form-group">
         <label for="submitDesc">Описание инициативы *</label>
@@ -1340,7 +1554,7 @@
   let allItems = [];
   INITIATIVES.forEach(g => g.items.forEach(i => {
     allItems.push(i);
-    i._customer = g.customer; i._dept = g.dept;
+    i._customer = g.customer; i._dept = g.dept; i._curator = DEPUTY_MAP[i._dept] || '';
     i._services = INITIATIVE_SERVICES[i.id] || [];
     i._combinations = INITIATIVE_COMBINATIONS[i.id] || [];
     i._categories = getCategories(i.id);
@@ -1505,7 +1719,7 @@
         flags.lsi ? 'Да' : 'Нет',
         flags.idpo ? 'Да' : 'Нет',
         flags.external ? 'Да' : 'Нет',
-        DEPUTY_MAP[item._dept] || '',
+        item._curator || DEPUTY_MAP[item._dept] || '',
         getCategories(item.id).map(function(cid) { var c = CATEGORIES.find(function(x) { return x.id === cid; }); return c ? c.ru : ''; }).filter(Boolean).join(', '),
       ]);
     });
@@ -1617,7 +1831,7 @@
       var flags = getOrgFlags(item.id);
       return '<tr data-id="' + item.id + '">' +
         '<td class="col-id">' + item.id + '</td>' +
-        '<td class="col-title"><div><button class="expand-btn" onclick="openInitiativeModal(' + item.id + ', 0)" title="Подробнее">+</button>' + (item._isAdditional ? '<button class="delete-btn" ' + deleteHidden + ' onclick="deleteAdditionalItem(' + item.id + ', event)" title="Удалить">✕</button>' : '') + item.title + '</div><div class="desc">' + item.desc.split('\n')[0] + '</div></td>' +
+        '<td class="col-title"><div><button class="expand-btn" onclick="openInitiativeModal(' + item.id + ', 0)" title="Подробнее">+</button>' + (item._isAdditional ? '<button class="delete-btn" ' + deleteHidden + ' onclick="deleteAdditionalItem(' + item.id + ', event)" title="Удалить">✕</button>' : '') + '<button class="s-score-btn" onclick="openSidebar(' + item.id + ')" title="Оценка">📋</button>' + item.title + '</div><div class="desc">' + item.desc.split('\n')[0] + '</div></td>' +
         '<td class="col-comment"><button class="comment-btn ' + (getComment(item.id) ? 'has-note' : '') + '" ' + commentHidden + ' data-id="' + item.id + '" onclick="openComment(event, ' + item.id + ')">&#128172;</button></td>' +
         '<td class="col-status"><span class="tag ' + s.cls + '">' + s.label + '</span></td>' +
         '<td class="org-check-cell"><input type="checkbox" ' + disabledAttr + ' ' + (flags.lsi ? 'checked' : '') + ' onchange="setOrgFlag(' + item.id + ',\'lsi\',this.checked)"></td>' +
@@ -1628,7 +1842,7 @@
     const activeGroupIds = groupsOf(item);
     return '<tr data-id="' + item.id + '">' +
       '<td class="col-id">' + item.id + '</td>' +
-      '<td class="col-title"><div><button class="expand-btn" onclick="openInitiativeModal(' + item.id + ', 0)" title="Подробнее">+</button>' + (item._isAdditional ? '<button class="delete-btn" ' + deleteHidden + ' onclick="deleteAdditionalItem(' + item.id + ', event)" title="Удалить">✕</button>' : '') + item.title + '</div><div class="desc">' + item.desc.split('\n')[0] + '</div></td>' +
+      '<td class="col-title"><div><button class="expand-btn" onclick="openInitiativeModal(' + item.id + ', 0)" title="Подробнее">+</button>' + (item._isAdditional ? '<button class="delete-btn" ' + deleteHidden + ' onclick="deleteAdditionalItem(' + item.id + ', event)" title="Удалить">✕</button>' : '') + '<button class="s-score-btn" onclick="openSidebar(' + item.id + ')" title="Оценка">📋</button>' + item.title + '</div><div class="desc">' + item.desc.split('\n')[0] + '</div></td>' +
       '<td class="col-comment"><button class="comment-btn ' + (getComment(item.id) ? 'has-note' : '') + '" ' + commentHidden + ' data-id="' + item.id + '" onclick="openComment(event, ' + item.id + ')">&#128172;</button></td>' +
       '<td class="col-complexity">' + genComplexity(item) + '</td>' +
       '<td class="col-status"><span class="tag ' + s.cls + '">' + s.label + '</span></td>' +
@@ -1701,7 +1915,7 @@
         let show = true;
         if (activeTechs.size > 0 && !item.techs.some(t => activeTechs.has(t))) show = false;
         if (activeCategories.size > 0 && !getCategories(id).some(c => activeCategories.has(c))) show = false;
-        if (activeCurators.size > 0 && !activeCurators.has(DEPUTY_MAP[item._dept])) show = false;
+        if (activeCurators.size > 0 && !activeCurators.has(item._curator || DEPUTY_MAP[item._dept])) show = false;
         if (show && searchTerm) { if (!(item.title + ' ' + item.desc).toLowerCase().includes(searchTerm)) show = false; }
         group.querySelectorAll('tr[data-id="' + id + '"]').forEach(function(r) { r.classList.toggle('hidden', !show); });
         if (show) groupVisible = true;
@@ -1821,6 +2035,7 @@
     renderDescriptionTab(item);
     renderServicesTab(item);
     renderRoadmapTab(item);
+    renderEvalTab(item);
     renderModalComment(item);
     switchTab(tabIndex || 0);
 
@@ -1853,6 +2068,7 @@
       { label: '📋 Описание' },
       { label: '🏛 Сервисы Москвы' },
       { label: '🔧 Разработка' },
+      { label: '📋 Оценка' },
     ];
     document.getElementById('tabBar').innerHTML = tabs.map((t, i) =>
       '<button class="tab-btn' + (i === activeIndex ? ' active' : '') + '" onclick="switchTab(' + i + ')">' + t.label + '</button>'
@@ -1860,8 +2076,11 @@
   }
 
   function switchTab(index) {
-    const ids = ['tabDescription', 'tabServices', 'tabRoadmap'];
-    ids.forEach((id, i) => document.getElementById(id).classList.toggle('active', i === index));
+    var ids = ['tabDescription', 'tabServices', 'tabRoadmap', 'tabEval'];
+    ids.forEach(function(id, i) {
+      var el = document.getElementById(id);
+      if (el) el.classList.toggle('active', i === index);
+    });
     document.querySelectorAll('#tabBar .tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === index));
   }
 
@@ -1876,7 +2095,7 @@
     const s = STATUS_MAP[item.status] || STATUS_MAP.proposed;
     document.getElementById('tabDescription').innerHTML =
       '<div class="modal-meta"><span>&#128101; ' + item._customer + ' (' + item._dept + ')</span>' +
-      (DEPUTY_MAP[item._dept] ? '<span style="font-size:13px;color:#64748b">&#128736; Куратор: ' + DEPUTY_MAP[item._dept] + '</span>' : '') +
+      (item._curator ? '<span style="font-size:13px;color:#64748b">&#128736; Куратор: ' + item._curator + '</span>' : '') +
       '<span class="tag ' + s.cls + '">' + s.label + '</span><span>&#128200; Охват: ' + groupsOf(item).size + ' из ' + GROUPS.length + ' групп</span></div>' +
       '<div class="modal-section"><div class="modal-label">Описание</div><div class="modal-text">' + item.desc + '</div></div>' +
       '<div class="modal-section"><div class="modal-label">Технологии (' + item.techs.length + ')</div><div class="modal-techs">' +
@@ -2017,12 +2236,15 @@
   function closeModal() {
     document.getElementById('modalOverlay').classList.remove('open');
     document.getElementById('modal').classList.remove('open');
-    document.body.style.overflow = '';
+    var sb = document.getElementById('sidebar');
+    if (!sb || !sb.classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
     modalItemId = null;
   }
 
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') { closeModal(); closePopup(); closeSubmitModal(); closeRefModal(); }
+    if (e.key === 'Escape') { closeModal(); closePopup(); closeSubmitModal(); closeRefModal(); closeMethodologyModal(); closeSidebar(); }
   });
 
   const STORAGE_KEY = 'oc_additional';
@@ -2267,6 +2489,1005 @@
     openInitiativeModal(id, 0);
   }
 
+  // ─── Scoring & Evaluation System ───
+  const LEVELS = [
+    { score:1, label:'Низкое влияние' },
+    { score:3, label:'Среднее влияние' },
+    { score:5, label:'Высокое влияние' }
+  ];
+  const LEVEL_LABELS = { 1:'Низкое влияние', 3:'Среднее влияние', 5:'Высокое влияние' };
+
+  const SCORE_DOMAINS = [
+    { id:'effect', title:'Эффект', weight:25, sentiment:'positive', params:[
+      { id:'process_impact', title:'Влияние на процессы', desc:'Кто является целевым пользователем результата', textType:'select', paramWeight:10, options:[
+        { score:0, label:'Нет явного пользователя' },
+        { score:3, label:'Для сотрудников' },
+        { score:5, label:'Для граждан' }
+      ]},
+      { id:'ai_type', title:'Тип ИИ', desc:'Характер применения искусственного интеллекта', textType:'select', paramWeight:5, options:[
+        { score:3, label:'Инструмент для оптимизации ручного труда' },
+        { score:5, label:'Фоновый ИИ-процесс' }
+      ]},
+      { id:'metrics', title:'Метрики эффективности', desc:'Что улучшает внедрение ИИ (отметьте применимые)', textType:'checklist', paramWeight:10, options:[
+        { score:0.5, label:'Сокращение времени обработки запросов граждан' },
+        { score:0.5, label:'Повышение точности принимаемых решений' },
+        { score:0.5, label:'Снижение ручной нагрузки на сотрудников' },
+        { score:0.5, label:'Улучшение качества обслуживания (NPS/CSI)' },
+        { score:0.5, label:'Ускорение межведомственного взаимодействия' },
+        { score:0.5, label:'Оптимизация бюджетных расходов' },
+        { score:0.5, label:'Повышение прозрачности и прослеживаемости процессов' },
+        { score:0.5, label:'Снижение числа ошибок в документах и данных' },
+        { score:0.5, label:'Сокращение времени оказания услуги' },
+        { score:0.5, label:'Раннее выявление отклонений и рисков' }
+      ]}
+    ]},
+    { id:'strategy', title:'Стратегическое соответствие', weight:20, sentiment:'positive', params:[
+      { id:'priority_align', title:'Соответствие приоритетам ДТСЗН', desc:'Связь с текущими программами', textType:'select', boolean:true, options:[
+        { score:0, label:'Не соответствует' },
+        { score:5, label:'Соответствует' }
+      ]},
+      { id:'cross_dept', title:'Кросс-ведомственный потенциал', desc:'Возможность тиражирования', textType:'textarea' }
+    ]},
+    { id:'resources', title:'Ресурсы и команда', weight:10, sentiment:'positive', params:[
+      { id:'gov_team', title:'Реализация силами ГАУ ИТЦ / подведов', desc:'Внутренние ресурсы для разработки', textType:'select', options:[
+        { score:1, label:'Компетенции отсутствуют' },
+        { score:3, label:'Требуется доукомплектование' },
+        { score:5, label:'Компетенции и ресурсы есть' }
+      ]},
+      { id:'dit_team', title:'Реализация силами ДИТ', desc:'Участие ДИТ в проекте', textType:'select', options:[
+        { score:1, label:'Не вовлечены' },
+        { score:3, label:'Частично вовлечены' },
+        { score:5, label:'Вовлечены' }
+      ]},
+      { id:'outsource', title:'Только внешний подрядчик', desc:'Привлечение внешнего подрядчика вместо внутренних ресурсов', textType:'select', boolean:true, options:[
+        { score:0, label:'Нет' },
+        { score:5, label:'Да' }
+      ]},
+      { id:'outsource_reasons', title:'Причины привлечения внешнего подрядчика', desc:'Отметьте применимые причины', textType:'checklist', options:[
+        { score:2.5, label:'Типовое решение или технология отсутствует в ДИТ' },
+        { score:2.5, label:'Слишком долгая очередь у команд ДИТ' }
+      ]}
+    ]},
+    { id:'tech_complexity', title:'Техническая сложность', weight:15, sentiment:'negative', params:[
+      { id:'data_quality', title:'Наличие и качество данных', desc:'Данные доступны, структурированы, пригодны для ML', auto:true, textType:'textarea' },
+      { id:'template_solutions', title:'Типовые решения в контуре ПМ', desc:'Типовые сервисы Правительства Москвы, применимые в инициативе', auto:true, textType:'checklist', options: (function(){
+        var opts = [];
+        MOSCOW_SERVICES.forEach(function(s) { opts.push({ id:s.id, score:0.19, label:s.name }); });
+        return opts;
+      })() },
+      { id:'tech_coverage', title:'Технологическое покрытие', desc:'Виды ИИ-технологий, применимые в инициативе', auto:true, textType:'checklist', options: (function(){
+        var opts = [];
+        ALL_TECHS.forEach(function(t) { opts.push({ id:t.id, score:0.36, label:t.ru }); });
+        return opts;
+      })() }
+    ]},
+    { id:'financing', title:'Финансирование', weight:10, sentiment:'positive', params:[
+      { id:'cost_broken', title:'Стоимость определена по этапам', desc:'Разбивка бюджета по стадиям roadmap', textType:'text' },
+      { id:'source_defined', title:'Источник финансирования определён', desc:'Понятно, из какого бюджета', textType:'select', boolean:true, options:[
+        { score:0, label:'Не определён' },
+        { score:5, label:'Определён' }
+      ]},
+      { id:'owner_defined', title:'Определён владелец бюджета', desc:'Выберите куратора / ответственного за бюджет', textType:'select', options: (function() {
+        var opts = [{ score:0, label:'Не определён' }];
+        CURATORS.forEach(function(n) { opts.push({ score:5, label:n }); });
+        return opts;
+      })() }
+    ]},
+    { id:'risks', title:'Риски', weight:20, sentiment:'negative', params:[
+      { id:'kill_152fz', title:'⛔ Неустранимый риск по 152-ФЗ', desc:'Нарушение №152-ФЗ «О персональных данных» — критический стоп-фактор', textType:'select', boolean:true, killCriterion:true, options:[
+        { score:0, label:'Риск управляем / отсутствует' },
+        { score:5, label:'Выявлен неустранимый риск' }
+      ]},
+      { id:'regulatory', title:'Регуляторные / Privacy-риски', desc:'152-ФЗ, персональные данные, согласования', textType:'textarea' },
+      { id:'ext_deps', title:'Зависимость от внешних систем', desc:'Сторонние API, межведомственные интеграции', textType:'textarea' }
+    ]}
+  ];
+
+  var SCORES_VERSION = 5;
+
+  function getScoresKey(id) { return 'oc_eval_' + id; }
+
+  function loadScores(id) {
+    try { var v = localStorage.getItem(getScoresKey(id)); return v ? JSON.parse(v) : {}; } catch(e) { return {}; }
+  }
+
+  function saveScores(id, scores) {
+    scores._version = SCORES_VERSION;
+    localStorage.setItem(getScoresKey(id), JSON.stringify(scores));
+  }
+
+  var _scoringCache = {};
+
+  function getParamAutoValue(item, domainId, paramId) {
+    var text = ((item.title||'') + ' ' + (item.desc||'') + ' ' + ((item.roadmap&&item.roadmap.description)||'')).toLowerCase();
+    var stages = (item.roadmap && item.roadmap.stages) || [];
+    var stageNames = stages.map(function(s){ return (s.name||'').toLowerCase(); }).join(' ');
+    var svcs = (item._services || []).length;
+    function mapLevel(v) { if (v <= 2) return 1; if (v <= 4) return 3; return 5; }
+    switch(paramId) {
+      case 'data_quality':
+        var dq = 1;
+        if (text.length > 200) dq = 3;
+        if (text.indexOf('данн')!==-1 || text.indexOf('датасет')!==-1 || text.indexOf('база')!==-1) dq = 5;
+        if (text.indexOf('реес')!==-1 || text.indexOf('журнал')!==-1 || text.indexOf('отчет')!==-1) dq = Math.max(dq, 3);
+        if (stageNames.indexOf('данн')!==-1 || stageNames.indexOf('сбор')!==-1 || stageNames.indexOf('разметк')!==-1) dq = 5;
+        return dq;
+      case 'template_solutions':
+        if (svcs === 0) return 1;
+        if (svcs >= 4) return 5;
+        return 3;
+
+      default: return null;
+    }
+  }
+
+  function buildScores(item) {
+    var id = item.id;
+    var saved = loadScores(id);
+    if (saved._version && saved._version !== SCORES_VERSION) { saved = {}; }
+    var scores = { _version:SCORES_VERSION, _initiativeTitle:item.title };
+
+    SCORE_DOMAINS.forEach(function(domain) {
+      domain.params.forEach(function(param) {
+        var key = domain.id + '.' + param.id;
+        var savedEntry = saved[key];
+        if (param.auto) {
+          if (savedEntry !== undefined && !savedEntry.auto) {
+            scores[key] = { value:savedEntry.value, auto:false, text:savedEntry.text||'' };
+          } else if (param.textType === 'checklist') {
+            var autoIndices = [];
+            param.options.forEach(function(o, i) {
+              var matched = false;
+              if (o.id != null) {
+                if (typeof o.id === 'number') {
+                  matched = (item._services || []).some(function(s){ return s.serviceId === o.id; });
+                } else {
+                  matched = ((item.techs || []).indexOf(o.id) !== -1);
+                }
+              }
+              if (matched) autoIndices.push('' + i);
+            });
+            var chkVal = Math.min(5, autoIndices.reduce(function(acc, idx) {
+              return acc + (param.options[+idx] ? param.options[+idx].score : 0);
+            }, 0));
+            scores[key] = { value:chkVal, auto:true, text:autoIndices.join('|') };
+          } else {
+            var autoVal = getParamAutoValue(item, domain.id, param.id);
+            scores[key] = { value:autoVal, auto:true, text:savedEntry?savedEntry.text||'':'' };
+          }
+        } else if (savedEntry !== undefined && !savedEntry.auto) {
+          scores[key] = { value:savedEntry.value, auto:false, text:savedEntry.text||'' };
+        } else if (param.textType === 'checklist') {
+          var checkedList = savedEntry ? (savedEntry.text ? savedEntry.text.split('|').filter(Boolean) : []) : [];
+          var chkVal = Math.min(5, checkedList.reduce(function(acc, idx) {
+            return acc + (param.options[+idx] ? param.options[+idx].score : 0);
+          }, 0));
+          scores[key] = { value:chkVal, auto:false, text:checkedList.join('|') };
+        } else {
+          var initVal = param.boolean || param.killCriterion ? 0 : 1;
+          if (param.options && param.options.length) {
+            initVal = param.options[0].score;
+          }
+          scores[key] = { value:initVal, auto:false, text:'' };
+        }
+      });
+    });
+
+    scores._blocked = false;
+    scores._blockedReason = '';
+    scores._blockedParam = '';
+    SCORE_DOMAINS.forEach(function(domain) {
+      domain.params.forEach(function(param) {
+        if (param.killCriterion) {
+          var key = domain.id + '.' + param.id;
+          var entry = scores[key];
+          if (entry && entry.value >= 5) {
+            scores._blocked = true;
+            scores._blockedReason = entry.text || 'Неустранимый риск по 152-ФЗ';
+            scores._blockedParam = param.title;
+          }
+        }
+      });
+    });
+
+    saveScores(id, scores);
+    _scoringCache[id] = scores;
+    return scores;
+  }
+
+  function getDomainScore(scores, domainId) {
+    var domain = SCORE_DOMAINS.find(function(d){ return d.id === domainId; });
+    if (!domain || !domain.params.length) return 0;
+    var relevant = domain.params.filter(function(p){ return !p.killCriterion; });
+    if (!relevant.length) return 0;
+    var vals = relevant.map(function(p){
+      var entry = scores[domain.id+'.'+p.id];
+      return entry ? entry.value : 0;
+    });
+    var sum = vals.reduce(function(a,b){ return a+b; }, 0);
+    return sum / vals.length;
+  }
+
+  function domainEffectiveScore(scores, domain) {
+    if (typeof domain === 'string') domain = SCORE_DOMAINS.find(function(d){ return d.id === domain; });
+    if (!domain) return 0;
+    var relevant = domain.params.filter(function(p){ return !p.killCriterion; });
+    if (!relevant.length) return 0;
+    var totalPw = 0, sum = 0;
+    relevant.forEach(function(p) {
+      var pw = p.paramWeight || (domain.weight / relevant.length);
+      var entry = scores[domain.id + '.' + p.id];
+      var val = entry ? entry.value : 0;
+      if (domain.sentiment === 'negative') val = 5 - val;
+      totalPw += pw;
+      sum += (val / 5) * pw;
+    });
+    return totalPw > 0 ? (sum / totalPw) * 5 : 0;
+  }
+
+  function calcHealthIndex(scores) {
+    var total = 0;
+    SCORE_DOMAINS.forEach(function(domain) {
+      domain.params.forEach(function(param) {
+        if (param.killCriterion) return;
+        var entry = scores[domain.id + '.' + param.id];
+        var val = entry ? entry.value : 0;
+        if (domain.sentiment === 'negative') val = 5 - val;
+        var pw = param.paramWeight || (domain.weight / domain.params.filter(function(p){ return !p.killCriterion; }).length);
+        total += (val / 5) * pw;
+      });
+    });
+    return Math.round(total);
+  }
+
+  function getStrengthsWeaknesses(scores) {
+    var s = [], w = [], n = [];
+    SCORE_DOMAINS.forEach(function(domain) {
+      var eff = domainEffectiveScore(scores, domain);
+      var raw = getDomainScore(scores, domain.id);
+      var pct = Math.round((eff / 5) * 100);
+      var weighted = Math.round(((eff / 5) * domain.weight) * 10) / 10;
+      var rawLevel = raw >= 4.5 ? 'Высокое влияние' : raw >= 2.5 ? 'Среднее влияние' : 'Низкое влияние';
+      var entry = { id:domain.id, title:domain.title, score:pct, weight:domain.weight, weightedScore:weighted, rawAvg:raw, rawLevel:rawLevel, negative:domain.sentiment==='negative' };
+      if (entry.negative) {
+        if (pct < 40) w.push(entry);
+        else n.push(entry);
+      } else {
+        if (pct >= 70) s.push(entry);
+        else if (pct < 40) w.push(entry);
+        else n.push(entry);
+      }
+    });
+    s.sort(function(a,b){ return b.score - a.score; });
+    w.sort(function(a,b){ return a.score - b.score; });
+    n.sort(function(a,b){ return b.score - a.score; });
+    return { strengths:s, weaknesses:w, neutral:n };
+  }
+
+  function getRecommendations(sw) {
+    var recs = [];
+    if (sw.weaknesses.length) {
+      sw.weaknesses.forEach(function(dom) {
+        switch(dom.id) {
+          case 'financing': recs.push('Уточнить бюджет, источник финансирования и владельца бюджета'); break;
+          case 'resources': recs.push('Определить команду реализации (ГАУ ИТЦ / ДИТ / подрядчик)'); break;
+          case 'risks': recs.push('Проработать регуляторные риски и внешние зависимости'); break;
+          case 'strategy': recs.push('Усилить связь с приоритетами ДТСЗН и кросс-ведомственное взаимодействие'); break;
+          case 'effect': recs.push('Сформулировать измеримые метрики эффективности и KPI'); break;
+          case 'tech_complexity': recs.push('Провести аудит данных и оценить зрелость типовых решений'); break;
+          default: recs.push('Проработать домен: ' + dom.title);
+        }
+      });
+    }
+    if (!sw.strengths.length && !sw.weaknesses.length && !sw.neutral.length) {
+      recs.push('Заполните оценки по всем доменам');
+    }
+    return recs.slice(0, 4);
+  }
+
+  function healthColor(num) {
+    if (num >= 70) return '#16a34a';
+    if (num >= 40) return '#eab308';
+    return '#dc2626';
+  }
+
+  function healthVerdict(num) {
+    if (num >= 80) return '✅ Высокий потенциал';
+    if (num >= 60) return '⚠️ Средний потенциал';
+    if (num >= 40) return '🔶 Низкий потенциал';
+    return '🔴 Слабый потенциал';
+  }
+
+  function renderHealthCard(healthIndex, sw, scores) {
+    var blockedHtml = '';
+    if (scores && scores._blocked) {
+      blockedHtml = '<div class="blocked-banner" style="background:#fef2f2;border:2px solid #dc2626;border-radius:8px;padding:10px 12px;margin-bottom:12px;text-align:center">' +
+        '<div style="font-size:16px;font-weight:700;color:#dc2626">⛔ ПРОЕКТ ЗАБЛОКИРОВАН</div>' +
+        '<div class="blocked-reason" style="font-size:12px;color:#991b1b;margin-top:4px">' + scores._blockedReason + '</div>' +
+        (scores._blockedParam ? '<div style="font-size:11px;color:#b91c1c;margin-top:2px">Стоп-фактор: ' + scores._blockedParam + '</div>' : '') +
+      '</div>';
+    }
+    var c = healthColor(healthIndex);
+    var r = 40, circumference = 2 * Math.PI * r;
+    var offset = circumference - (healthIndex / 100) * circumference;
+    function formatEntry(d) {
+      if (d.negative) return d.title + ' — ' + d.weightedScore + ' / ' + d.weight + ' (' + d.score + '% от максимального потенциала)';
+      return d.title + ' — ' + d.weightedScore + ' / ' + d.weight + ' (' + d.score + '% от максимального потенциала)';
+    }
+    var shtml = '', whtml = '', nhtml = '';
+    sw.strengths.forEach(function(d){
+      shtml += '<li class="sw-strength">↑ ' + formatEntry(d) + '</li>';
+    });
+    sw.weaknesses.forEach(function(d){
+      whtml += '<li class="sw-weakness">↓ ' + formatEntry(d) + (d.negative ? ' ⚠' : '') + '</li>';
+    });
+    sw.neutral.forEach(function(d){
+      nhtml += '<li class="sw-neutral">→ ' + formatEntry(d) + (d.negative ? '' : '') + '</li>';
+    });
+    var recs = getRecommendations(sw);
+    var rhtml = recs.map(function(r){ return '<li>💡 ' + r + '</li>'; }).join('');
+
+    return (
+      blockedHtml +
+      '<div class="health-card">' +
+        '<div class="health-ring">' +
+          '<svg width="100" height="100" viewBox="0 0 100 100">' +
+            '<circle class="health-ring-bg" cx="50" cy="50" r="' + r + '"/>' +
+            '<circle class="health-ring-fg" cx="50" cy="50" r="' + r + '" stroke="' + c + '" stroke-dasharray="' + circumference + '" stroke-dashoffset="' + offset + '"/>' +
+          '</svg>' +
+          '<div class="health-number" style="color:' + c + '">' + healthIndex + '</div>' +
+        '</div>' +
+        '<div class="health-label">Индекс потенциала инициативы</div>' +
+        '<div class="health-verdict" style="color:' + c + '">' + healthVerdict(healthIndex) + '</div>' +
+      '</div>' +
+      '<div class="sw-strengths">' + (shtml ? '<div class="sw-section"><div class="sw-title sw-strength">✅ Сильные стороны</div><ul class="sw-list">' + shtml + '</ul></div>' : '') + '</div>' +
+      '<div class="sw-weaknesses">' + (whtml ? '<div class="sw-section"><div class="sw-title sw-weakness">⚠️ Слабые стороны</div><ul class="sw-list">' + whtml + '</ul></div>' : '') + '</div>' +
+      '<div class="sw-neutral">' + (nhtml ? '<div class="sw-section"><div class="sw-title sw-neutral">📋 Другие показатели</div><ul class="sw-list">' + nhtml + '</ul></div>' : '') + '</div>' +
+      '<div class="sw-recs">' + (rhtml ? '<div class="sw-section"><div class="sw-title" style="color:#2563eb">💡 Рекомендации</div><ul class="sw-list">' + rhtml + '</ul></div>' : '') + '</div>'
+    );
+  }
+
+  function renderEisenhowerMatrix(scores) {
+    var complexity = (getDomainScore(scores, 'tech_complexity') + getDomainScore(scores, 'resources')) / 2;
+    var value = (getDomainScore(scores, 'effect') + getDomainScore(scores, 'strategy')) / 2;
+    var cx = Math.round((complexity / 5) * 100);
+    var cy = Math.round((value / 5) * 100);
+
+    var qLabel = '', qColor = '';
+    if (cx <= 50 && cy > 50) { qLabel = '→ Быстрые победы'; qColor = '#16a34a'; }
+    else if (cx > 50 && cy > 50) { qLabel = '→ Крупный проект'; qColor = '#eab308'; }
+    else if (cx <= 50 && cy <= 50) { qLabel = '→ Малый эффект'; qColor = '#64748b'; }
+    else { qLabel = '→ Малоперспективные'; qColor = '#dc2626'; }
+
+    var dotStyle = 'left:' + cx + '%;top:' + (100 - cy) + '%;background:' + qColor;
+
+    return (
+      '<div class="eisenhower-box">' +
+        '<div class="eisenhower-title">Матрица категории проекта</div>' +
+        '<div style="position:relative;margin:0 auto;max-width:320px">' +
+          '<div class="eisenhower-grid" style="position:relative">' +
+            '<div class="eisenhower-cell" data-tip="Сложность ≤ 50%, Ценность > 50% → высокая ценность при низкой сложности.\nРекомендация: включить в ближайший план."><span class="eisenhower-cell-label" style="color:#16a34a">Быстрые победы</span><span style="font-size:10px;color:#94a3b8;text-align:center">Низкая сложность<br>Высокая ценность</span></div>' +
+            '<div class="eisenhower-cell" data-tip="Сложность > 50%, Ценность > 50% → высокая ценность, но требует ресурсов.\nРекомендация: запланировать, детальный анализ."><span class="eisenhower-cell-label" style="color:#ca8a04">Крупные проекты</span><span style="font-size:10px;color:#94a3b8;text-align:center">Высокая сложность<br>Высокая ценность</span></div>' +
+            '<div class="eisenhower-cell" data-tip="Сложность ≤ 50%, Ценность ≤ 50% → низкая ценность, низкая сложность.\nРекомендация: низкий приоритет, по остаточному принципу."><span class="eisenhower-cell-label" style="color:#64748b">Малый эффект</span><span style="font-size:10px;color:#94a3b8;text-align:center">Низкая сложность<br>Низкая ценность</span></div>' +
+            '<div class="eisenhower-cell" data-tip="Сложность > 50%, Ценность ≤ 50% → высокая сложность, низкая ценность.\nРекомендация: избегать, отклонить."><span class="eisenhower-cell-label" style="color:#dc2626">Малоперспективные</span><span style="font-size:10px;color:#94a3b8;text-align:center">Высокая сложность<br>Низкая ценность</span></div>' +
+            '<div class="eisenhower-dot" style="' + dotStyle + '"></div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-top:2px;padding:0 10px">' +
+          '<span>← Сложность</span><span>Ценность ↑</span>' +
+        '</div>' +
+        '<div class="eisenhower-quadrant-label" style="font-size:11px;margin-top:6px;text-align:center;color:' + qColor + ';font-weight:600">' +
+          qLabel + ' (Сложность: ' + cx + '%, Ценность: ' + cy + '%)' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderParamControl(item, param, scores, key, domainId) {
+    var s = scores[key] || { value:3, auto:false, text:'' };
+    var q = "'" + item.id + "','" + domainId + "','" + param.id + "'";
+
+    var scoreHtml = '';
+    if (param.textType === 'checklist') {
+      var checkedItems = s.text ? s.text.split('|').filter(Boolean) : [];
+      var chkHtml = '';
+      param.options.forEach(function(o, idx) {
+        var checked = checkedItems.indexOf(''+idx) !== -1 ? ' checked' : '';
+        chkHtml += '<label class="p-chk-item"><input type="checkbox" data-did="' + domainId + '" data-pid="' + param.id + '" data-idx="' + idx + '"' + checked + ' onchange="onChecklistToggle(' + q + ',' + idx + ',this.checked,this)"> ' + o.label + '</label>';
+      });
+      scoreHtml = '<div class="p-checklist">' + chkHtml + '</div>';
+    } else if (param.boolean || param.killCriterion) {
+      var checked = s.value >= 1 ? ' selected' : '';
+      scoreHtml = '<select class="p-score-select" onchange="onScoreChange(' + q + ',+this.value,this)">' +
+        '<option value="0"' + (!checked ? ' selected' : '') + '>Нет</option>' +
+        '<option value="5"' + checked + '>Да</option></select>';
+    } else if (param.options && param.options.length) {
+      var opts = '';
+      param.options.forEach(function(o) {
+        opts += '<option value="' + o.score + '"' + (s.value === o.score ? ' selected' : '') + '>' + o.label + '</option>';
+      });
+      scoreHtml = '<select class="p-score-select" onchange="onScoreChange(' + q + ',+this.value,this)">' + opts + '</select>';
+    } else {
+      var opts = '';
+      LEVELS.forEach(function(l) {
+        opts += '<option value="' + l.score + '"' + (s.value === l.score ? ' selected' : '') + '>' + l.label + '</option>';
+      });
+      scoreHtml = '<select class="p-score-select" onchange="onScoreChange(' + q + ',+this.value,this)">' + opts + '</select>';
+    }
+
+    var textHtml = '';
+    var textVal = s.text || '';
+    var eid = 'pt_' + item.id + '_' + domainId + '_' + param.id;
+    if (param.textType === 'textarea') {
+      textHtml = '<textarea class="p-textarea" id="' + eid + '" placeholder="' + (s.auto ? 'Введите экспертную оценку (авто-параметр)' : 'Введите экспертную оценку') + '" onchange="onTextChange(' + q + ',this.value)">' + textVal + '</textarea>';
+    } else if (param.textType === 'text') {
+      textHtml = '<input class="p-text" type="text" id="' + eid + '" value="' + textVal.replace(/"/g,'&quot;') + '" placeholder="' + (s.auto ? 'Введите значение' : 'Введите значение') + '" onchange="onTextChange(' + q + ',this.value)">';
+    }
+
+    var label = '';
+    if (s.auto) label = '<span class="param-auto-label">авто</span>';
+    if (param.killCriterion) label = '<span class="param-kill-label">стоп-фактор</span>';
+
+    var isKill = param.killCriterion;
+    var killTriggered = s.value >= 5;
+    var killStyle = isKill ? 'border:2px solid ' + (killTriggered ? '#dc2626' : '#e2e8f0') + ';border-radius:6px;background:' + (killTriggered ? '#fef2f2' : '#fff') + ';margin-bottom:4px' : '';
+
+    var extraInfo = param.textType === 'checklist' ? '<span class="param-val" style="margin-left:6px">' + s.value + '/5</span>' : '';
+
+    var conditionalHide = '';
+    if (param.id === 'outsource_reasons' && domainId === 'resources') {
+      var parentKey = domainId + '.outsource';
+      var parentEntry = scores[parentKey];
+      if (!parentEntry || parentEntry.value < 5) conditionalHide = 'conditional-hide';
+    }
+
+    return (
+      '<div class="param-row ' + conditionalHide + '" style="' + killStyle + '">' +
+        '<div class="param-info">' +
+          '<div class="param-name">' + (isKill ? '⛔ ' : '') + param.title + label + '</div>' +
+          '<div class="param-desc">' + param.desc + '</div>' +
+        '</div>' +
+        '<div class="param-control">' +
+          '<div class="param-score-col">' + (param.textType !== 'checklist' ? (scoreHtml + '<span class="param-val">' + s.value + '</span>') : (extraInfo)) + '</div>' +
+          (param.textType === 'checklist' ? '<div class="param-text-col">' + scoreHtml + '</div>' : '') +
+          (textHtml && param.textType !== 'checklist' ? '<div class="param-text-col">' + textHtml + '</div>' : '') +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function onChecklistToggle(id, domainId, paramId, idx, checked, el) {
+    var item = allItems.find(function(i){ return i.id === +id; });
+    if (!item) return;
+    var scores = _scoringCache[id] || loadScores(id);
+    var key = domainId + '.' + paramId;
+    var prev = scores[key] || { value:0, auto:false, text:'' };
+    var items = prev.text ? prev.text.split('|').filter(Boolean) : [];
+    if (checked && items.indexOf(''+idx) === -1) items.push(''+idx);
+    else if (!checked) items = items.filter(function(i){ return i !== ''+idx; });
+    var param = SCORE_DOMAINS.reduce(function(f, d) {
+      var p = d.params.find(function(p){ return p.id === paramId; });
+      return p || f;
+    }, null);
+    var newVal = Math.min(5, Math.round(items.reduce(function(acc, i) {
+      return acc + (param && param.options[+i] ? param.options[+i].score : 0);
+    }, 0) * 10) / 10);
+    scores[key] = { value:newVal, auto:false, text:items.join('|') };
+    saveScores(id, scores);
+    _scoringCache[id] = scores;
+
+    if (el) {
+      var paramRow = el.closest('.param-row');
+      if (paramRow) {
+        var valSpan = paramRow.querySelector('.param-val');
+        if (valSpan) valSpan.textContent = newVal + '/5';
+      }
+    }
+
+    recalcSidebar(item, domainId);
+  }
+
+  function renderDomainCards(item, scores) {
+    var html = '';
+    SCORE_DOMAINS.forEach(function(domain) {
+      var eff = domainEffectiveScore(scores, domain);
+      var pct = Math.round((eff / 5) * 100);
+      var c = healthColor(eff * 20);
+      var paramsHtml = '';
+      domain.params.forEach(function(param) {
+        var key = domain.id + '.' + param.id;
+        paramsHtml += renderParamControl(item, param, scores, key, domain.id);
+      });
+      html += (
+        '<div class="domain-card" data-domain="' + domain.id + '">' +
+          '<div class="domain-header" onclick="toggleDomain(this)">' +
+            '<span class="domain-arrow">▼</span>' +
+            '<span class="domain-title">' + domain.title + '</span>' +
+            '<span class="domain-score" style="color:' + c + '">' + pct + '/100</span>' +
+          '</div>' +
+          '<div class="domain-body">' + paramsHtml + '</div>' +
+        '</div>'
+      );
+    });
+    return html;
+  }
+
+  function toggleDomain(header) {
+    var card = header.closest('.domain-card');
+    if (card) card.classList.toggle('collapsed');
+  }
+
+  function openSidebar(id) {
+    var item = allItems.find(function(i){ return i.id === id; });
+    if (!item) return;
+    modalItemId = id;
+    document.getElementById('sidebarTitle').textContent = '📋 Паспорт инициативы: ' + item.title;
+    renderSidebar(item);
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebarOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('open');
+    var mo = document.getElementById('modalOverlay');
+    if (!mo || !mo.classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  function onScoreChange(id, domainId, paramId, value, el) {
+    var item = allItems.find(function(i){ return i.id === +id; });
+    if (!item) return;
+    var scores = _scoringCache[id] || loadScores(id);
+    var key = domainId + '.' + paramId;
+    var prev = scores[key] || { text:'' };
+    var label = (el && el.options && el.options[el.selectedIndex]) ? el.options[el.selectedIndex].text : '';
+    scores[key] = { value:value, auto:false, text:label || prev.text||'' };
+    saveScores(id, scores);
+    _scoringCache[id] = scores;
+
+    if (el && el.parentNode) {
+      var span = el.parentNode.querySelector('.param-val');
+      if (span) span.textContent = value;
+    }
+
+    if (paramId === 'outsource') {
+      var reasonRow = el ? el.closest('.param-row').nextElementSibling : null;
+      if (reasonRow) {
+        if (value >= 5) reasonRow.classList.remove('conditional-hide');
+        else reasonRow.classList.add('conditional-hide');
+      }
+    }
+
+    recalcSidebar(item, domainId);
+  }
+
+  function recalcSidebar(item, changedDomainId) {
+    try {
+      var scores = buildScores(item);
+      var hi = calcHealthIndex(scores);
+      var body = document.getElementById('sidebarBody');
+      if (!body) return;
+
+      var domainIdx = -1;
+      if (changedDomainId) {
+        SCORE_DOMAINS.forEach(function(d, i) {
+          if (d.id === changedDomainId) domainIdx = i;
+        });
+      }
+
+      if (domainIdx >= 0) {
+        var eff = domainEffectiveScore(scores, changedDomainId);
+        var pct = Math.round((eff / 5) * 100);
+        var c = healthColor(eff * 20);
+        var card = body.querySelector('.domain-card[data-domain="' + changedDomainId + '"]');
+        if (card) {
+          var ds = card.querySelector('.domain-score');
+          if (ds) { ds.textContent = pct + '/100'; ds.style.color = c; }
+        }
+      }
+
+      var hiEl = body.querySelector('.health-number');
+      var verdictEl = body.querySelector('.health-verdict');
+      var ringFg = body.querySelector('.health-ring-fg');
+      if (hiEl) hiEl.textContent = hi;
+      if (hiEl) hiEl.style.color = healthColor(hi);
+      if (verdictEl) { verdictEl.textContent = healthVerdict(hi); verdictEl.style.color = healthColor(hi); }
+      if (ringFg) {
+        var r = 40;
+        var circ = 2 * Math.PI * r;
+        var off = circ - (hi / 100) * circ;
+        ringFg.setAttribute('stroke-dasharray', circ);
+        ringFg.setAttribute('stroke-dashoffset', off);
+        ringFg.setAttribute('stroke', healthColor(hi));
+      }
+
+      var complexity = (getDomainScore(scores, 'tech_complexity') + getDomainScore(scores, 'resources')) / 2;
+      var value = (getDomainScore(scores, 'effect') + getDomainScore(scores, 'strategy')) / 2;
+      var cx = Math.round((complexity / 5) * 100);
+      var cy = Math.round((value / 5) * 100);
+      var qLabel = '';
+      var qColor = '';
+      if (cx <= 50 && cy > 50) { qLabel = '→ Быстрые победы'; qColor = '#16a34a'; }
+      else if (cx > 50 && cy > 50) { qLabel = '→ Крупный проект'; qColor = '#eab308'; }
+      else if (cx <= 50 && cy <= 50) { qLabel = '→ Малый эффект'; qColor = '#64748b'; }
+      else { qLabel = '→ Малоперспективные'; qColor = '#dc2626'; }
+      var dot = body.querySelector('.eisenhower-dot');
+      if (dot) { dot.style.left = cx + '%'; dot.style.top = (100 - cy) + '%'; dot.style.background = qColor; }
+      var qLabelEl = body.querySelector('.eisenhower-quadrant-label');
+      if (qLabelEl) { qLabelEl.textContent = qLabel + ' (Сложность: ' + cx + '%, Ценность: ' + cy + '%)'; qLabelEl.style.color = qColor; }
+
+      var blockedBanner = body.querySelector('.blocked-banner');
+      if (scores._blocked) {
+        if (blockedBanner) {
+          var br = blockedBanner.querySelector('.blocked-reason');
+          if (br) br.textContent = scores._blockedReason;
+        }
+      } else {
+        if (blockedBanner) blockedBanner.style.display = 'none';
+      }
+
+      updateSW(scores, hi, body);
+    } catch(e) { console.error('recalcSidebar error:', e); }
+  }
+
+  function updateSW(scores, hi, body) {
+    var sw = getStrengthsWeaknesses(scores);
+    var shtml = '', whtml = '', nhtml = '';
+    function formatEntry(d) {
+      if (d.negative) return d.title + ' — ' + d.weightedScore + ' / ' + d.weight + ' (' + d.score + '% от максимального потенциала)';
+      return d.title + ' — ' + d.weightedScore + ' / ' + d.weight + ' (' + d.score + '% от максимального потенциала)';
+    }
+    sw.strengths.forEach(function(d){ shtml += '<li class="sw-strength">↑ ' + formatEntry(d) + '</li>'; });
+    sw.weaknesses.forEach(function(d){ whtml += '<li class="sw-weakness">↓ ' + formatEntry(d) + (d.negative ? ' ⚠' : '') + '</li>'; });
+    sw.neutral.forEach(function(d){ nhtml += '<li class="sw-neutral">→ ' + formatEntry(d) + '</li>'; });
+    var recs = getRecommendations(sw);
+    var rhtml = recs.map(function(r){ return '<li>💡 ' + r + '</li>'; }).join('');
+    ['sw-strengths','sw-weaknesses','sw-neutral','sw-recs'].forEach(function(cls) {
+      var el = body.querySelector('.' + cls);
+      if (el) {
+        if (cls === 'sw-strengths') el.innerHTML = shtml ? '<div class="sw-section"><div class="sw-title sw-strength">✅ Сильные стороны</div><ul class="sw-list">' + shtml + '</ul></div>' : '';
+        else if (cls === 'sw-weaknesses') el.innerHTML = whtml ? '<div class="sw-section"><div class="sw-title sw-weakness">⚠️ Слабые стороны</div><ul class="sw-list">' + whtml + '</ul></div>' : '';
+        else if (cls === 'sw-neutral') el.innerHTML = nhtml ? '<div class="sw-section"><div class="sw-title sw-neutral">📋 Другие показатели</div><ul class="sw-list">' + nhtml + '</ul></div>' : '';
+        else if (cls === 'sw-recs') el.innerHTML = rhtml ? '<div class="sw-section"><div class="sw-title" style="color:#2563eb">💡 Рекомендации</div><ul class="sw-list">' + rhtml + '</ul></div>' : '';
+      }
+    });
+  }
+
+  function onTextChange(id, domainId, paramId, text) {
+    var item = allItems.find(function(i){ return i.id === +id; });
+    if (!item) return;
+    var scores = _scoringCache[id] || loadScores(id);
+    var key = domainId + '.' + paramId;
+    var prev = scores[key] || { value:3, auto:false };
+    scores[key] = { value:prev.value, auto:false, text:text };
+    saveScores(id, scores);
+    _scoringCache[id] = scores;
+  }
+
+  function renderSidebar(item) {
+    var scores = buildScores(item);
+    var hi = calcHealthIndex(scores);
+    var sw = getStrengthsWeaknesses(scores);
+    var container = document.getElementById('sidebarBody');
+
+    container.innerHTML = (
+      '<div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap">' +
+        '<button class="export-btn" onclick="downloadPassportPDF(' + item.id + ')" title="Сохранить PDF">⬇ Скачать PDF</button>' +
+        '<button class="export-btn" onclick="downloadPassportExcel(' + item.id + ')" title="Сохранить Excel">⬇ Скачать Excel</button>' +
+      '</div>' +
+      '<div style="padding:6px 2px 10px 2px;font-size:11px;color:#475569;border-bottom:1px solid #e2e8f0;margin-bottom:12px">' +
+        '<div>' + item._customer + (item._dept ? ' (' + item._dept + ')' : '') + '</div>' +
+        (item._curator ? '<div style="margin-top:2px">&#128736; Куратор: ' + item._curator + '</div>' : '') +
+      '</div>' +
+      renderHealthCard(hi, sw, scores) +
+      renderEisenhowerMatrix(scores) +
+      renderDomainCards(item, scores)
+    );
+  }
+
+  function openMethodologyModal() {
+    var o = document.getElementById('methodologyOverlay');
+    var m = document.getElementById('methodologyModal');
+    if (o) o.classList.add('open');
+    if (m) m.classList.add('open');
+  }
+
+  function closeMethodologyModal() {
+    var o = document.getElementById('methodologyOverlay');
+    var m = document.getElementById('methodologyModal');
+    if (o) o.classList.remove('open');
+    if (m) m.classList.remove('open');
+  }
+
+  function renderEvalTab(item) {
+    var scores = buildScores(item);
+    var hi = calcHealthIndex(scores);
+    var sw = getStrengthsWeaknesses(scores);
+    var c = healthColor(hi);
+    var shtml = '', whtml = '';
+    sw.strengths.forEach(function(d){ shtml += '<li class="sw-strength">↑ ' + d.title + ' (' + d.score + '/100)</li>'; });
+    sw.weaknesses.forEach(function(d){ whtml += '<li class="sw-weakness">↓ ' + d.title + ' (' + d.score + '/100)</li>'; });
+    var recs = getRecommendations(sw);
+
+    var domainsHtml = '';
+    SCORE_DOMAINS.forEach(function(domain) {
+      var eff = domainEffectiveScore(scores, domain);
+      var pct = Math.round((eff / 5) * 100);
+      var weighted = Math.round(((eff / 5) * domain.weight) * 10) / 10;
+      var dc = healthColor(eff * 20);
+      var rows = '';
+      domain.params.forEach(function(param) {
+        var key = domain.id + '.' + param.id;
+        var s = scores[key] || {};
+        var text = getScoreText(scores, domain.id, param.id);
+        var nowrap = param.textType === 'checklist' ? 'white-space:normal' : 'white-space:nowrap';
+        rows += '<tr><td style="font-size:11px;padding:2px 0">' + param.title + '</td><td style="font-size:11px;padding:2px 0;text-align:center;font-weight:600;color:' + (pct>=70?'#166534':pct<40?'#991b1b':'#a16207') + '">' + (s.value !== undefined ? s.value + '/5' : '—') + '</td><td style="font-size:10px;padding:2px 0 2px 8px;color:#64748b;max-width:260px;overflow:hidden;text-overflow:ellipsis;' + nowrap + '" title="' + text.replace(/"/g,'&quot;') + '">' + text + '</td></tr>';
+      });
+      domainsHtml += '<div style="margin-top:6px;font-size:11px"><div style="font-weight:600;color:' + dc + '">' + domain.title + ' — ' + weighted + ' / ' + domain.weight + ' (' + pct + '% от максимального потенциала)</div><table style="width:100%;border-collapse:collapse">' + rows + '</table></div>';
+    });
+
+    var blockedBanner = '';
+    if (scores._blocked) {
+      blockedBanner = '<div style="background:#fef2f2;border:2px solid #dc2626;border-radius:8px;padding:8px 12px;margin-bottom:10px;text-align:center">' +
+        '<div style="font-size:14px;font-weight:700;color:#dc2626">⛔ ПРОЕКТ ЗАБЛОКИРОВАН: ' + scores._blockedReason + '</div></div>';
+    }
+
+    document.getElementById('tabEval').innerHTML =
+      blockedBanner +
+      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:8px">' +
+        '<div style="flex-shrink:0;width:56px;height:56px;border-radius:50%;background:conic-gradient(' + c + ' ' + hi + '%, #e2e8f0 ' + hi + '%);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#0f172a">' + hi + '</div>' +
+        '<div style="flex:1"><div style="font-size:13px;font-weight:600;color:' + c + '">' + healthVerdict(hi) + '</div>' +
+        '<div style="font-size:11px;color:#64748b">Индекс потенциала инициативы: ' + hi + '/100</div></div>' +
+        '<div style="display:flex;gap:6px;flex-wrap:wrap">' +
+          '<button class="s-score-btn" onclick="openSidebar(' + item.id + ')">Открыть полную оценку 📋</button>' +
+          '<button class="export-btn" onclick="downloadPassportPDF(' + item.id + ')">⬇ PDF</button>' +
+          '<button class="export-btn" onclick="downloadPassportExcel(' + item.id + ')">⬇ Excel</button>' +
+        '</div>' +
+      '</div>' +
+      (shtml ? '<div style="margin-bottom:6px"><div style="font-size:11px;font-weight:600;color:#166534;margin-bottom:2px">✅ Сильные стороны</div><ul style="margin:0;padding-left:16px;font-size:11px;color:#166534">' + shtml + '</ul></div>' : '') +
+      (whtml ? '<div style="margin-bottom:6px"><div style="font-size:11px;font-weight:600;color:#991b1b;margin-bottom:2px">⚠️ Слабые стороны</div><ul style="margin:0;padding-left:16px;font-size:11px;color:#991b1b">' + whtml + '</ul></div>' : '') +
+      (recs.length ? '<div style="margin-bottom:10px;padding:8px 10px;background:#eff6ff;border-radius:6px;font-size:11px;color:#1e40af"><b>💡 Рекомендации:</b><br>' + recs.map(function(r){ return '• ' + r; }).join('<br>') + '</div>' : '') +
+      domainsHtml;
+  }
+
+  // ─── Export functions ───
+  function getScoreVal(scores, did, pid) {
+    var s = scores[did+'.'+pid];
+    return s ? s.value : '—';
+  }
+  function getScoreText(scores, did, pid) {
+    var s = scores[did+'.'+pid];
+    var t = s ? (s.text||'') : '';
+    if (t && t.indexOf('|') !== -1) {
+      var domain = SCORE_DOMAINS.find(function(d){ return d.id === did; });
+      var param = domain && domain.params.find(function(p){ return p.id === pid; });
+      if (param && param.textType === 'checklist') {
+        var idxs = t.split('|').filter(Boolean).map(Number);
+        return idxs.map(function(i){ return (param.options[i] && param.options[i].label) || ''; }).filter(Boolean).join('; ') || '—';
+      }
+    }
+    if (!t && s && s.auto && typeof s.value === 'number') {
+      var v = s.value;
+      if (v >= 4) return 'Высокое влияние';
+      if (v >= 2.5) return 'Среднее влияние';
+      return 'Низкое влияние';
+    }
+    return t || '—';
+  }
+
+  function generatePassportHTML(id) {
+    var item = allItems.find(function(i){ return i.id === id; });
+    if (!item) return '<p>Инициатива не найдена</p>';
+    var scores = buildScores(item);
+    var hi = calcHealthIndex(scores);
+    var sw = getStrengthsWeaknesses(scores);
+    var c = healthColor(hi);
+    var iMeta = (item._customer||'') + (item._dept ? ' / ' + item._dept : '') + (item._curator ? ' • Куратор: ' + item._curator : '');
+
+    var techTags = item.techs.map(function(t) {
+      var f = ALL_TECHS.find(function(x) { return x.id === t; });
+      return f ? f.ru : t;
+    }).join(', ');
+
+    var catLabels = getCategories(item.id).map(function(cid) {
+      var c = CATEGORIES.find(function(x) { return x.id === cid; });
+      return c ? c.ru : '';
+    }).filter(Boolean).join(', ');
+
+    var eisenhowerLabel = '', eisenhowerPct = '';
+    (function() {
+      var complexity = (getDomainScore(scores, 'tech_complexity') + getDomainScore(scores, 'resources')) / 2;
+      var value = (getDomainScore(scores, 'effect') + getDomainScore(scores, 'strategy')) / 2;
+      var cx = Math.round((complexity / 5) * 100);
+      var cy = Math.round((value / 5) * 100);
+      if (cx <= 50 && cy > 50) eisenhowerLabel = 'Быстрые победы';
+      else if (cx > 50 && cy > 50) eisenhowerLabel = 'Крупный проект';
+      else if (cx <= 50 && cy <= 50) eisenhowerLabel = 'Малый эффект';
+      else eisenhowerLabel = 'Малоперспективные';
+      eisenhowerPct = cx + '% / ' + cy + '%';
+    })();
+
+    var sList = sw.strengths.map(function(d){ return d.title + ' (' + d.score + '/100)'; }).join(', ');
+    var wList = sw.weaknesses.map(function(d){ return d.title + ' (' + d.score + '/100)'; }).join(', ');
+    var nList = sw.neutral.map(function(d){ return d.title + ' (' + d.score + '/100)'; }).join(', ');
+    var recs = getRecommendations(sw);
+
+    var domainsTable = '';
+    SCORE_DOMAINS.forEach(function(domain) {
+      var eff = domainEffectiveScore(scores, domain);
+      var pct = Math.round((eff / 5) * 100);
+      var weighted = Math.round(((eff / 5) * domain.weight) * 10) / 10;
+      var rows = '';
+      domain.params.forEach(function(param) {
+        var val = getScoreVal(scores, domain.id, param.id);
+        var txt = getScoreText(scores, domain.id, param.id);
+        rows += '<tr><td>' + param.title + '</td><td style="text-align:center">' + val + '/5</td><td>' + txt + '</td></tr>';
+      });
+      domainsTable += '<h3>' + domain.title + ' — ' + weighted + ' / ' + domain.weight + ' (' + pct + '% от максимального потенциала)</h3><table><thead><tr><th style="width:35%">Параметр</th><th style="width:10%">Балл</th><th style="width:55%">Экспертное заключение</th></tr></thead><tbody>' + rows + '</tbody></table>';
+    });
+
+    var blockedNotice = '';
+    if (scores._blocked) {
+      blockedNotice = '<div style="background:#fef2f2;border:2px solid #dc2626;border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:12px;font-weight:600;color:#dc2626;text-align:center">⛔ ПРОЕКТ ЗАБЛОКИРОВАН: ' + scores._blockedReason + '</div>';
+    }
+
+    return (
+      blockedNotice +
+      '<h2>' + item.title + '</h2>' +
+      '<p class="p-meta">' + iMeta + ' • Индекс потенциала инициативы: ' + hi + '/100</p>' +
+      '<div style="font-size:9px;color:#555;margin-bottom:8px">' +
+        (techTags ? '<span><b>Технологии:</b> ' + techTags + '</span>' : '') +
+        (catLabels ? '<span style="margin-left:12px"><b>Категории:</b> ' + catLabels + '</span>' : '') +
+        '<span style="margin-left:12px"><b>Матрица:</b> ' + eisenhowerLabel + ' (Сложность: ' + eisenhowerPct + ')</span>' +
+      '</div>' +
+      '<div class="p-summary">' +
+        '<div class="p-summary-item"><strong style="color:' + c + '">' + hi + '/100</strong><br><span>Индекс потенциала инициативы</span></div>' +
+        (sList ? '<div class="p-summary-item"><strong>Сильные стороны</strong><br><span>' + sList + '</span></div>' : '') +
+        (nList ? '<div class="p-summary-item"><strong>Другие показатели</strong><br><span>' + nList + '</span></div>' : '') +
+        (wList ? '<div class="p-summary-item"><strong>Слабые стороны</strong><br><span>' + wList + '</span></div>' : '') +
+      '</div>' +
+      (recs.length ? '<div style="margin:6px 0;padding:6px 10px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:4px;font-size:10px"><b>Рекомендации:</b> ' + recs.join('; ') + '</div>' : '') +
+      domainsTable
+    );
+  }
+
+  function downloadPassportPDF(id) {
+    var html = generatePassportHTML(id);
+    var el = document.getElementById('printPassport');
+    el.innerHTML = html;
+    el.style.display = 'block';
+    setTimeout(function() {
+      window.print();
+      setTimeout(function() { el.style.display = ''; }, 200);
+    }, 100);
+  }
+
+  function downloadPassportExcel(id) {
+    var item = allItems.find(function(i){ return i.id === id; });
+    if (!item) return alert('Инициатива не найдена');
+    var scores = buildScores(item);
+    var hi = calcHealthIndex(scores);
+    var statusLabel = scores._blocked ? '⛔ Заблокирован (' + scores._blockedReason + ')' : 'Допущен';
+    var techTags = item.techs.map(function(t) { var f = ALL_TECHS.find(function(x) { return x.id === t; }); return f ? f.ru : t; }).join(', ');
+    var catLabels = getCategories(item.id).map(function(cid) { var cc = CATEGORIES.find(function(x) { return x.id === cid; }); return cc ? cc.ru : ''; }).filter(Boolean).join(', ');
+    var data = [['Паспорт оценки: ' + item.title], ['Заказчик', item._customer||''], ['Департамент', item._dept||''], ['Куратор', item._curator||''], ['Технологии', techTags], ['Категории', catLabels], ['Индекс потенциала инициативы', hi + '/100'], ['Статус', statusLabel], []];
+    data.push(['Домен', 'Параметр', 'Оценка', 'Вклад (вес)', 'Экспертное заключение']);
+    SCORE_DOMAINS.forEach(function(domain) {
+      var added = false;
+      var eff = domainEffectiveScore(scores, domain);
+      var weighted = Math.round(((eff / 5) * domain.weight) * 10) / 10;
+      domain.params.forEach(function(param) {
+        var val = getScoreVal(scores, domain.id, param.id);
+        var txt = getScoreText(scores, domain.id, param.id);
+        data.push([added ? '' : domain.title, param.title, val + '/5', added ? '' : weighted + '/' + domain.weight, txt]);
+        added = true;
+      });
+    });
+    if (typeof XLSX !== 'undefined') {
+      var wb = XLSX.utils.book_new();
+      var ws = XLSX.utils.aoa_to_sheet(data);
+      XLSX.utils.book_append_sheet(wb, ws, 'Паспорт');
+      XLSX.writeFile(wb, 'passport_' + item.id + '_' + item.title.replace(/[^a-zа-я0-9]/gi,'_').substring(0,30) + '.xlsx');
+    } else {
+      alert('Библиотека XLSX не загружена');
+    }
+  }
+
+  function generateRegistryHTML() {
+    var html = '<h2>Сводный реестр оценки инициатив</h2><p class="p-meta">Сгенерировано ' + new Date().toLocaleDateString('ru-RU') + '</p>';
+    allItems.forEach(function(item) {
+      var scores = buildScores(item);
+      var hi = calcHealthIndex(scores);
+      var c = healthColor(hi);
+      var blockedBadge = '';
+      if (scores._blocked) blockedBadge = ' <span style="font-size:10px;color:#dc2626;font-weight:700">⛔ Заблокирован</span>';
+
+      var techTags = item.techs.map(function(t) {
+        var f = ALL_TECHS.find(function(x) { return x.id === t; });
+        return f ? f.ru : t;
+      }).join(', ');
+      var catLabels = getCategories(item.id).map(function(cid) {
+        var cc = CATEGORIES.find(function(x) { return x.id === cid; });
+        return cc ? cc.ru : '';
+      }).filter(Boolean).join(', ');
+
+      html += '<div style="page-break-inside:avoid;margin-bottom:16px;padding:10px;border:1px solid #ddd;border-radius:6px">' +
+        '<div style="font-size:13px;font-weight:600;margin-bottom:2px">' + item.id + '. ' + item.title + blockedBadge + ' <span style="font-size:11px;color:' + c + ';font-weight:700">' + hi + '/100</span></div>' +
+        '<div style="font-size:9px;color:#666;margin-bottom:4px">' + (item._customer||'') + (item._dept ? ' / ' + item._dept : '') + (item._curator ? ' • Куратор: ' + item._curator : '') + '</div>' +
+        (techTags || catLabels ? '<div style="font-size:8px;color:#888;margin-bottom:4px">' + (techTags ? '<b>Технологии:</b> ' + techTags : '') + (catLabels ? ' | <b>Категории:</b> ' + catLabels : '') + '</div>' : '');
+      html += '<table><thead><tr><th>Домен</th><th>Параметр</th><th style="width:10%">Балл</th><th style="width:8%">Вклад (вес)</th><th style="width:8%">%</th><th>Экспертное заключение</th></tr></thead><tbody>';
+      SCORE_DOMAINS.forEach(function(domain) {
+        var eff = domainEffectiveScore(scores, domain);
+        var pct = Math.round((eff / 5) * 100);
+        var weighted = Math.round(((eff / 5) * domain.weight) * 10) / 10;
+        domain.params.forEach(function(param) {
+          var val = getScoreVal(scores, domain.id, param.id);
+          var txt = getScoreText(scores, domain.id, param.id);
+          html += '<tr><td>' + domain.title + '</td><td>' + param.title + '</td><td style="text-align:center">' + val + '/5</td><td style="text-align:center">' + weighted + '/' + domain.weight + '</td><td style="text-align:center">' + pct + '% от макс. потенциала</td><td>' + txt + '</td></tr>';
+        });
+      });
+      html += '</tbody></table></div>';
+    });
+    return html;
+  }
+
+  function downloadRegistryPDF() {
+    var html = generateRegistryHTML();
+    var el = document.getElementById('printPassport');
+    el.innerHTML = html;
+    el.style.display = 'block';
+    setTimeout(function() {
+      window.print();
+      setTimeout(function() { el.style.display = ''; }, 200);
+    }, 100);
+  }
+
+  function downloadRegistryExcel() {
+    var data = [['Сводный реестр оценки инициатив'], ['Сгенерировано', new Date().toLocaleDateString('ru-RU')], []];
+    data.push(['№', 'Инициатива', 'Заказчик', 'Департамент', 'Куратор', 'Индекс потенциала инициативы', 'Статус', 'Домен', 'Параметр', 'Оценка', 'Вклад (вес)', 'Балл домена %', 'Экспертное заключение']);
+    allItems.forEach(function(item) {
+      var scores = buildScores(item);
+      var hi = calcHealthIndex(scores);
+      var added = false;
+      SCORE_DOMAINS.forEach(function(domain) {
+        var eff = domainEffectiveScore(scores, domain);
+        var pct = Math.round((eff / 5) * 100);
+        var weighted = Math.round(((eff / 5) * domain.weight) * 10) / 10;
+        domain.params.forEach(function(param) {
+          var val = getScoreVal(scores, domain.id, param.id);
+          var txt = getScoreText(scores, domain.id, param.id);
+          data.push([
+            added ? '' : item.id,
+            added ? '' : item.title,
+            added ? '' : (item._customer||''),
+            added ? '' : (item._dept||''),
+            added ? '' : (item._curator||''),
+            added ? '' : hi + '/100',
+            added ? '' : (scores._blocked ? '⛔ Заблокирован' : 'Допущен'),
+            domain.title,
+            param.title,
+            val + '/5',
+            weighted + '/' + domain.weight,
+            pct + '%',
+            txt
+          ]);
+          added = true;
+        });
+      });
+    });
+    if (typeof XLSX !== 'undefined') {
+      var wb = XLSX.utils.book_new();
+      var ws = XLSX.utils.aoa_to_sheet(data);
+      XLSX.utils.book_append_sheet(wb, ws, 'Реестр');
+      XLSX.writeFile(wb, 'registry_evaluation.xlsx');
+    } else {
+      alert('Библиотека XLSX не загружена');
+    }
+  }
+
   let _submittedFile = null;
 
   function initFileUpload() {
@@ -2340,6 +3561,7 @@
     const desc = document.getElementById('submitDesc').value.trim();
     const customer = document.getElementById('submitCustomer').value.trim() || 'Пользователь';
     const dept = document.getElementById('submitDept').value.trim();
+    const curator = document.getElementById('submitCurator').value.trim();
     if (!title) { alert('Введите название инициативы'); return; }
     if (!desc) { alert('Введите описание инициативы'); return; }
     var techs = detectTechs(title + ' ' + desc);
@@ -2352,7 +3574,8 @@
       status: 'proposed',
       desc: desc + (customer !== 'Пользователь' || dept ? '\n\n---\nДобавлено: ' + customer + (dept ? ' (' + dept + ')' : '') : ''),
       _isAdditional: true,
-      _categories: detectedCats
+      _categories: detectedCats,
+      _curator: curator
     };
     if (detectedCats.length) setCategories(newItem.id, detectedCats);
     let additionalGroup = INITIATIVES.find(function(g) { return g.customer === 'Дополнительные инициативы'; });
@@ -2375,6 +3598,8 @@
 
   try { initFileUpload(); } catch(e) {}
 </script>
+
+<div class="print-passport" id="printPassport"></div>
 
 </body>
 </html>
